@@ -4,62 +4,84 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b7f72ee9-cbb6-4be9-8a67-0f16e47cdfc5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/fastapiDBTProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/db/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/db/session.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/gateways/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/gateways/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/gateways/diary_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/models/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/adapters/models/diary_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/api/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/api/deps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/api/v1/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/api/v1/api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/api/v1/routes/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/api/v1/routes/diary_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/dto/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/dto/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/dto/diary_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/dto/pagination.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interactors/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interactors/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interactors/diary_card/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interactors/diary_card/create_dc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interactors/diary_card/get_dc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interfaces/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interfaces/gateway.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interfaces/id_provider.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/application/interfaces/uow.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/core/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/core/ioc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/core/server.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/models/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/models/diary_card.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/models/id.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/models/user.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/domain/services/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/diary_ms/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+    <list default="true" id="b7f72ee9-cbb6-4be9-8a67-0f16e47cdfc5" name="Changes" comment="init">
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/application/interactors/queries/get_dc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/exceptions/access.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/exceptions/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/aggregates/diary_card.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/aggregates/diary_card_id.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/commands/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/entities/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/entities/user_id.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/events/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/value_objects/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/value_objects/emotion.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/value_objects/medicaments.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/value_objects/skill.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/value_objects/target_behavior.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/value_objects/weekday.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/domain/services/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/auth/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/auth/token.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/broker/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/db/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/gateways/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/main/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/presentation/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/dependencies/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/dependencies/id_provider.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/v1/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/v1/routes/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/db/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/dto/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/db/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/db/session.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/gateways/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interactors/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/gateways/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/gateways/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/gateways/diary_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/gateways/diary_card.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interactors/commands/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/models/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/models/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/adapters/models/diary_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/infrastructure/models/diary_card.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/api/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interactors/outbounds/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/api/deps.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/deps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/api/v1/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interactors/queries/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/api/v1/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/v1/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/api/v1/routes/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interfaces/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/api/v1/routes/diary_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/presentation/api/v1/routes/diary_card.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/dto/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/dto/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/dto/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/dto/diary_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/dto/diary_card.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/dto/pagination.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/dto/pagination.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interactors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/exceptions/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interactors/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interfaces/interactor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interactors/diary_card/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/model/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interactors/diary_card/create_dc.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interactors/commands/create_dc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interactors/diary_card/get_dc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interfaces/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/model/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interfaces/gateway.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interfaces/gateway.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interfaces/id_provider.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interfaces/id_provider.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/application/interfaces/uow.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/application/interfaces/uow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/types/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/main/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/core/ioc.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/main/ioc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/core/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/main/web.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/common/types/id.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/models/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/models/diary_card.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/models/id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/entities/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/domain/services/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/domain/model/aggregates/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/diary_ms/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/diary_ms/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +98,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;monolito-s&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/monolito-s/fastapiDBTProject.git&quot;,
+    &quot;accountId&quot;: &quot;1644046d-e7c8-4ca8-b0b7-286daf8ae597&quot;
+  }
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -100,11 +134,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\app\diary_ms\main" />
-      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\app\diary_ms\application\interactors\diary_card" />
-      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\app\diary_ms\application\interfaces" />
-      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\app\diary_ms\adapters" />
-      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\app\diary_ms\domain" />
+      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\src\diary_ms\domain\model\value_objects" />
+      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\src\diary_ms\domain\common" />
+      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\src\diary_ms\domain\model" />
+      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\src\diary_ms\domain\model\aggregates" />
+      <recent name="C:\Users\Lenovo\PycharmProjects\fastapiDBTProject\src\diary_ms\application\interactors\queries" />
     </key>
   </component>
   <component name="RunManager">
@@ -140,17 +174,19 @@
       <option name="presentableId" value="Default" />
       <updated>1729876727261</updated>
     </task>
+    <task id="LOCAL-00001" summary="init">
+      <option name="closed" value="true" />
+      <created>1730455871680</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1730455871680</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app/diary_ms/core/server.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <option name="LAST_COMMIT_MESSAGE" value="init" />
   </component>
 </project>
