@@ -1,11 +1,12 @@
+from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
 
-from ..types.id import TypeId
+from src.diary_ms.domain.common.types.id import TypeId
 
 
 @dataclass
-class BaseDM:
+class BaseEntity(ABC):
     id: TypeId
     created_at: datetime
     updated_at: datetime
