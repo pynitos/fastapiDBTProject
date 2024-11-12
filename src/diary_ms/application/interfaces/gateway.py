@@ -1,25 +1,24 @@
 from abc import abstractmethod
 from asyncio import Protocol
-from uuid import UUID
 
-from sqlmodel import SQLModel
+from src.diary_ms.domain.common.types.id import TypeId
 
 
-class SaverProtocol[TModel: SQLModel](Protocol):
+class SaverProtocol[TModel](Protocol):
     @abstractmethod
     async def create(self, entity: TModel) -> None:
         ...
 
 
-class UpdaterProtocol[TModel: SQLModel](Protocol):
+class UpdaterProtocol[TModel](Protocol):
     @abstractmethod
-    async def update(self, entity: TModel) -> None:
+    async def update(self, pk: TypeId, entity: TModel) -> None:
         ...
 
 
-class ReaderProtocol[TDModel: SQLModel](Protocol):
+class ReaderProtocol[TDModel](Protocol):
     @abstractmethod
-    async def get_by_id(self, pk: UUID) -> TDModel | None:
+    async def get_by_id(self, pk: TypeId) -> TDModel | None:
         ...
 
     @abstractmethod
@@ -27,7 +26,7 @@ class ReaderProtocol[TDModel: SQLModel](Protocol):
         ...
 
 
-class DeleterProtocol[TId](Protocol):
+class DeleterProtocol(Protocol):
     @abstractmethod
-    async def delete(self, id: TId) -> None:
+    async def delete(self, id: TypeId) -> None:
         ...
