@@ -5,7 +5,6 @@ from src.diary_ms.application.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
-from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 class DeleteDiaryCard(Interactor[CreateDiaryCardCommand, DiaryCardId]):
