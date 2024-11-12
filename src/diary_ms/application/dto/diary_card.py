@@ -16,6 +16,3 @@ class NewDiaryCardDTO:
 @dataclass
 class GetOwnDiaryCardsDTO:
     pagination: Pagination
-
-
-

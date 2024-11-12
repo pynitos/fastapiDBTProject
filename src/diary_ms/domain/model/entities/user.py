@@ -1,7 +1,8 @@
 import uuid
 
-from src.diary_ms.domain.model.entities.id import UserId
 from sqlmodel import SQLModel, Field
+
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 class User(SQLModel):

@@ -1,3 +1,4 @@
+import uuid
 from datetime import timedelta, datetime, UTC
 from typing import Literal
 
@@ -5,7 +6,7 @@ from jose import jwt, JWTError
 
 from src.diary_ms.application.interfaces.id_provider import IdProvider
 from src.diary_ms.domain.common.exceptions.access import AuthenticationError
-from src.diary_ms.domain.model.entities import UserId
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 Algorithm = Literal[
     "HS256", "HS384", "HS512",
@@ -60,3 +61,9 @@ class TokenIdProvider(IdProvider):
 
     def get_current_user_id(self) -> UserId:
         return self.token_processor.validate_token(self.token)
+
+
+class FakeIdProvider(IdProvider):
+
+    def get_current_user_id(self) -> UserId:
+        return uuid.uuid4()

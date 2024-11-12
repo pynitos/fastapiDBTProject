@@ -1,0 +1,25 @@
+from dataclasses import dataclass, field
+from datetime import date
+
+from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.domain.model.entities.medicaments import MedicamentDM
+from src.diary_ms.domain.model.entities.target_behavior import TargetDM
+from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.value_objects.emotion import EmotionDM
+from src.diary_ms.domain.model.value_objects.skill import SkillDM
+
+
+@dataclass
+class CreateDiaryCardCommand:
+    id: DiaryCardId
+    user_id: UserId
+
+    mood: int
+    description: str | None = None
+    date_of_entry: date = field(default_factory=date.today)
+
+    targets: list[TargetDM] | None = None
+    emotions: list[EmotionDM] | None = None
+    medicaments: list[MedicamentDM] | None = None
+
+    skills: list[SkillDM] | None = None

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from src.diary_ms.domain.model.entities import Id
+from src.diary_ms.domain.common.types.id import TypeId
 
 
 @dataclass
 class BaseDTO:
-    id: Id
+    id: TypeId

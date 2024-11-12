@@ -9,7 +9,7 @@ from sqlmodel.sql.expression import select, SelectOfScalar
 
 from src.diary_ms.application.interfaces.gateway import ReaderProtocol, SaverProtocol
 from src.diary_ms.application.interfaces.uow import UOWProtocol
-from src.diary_ms.domain.model.entities import User
+from src.diary_ms.domain.model.entities.user import User
 
 
 class BaseGateway[TModel: SQLModel, TDModel: dataclass](ReaderProtocol, SaverProtocol):

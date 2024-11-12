@@ -5,9 +5,9 @@ from dishka.integrations.fastapi import setup_dishka, FastapiProvider
 from fastapi import FastAPI
 from fastapi_versioning import VersionedFastAPI
 
-from src.diary_ms.presentation.api.v1.api import api_v1
 from src.diary_ms.main.config import settings, Settings
 from src.diary_ms.main.ioc import InteractorProvider, AdaptersProvider
+from src.diary_ms.presentation.api.v1.api import api_v1
 
 
 def create_fastapi_app() -> FastAPI:
