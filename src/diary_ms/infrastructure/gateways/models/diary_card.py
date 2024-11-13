@@ -1,13 +1,36 @@
 import datetime
+from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlmodel import Field
+from sqlmodel import Field, SQLModel, Relationship
 
 from src.diary_ms.infrastructure.gateways.models.base import Base
-from src.diary_ms.infrastructure.gateways.models.emotion import Emotion
-from src.diary_ms.infrastructure.gateways.models.medicament import Medicament
-from src.diary_ms.infrastructure.gateways.models.skill import Skill
-from src.diary_ms.infrastructure.gateways.models.target import Target
+
+if TYPE_CHECKING:
+    from src.diary_ms.infrastructure.gateways.models.emotion import Emotion
+    from src.diary_ms.infrastructure.gateways.models.medicament import Medicament
+    from src.diary_ms.infrastructure.gateways.models.skill import Skill
+    from src.diary_ms.infrastructure.gateways.models.target import Target
+
+
+class DiaryCardSkillLink(SQLModel, table=True):
+    diary_card_id: UUID | None = Field(default=None, foreign_key="diarycard.id", primary_key=True)
+    skill_id: UUID | None = Field(default=None, foreign_key="skill.id", primary_key=True)
+
+
+class DiaryCardTargetLink(SQLModel, table=True):
+    diary_card_id: UUID | None = Field(default=None, foreign_key="diarycard.id", primary_key=True)
+    skill_id: UUID | None = Field(default=None, foreign_key="target.id", primary_key=True)
+
+
+class DiaryCardEmotionLink(SQLModel, table=True):
+    diary_card_id: UUID | None = Field(default=None, foreign_key="diarycard.id", primary_key=True)
+    skill_id: UUID | None = Field(default=None, foreign_key="emotion.id", primary_key=True)
+
+
+class DiaryCardMedicamentLink(SQLModel, table=True):
+    diary_card_id: UUID | None = Field(default=None, foreign_key="diarycard.id", primary_key=True)
+    skill_id: UUID | None = Field(default=None, foreign_key="medicament.id", primary_key=True)
 
 
 class DiaryCard(Base, table=True):
@@ -15,7 +38,8 @@ class DiaryCard(Base, table=True):
     mood: int
     description: str | None = None
     date_of_entry: datetime.date = Field(default_factory=datetime.date.today)
-    targets: list[Target] | None = None
-    emotions: list[Emotion] | None = None
-    medicaments: list[Medicament] | None = None
-    skills: list[Skill] | None = None
+    targets: list["Target"] | None = Relationship(back_populates="diary_cards", link_model=DiaryCardTargetLink)
+    emotions: list["Emotion"] | None = Relationship(back_populates="diary_cards", link_model=DiaryCardEmotionLink)
+    medicaments: list["Medicament"] | None = Relationship(back_populates="diary_cards",
+                                                          link_model=DiaryCardMedicamentLink)
+    skills: list["Skill"] | None = Relationship(back_populates="diary_cards", link_model=DiaryCardSkillLink)

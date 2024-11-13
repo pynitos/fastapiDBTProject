@@ -1,0 +1,28 @@
+name: dbt
+version: "3.8"
+
+networks:
+  diary_backend_nw:
+
+volumes:
+  postgres-data:
+    driver: local
+
+services:
+  db-diary:
+    image: postgres
+    container_name: db
+    env_file:
+      - ../.env
+    restart: always
+    ports:
+      - "5432:5432"
+    healthcheck:
+        test: [ "CMD", "pg_isready", "-U", "$${POSTGRES_USER}", "-d", "$${POSTGRES_NAME}" ]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+    volumes:
+      - postgres-data:/var/lib/postgresql/data'
+    networks:
+      diary_backend_nw:
