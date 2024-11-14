@@ -11,10 +11,10 @@ from src.diary_ms.domain.model.value_objects.skill import SkillDM
 
 @dataclass
 class CreateDiaryCardCommand:
-    id: DiaryCardId
     user_id: UserId
-
     mood: int
+
+    id: DiaryCardId | None = None
     description: str | None = None
     date_of_entry: date = field(default_factory=date.today)
 

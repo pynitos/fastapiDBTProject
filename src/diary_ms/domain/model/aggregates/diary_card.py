@@ -15,7 +15,7 @@ from src.diary_ms.domain.model.value_objects.skill import SkillDM
 
 @dataclass
 class DiaryCardDM(AggregateRoot):
-    id: DiaryCardId
+    id: DiaryCardId | None
     user_id: UserId
     mood: int
     description: str | None = None

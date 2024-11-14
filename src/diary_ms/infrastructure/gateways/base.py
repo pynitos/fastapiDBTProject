@@ -12,8 +12,7 @@ from src.diary_ms.domain.model.entities.user import User
 
 
 class BaseGateway[TModel: SQLModel, TDModel](ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol):
-
-    def __init__(self, db_model: TModel, domain_model: TDModel, session: AsyncSession | UOWProtocol) -> None:
+    def __init__(self, db_model: TModel, domain_model: type[TDModel], session: AsyncSession | UOWProtocol) -> None:
         self._session = session
         self._db_model = db_model
         self._domain_model = domain_model
@@ -26,19 +25,12 @@ class BaseGateway[TModel: SQLModel, TDModel](ReaderProtocol, SaverProtocol, Upda
         stmt: SelectOfScalar = select(self._db_model).offset(offset).limit(limit)
         result: TupleResult = await self._session.exec(stmt)
         result_list: list[TModel] = result.all()
-        domain_list: list[TDModel] = [self._domain_model(x) for x in result_list]
+        domain_list: list[TDModel] = [self._domain_model(**x.model_dump()) for x in result_list]
         return domain_list
 
-    async def create(
-            self,
-            entity: TModel,
-            current_user: User | None = None
-    ) -> TDModel:
-        if current_user:
-            setattr(entity, "user_id", current_user.id)
+    async def create(self, entity: TDModel) -> None:
         db_entity: TModel = self._db_model.model_validate(entity)
         self._session.add(db_entity)
-        return self._domain_model(db_entity)
 
     async def update(
             self, pk: UUID, entity: TModel,

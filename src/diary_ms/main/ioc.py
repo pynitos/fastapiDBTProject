@@ -3,6 +3,7 @@ from typing import AsyncIterable
 from dishka import Scope, Provider, provide, from_context, AnyOf
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
+from src.diary_ms.application.interactors.commands.create_diary_card import CreateDiaryCard
 from src.diary_ms.application.interactors.queries.get_own_diary_cards import GetOwnDiaryCards
 from src.diary_ms.application.interfaces.gateway import ReaderProtocol
 from src.diary_ms.application.interfaces.id_provider import IdProvider
@@ -44,3 +45,4 @@ class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
     own_diary_cards = provide(GetOwnDiaryCards)
+    create_diary_card = provide(CreateDiaryCard)

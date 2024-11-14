@@ -3,10 +3,10 @@ from uuid import UUID
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO
+from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO, NewDiaryCardDTO
 from src.diary_ms.application.dto.pagination import Pagination
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
-from src.diary_ms.presentation.api.deps import GetOwnDiaryCardsDep, GetDiaryCardDep
+from src.diary_ms.presentation.api.deps import GetOwnDiaryCardsDep, GetDiaryCardDep, CreateDiaryCardDep
 
 router = APIRouter(route_class=DishkaRoute)
 
@@ -35,10 +35,11 @@ async def get_diary_card_by_id(
 
 
 @router.post('/', response_model=list[DiaryCardDM])
-async def get_diary_card_by_id(
-        interactor: GetOwnDiaryCardsDep,
+async def create_diary_card(
+
+        interactor: CreateDiaryCardDep,
 ) -> list[DiaryCardDM]:
-    diary_card = interactor(
+    interactor(
         NewDiaryCardDTO(
             pagination=Pagination(limit=limit, offset=offset)
         )
