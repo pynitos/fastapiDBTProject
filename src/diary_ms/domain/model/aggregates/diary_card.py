@@ -6,18 +6,19 @@ from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
+from src.diary_ms.domain.model.entities.emotion import EmotionDM
 from src.diary_ms.domain.model.entities.medicaments import MedicamentDM
+from src.diary_ms.domain.model.entities.skill import SkillDM
 from src.diary_ms.domain.model.entities.target_behavior import TargetDM
 from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.emotion import EmotionDM
-from src.diary_ms.domain.model.value_objects.skill import SkillDM
+from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
 
 
 @dataclass
 class DiaryCardDM(AggregateRoot):
     id: DiaryCardId | None
     user_id: UserId
-    mood: int
+    mood: DCMood
     description: str | None = None
     date_of_entry: datetime.date = field(default_factory=datetime.date.today)
     targets: list[TargetDM] | None = None
@@ -30,7 +31,7 @@ class DiaryCardDM(AggregateRoot):
         diary_card: Self = cls(
             id=command.id,
             user_id=command.user_id,
-            mood=command.mood,
+            mood=DCMood(command.mood),
             description=command.description,
             date_of_entry=command.date_of_entry,
             targets=command.targets,

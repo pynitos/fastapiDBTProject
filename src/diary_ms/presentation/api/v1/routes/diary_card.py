@@ -41,6 +41,3 @@ async def create_diary_card(
         interactor: CreateDiaryCardDep,
 ) -> None:
     await interactor(command)
-
-
-

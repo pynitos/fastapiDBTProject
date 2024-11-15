@@ -22,7 +22,7 @@ class ReaderProtocol[TDModel](Protocol):
         ...
 
     @abstractmethod
-    def get_all(self, offset: int = 0, limit: int = 10) -> list[TDModel]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[TDModel]:
         ...
 
 

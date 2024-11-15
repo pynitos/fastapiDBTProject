@@ -8,7 +8,6 @@ from sqlmodel.sql.expression import select, SelectOfScalar
 
 from src.diary_ms.application.interfaces.gateway import ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol
 from src.diary_ms.application.interfaces.uow import UOWProtocol
-from src.diary_ms.domain.model.entities.user import User
 
 
 class BaseGateway[TModel: SQLModel, TDModel](ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol):
@@ -25,7 +24,9 @@ class BaseGateway[TModel: SQLModel, TDModel](ReaderProtocol, SaverProtocol, Upda
         stmt: SelectOfScalar = select(self._db_model).offset(offset).limit(limit)
         result: TupleResult = await self._session.exec(stmt)
         result_list: list[TModel] = result.all()
-        domain_list: list[TDModel] = [self._domain_model(**x.model_dump()) for x in result_list]
+        domain_list: list[TDModel] = [self._domain_model(
+            **x.model_dump(exclude={'created_at', 'updated_at'})
+        ) for x in result_list]
         return domain_list
 
     async def create(self, entity: TDModel) -> None:

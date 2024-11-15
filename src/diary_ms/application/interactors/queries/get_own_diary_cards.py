@@ -16,5 +16,5 @@ class GetOwnDiaryCards(Interactor[GetOwnDiaryCardsDTO, list[DiaryCardDM]]):
 
     async def __call__(self, query: GetOwnDiaryCardsDTO) -> list[DiaryCardDM]:
         diary_cards: list[DiaryCardDM] = await self.db_gateway.get_all(offset=query.pagination.offset,
-                                                                 limit=query.pagination.limit)
+                                                                       limit=query.pagination.limit)
         return diary_cards

@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel   # noqa
+from sqlmodel import SQLModel  # noqa
 
 from src.diary_ms.infrastructure.gateways.models.base import Base  # noqa
 from src.diary_ms.infrastructure.gateways.models.diary_card import *  # noqa

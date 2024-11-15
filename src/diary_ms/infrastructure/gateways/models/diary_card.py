@@ -38,8 +38,19 @@ class DiaryCard(Base, table=True):
     mood: int
     description: str | None = None
     date_of_entry: datetime.date = Field(default_factory=datetime.date.today)
-    targets: list["Target"] | None = Relationship(back_populates="diary_cards", link_model=DiaryCardTargetLink)
-    emotions: list["Emotion"] | None = Relationship(back_populates="diary_cards", link_model=DiaryCardEmotionLink)
-    medicaments: list["Medicament"] | None = Relationship(back_populates="diary_cards",
-                                                          link_model=DiaryCardMedicamentLink)
-    skills: list["Skill"] | None = Relationship(back_populates="diary_cards", link_model=DiaryCardSkillLink)
+    targets: list["Target"] | None = Relationship(
+        back_populates="diary_cards", link_model=DiaryCardTargetLink, sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    emotions: list["Emotion"] | None = Relationship(
+        back_populates="diary_cards", link_model=DiaryCardEmotionLink, sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    medicaments: list["Medicament"] | None = Relationship(
+        back_populates="diary_cards",
+        link_model=DiaryCardMedicamentLink,
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    skills: list["Skill"] | None = Relationship(
+        back_populates="diary_cards",
+        link_model=DiaryCardSkillLink,
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
