@@ -18,7 +18,7 @@ class DeleteDiaryCard(Interactor[CreateDiaryCardCommand, DiaryCardId]):
         self.id_provider = id_provider
         self.uow = uow
 
-    def __call__(self, command: DeleteDiaryCardCommand) -> DiaryCardId:
+    async def __call__(self, command: DeleteDiaryCardCommand) -> DiaryCardId:
         # user_id: UserId = self.id_provider.get_current_user_id()
-        self.db_gateway.delete(command.id)
-        self.uow.commit()
+        await self.db_gateway.delete(command.id)
+        await self.uow.commit()

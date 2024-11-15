@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from src.diary_ms.application.interactors.commands.create_diary_card import CreateDiaryCard
 from src.diary_ms.application.interactors.queries.get_own_diary_cards import GetOwnDiaryCards
-from src.diary_ms.application.interfaces.gateway import ReaderProtocol
+from src.diary_ms.application.interfaces.gateway import ReaderProtocol, SaverProtocol
 from src.diary_ms.application.interfaces.id_provider import IdProvider
 from src.diary_ms.application.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
@@ -23,7 +23,7 @@ class AdaptersProvider(Provider):
     id_provider = provide(FakeIdProvider, provides=IdProvider)
 
     @provide
-    def get_diary_cards_gateway(self, session: AsyncSession) -> AnyOf[DiaryCardGateway, ReaderProtocol]:
+    def get_diary_cards_gateway(self, session: AsyncSession) -> AnyOf[DiaryCardGateway, ReaderProtocol, SaverProtocol]:
         return DiaryCardGateway(db_model=DiaryCard, domain_model=DiaryCardDM, session=session)
 
     @provide(scope=Scope.APP)

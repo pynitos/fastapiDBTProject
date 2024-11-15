@@ -6,7 +6,7 @@ from src.diary_ms.domain.common.types.id import TypeId
 
 class SaverProtocol[TModel](Protocol):
     @abstractmethod
-    async def create(self, entity: TModel) -> None:
+    def create(self, entity: TModel) -> None:
         ...
 
 

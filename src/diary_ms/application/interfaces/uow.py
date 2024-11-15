@@ -4,13 +4,13 @@ from typing import Protocol
 
 class UOWProtocol(Protocol):
     @abstractmethod
-    def commit(self) -> None:
+    async def commit(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def flush(self) -> None:
+    async def flush(self) -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def rollback(self) -> None:
+    async def rollback(self) -> None:
         raise NotImplementedError

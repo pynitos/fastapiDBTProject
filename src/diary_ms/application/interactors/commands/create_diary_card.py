@@ -19,10 +19,10 @@ class CreateDiaryCard(Interactor[CreateDiaryCardCommand, DiaryCardId]):
         self.id_provider = id_provider
         self.uow = uow
 
-    def __call__(self, command: CreateDiaryCardCommand) -> DiaryCardId:
+    async def __call__(self, command: CreateDiaryCardCommand) -> DiaryCardId:
         user_id: UserId = self.id_provider.get_current_user_id()
         command.user_id = user_id
         diary_card: DiaryCardDM = DiaryCardDM.create(command)
         self.db_gateway.create(diary_card)
-        self.uow.commit()
+        await self.uow.commit()
         return diary_card.id

@@ -11,7 +11,7 @@ def new_session_maker(settings: Settings) -> async_sessionmaker[AsyncSession]:
         pool_size=15,
         max_overflow=15,
         connect_args={
-            "connect_timeout": 5,
+            "command_timeout": 5,
         },
     )
     return async_sessionmaker(engine, class_=AsyncSession, autoflush=False, expire_on_commit=False)
