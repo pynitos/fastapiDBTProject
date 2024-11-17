@@ -1,4 +1,4 @@
-from src.diary_ms.domain.model.entities.emotion import EmotionId
+from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 
 
 class CreateEmotionCommand:

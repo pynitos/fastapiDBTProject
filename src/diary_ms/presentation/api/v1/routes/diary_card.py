@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO
 from src.diary_ms.application.dto.pagination import Pagination
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
+from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.presentation.api.deps import GetOwnDiaryCardsDep, GetDiaryCardDep, CreateDiaryCardDep
 
@@ -35,9 +36,10 @@ async def get_diary_card_by_id(
     return diary_card
 
 
-@router.post('/', status_code=201, response_model=None)
+@router.post('/', status_code=201, response_model=DiaryCardId)
 async def create_diary_card(
         command: CreateDiaryCardCommand,
         interactor: CreateDiaryCardDep,
-) -> None:
-    await interactor(command)
+) -> DiaryCardId:
+    new_diary_card_id = await interactor(command)
+    return new_diary_card_id

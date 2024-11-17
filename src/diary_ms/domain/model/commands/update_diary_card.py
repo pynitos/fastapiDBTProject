@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import date
 
-from src.diary_ms.domain.model.entities.medicaments import MedicamentDM
-
 from src.diary_ms.domain.model.entities.emotion import EmotionDM
+from src.diary_ms.domain.model.entities.medicament import MedicamentDM
 from src.diary_ms.domain.model.entities.skill import SkillDM
 from src.diary_ms.domain.model.entities.target_behavior import TargetDM
 
