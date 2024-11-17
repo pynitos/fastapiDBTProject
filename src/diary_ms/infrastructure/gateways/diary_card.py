@@ -10,6 +10,13 @@ from src.diary_ms.domain.model.entities.target_behavior import TargetDM
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from src.diary_ms.domain.model.value_objects.emotion.description import EmotionDescription
+from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
+from src.diary_ms.domain.model.value_objects.medicament.dosage import MedicamentDosage
+from src.diary_ms.domain.model.value_objects.medicament.name import MedicamentName
+from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
+from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
+from src.diary_ms.domain.model.value_objects.skill.name import SkillName
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 from src.diary_ms.infrastructure.gateways.base import BaseGateway
@@ -29,8 +36,10 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
             date_of_entry=entity.date_of_entry.value,
             targets=[Target(user_id=entity.user_id, urge=x.urge.value, action=x.action.value) for x in entity.targets],
             emotions=[Emotion(name=x.name.value, description=x.description.value) for x in entity.emotions],
-            medicaments=[Medicament(user_id=entity.user_id, name=x.name.value, dosage=x.dosage.value) for x in entity.medicaments],
-            skills=[Skill(category=x.category.value, group=x.group.value, name=x.name.value, type=x.type) for x in entity.skills],
+            medicaments=[Medicament(user_id=entity.user_id, name=x.name.value, dosage=x.dosage.value) for x in
+                         entity.medicaments],
+            skills=[Skill(category=x.category.value, group=x.group.value, name=x.name.value, type=x.type) for x in
+                    entity.skills],
         )
         self._session.add(db_entity)
 
@@ -52,11 +61,23 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
                     urge=TargetUrge(x.urge),
                     action=TargetAction(x.action)
                 ) for x in entity.targets],
-                emotions=[EmotionDM(id=x.id, name=x.name, description=x.description) for x in entity.emotions],
-                medicaments=[MedicamentDM(id=x.id, user_id=entity.user_id, name=x.name, dosage=x.dosage) for x in
-                             entity.medicaments],
-                skills=[SkillDM(id=x.id, category=x.category, group=x.group, name=x.name, type=x.type) for x in
-                        entity.skills],
+                emotions=[EmotionDM(
+                    id=x.id,
+                    name=EmotionName(x.name),
+                    description=EmotionDescription(x.description)
+                ) for x in entity.emotions],
+                medicaments=[MedicamentDM(
+                    id=x.id,
+                    user_id=entity.user_id,
+                    name=MedicamentName(x.name),
+                    dosage=MedicamentDosage(x.dosage),
+                ) for x in entity.medicaments],
+                skills=[SkillDM(
+                    id=x.id,
+                    category=SkillCategory(x.category),
+                    group=SkillGroup(x.group),
+                    name=SkillName(x.name),
+                    type=x.type) for x in entity.skills],
             )
             domain_list.append(domain_entity)
         return domain_list

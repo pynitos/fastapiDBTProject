@@ -9,8 +9,6 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 EmotionId = NewType('EmotionId', TypeId)
 
 
-
-
 @dataclass
 class EmotionDM:
     id: EmotionId
