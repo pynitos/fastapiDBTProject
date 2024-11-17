@@ -2,12 +2,26 @@ from dataclasses import dataclass
 from typing import NewType
 
 from src.diary_ms.domain.common.types.id import TypeId
+from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionCommand
+from src.diary_ms.domain.model.value_objects.emotion.description import EmotionDescription
+from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 
 EmotionId = NewType('EmotionId', TypeId)
+
+
 
 
 @dataclass
 class EmotionDM:
     id: EmotionId
-    name: str
-    description: str = None
+    name: EmotionName
+    description: EmotionDescription = None
+
+    @classmethod
+    def create(cls, command: CreateEmotionCommand):
+        emotion = cls(
+            id=command.id,
+            name=EmotionName(command.name),
+            description=EmotionDescription(command.description)
+        )
+        return emotion

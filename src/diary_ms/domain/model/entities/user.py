@@ -1,9 +1,9 @@
 import uuid
-
-from sqlmodel import SQLModel, Field
+from dataclasses import dataclass, field
 
 from src.diary_ms.domain.model.entities.user_id import UserId
 
 
-class User(SQLModel):
-    id: UserId = Field(default_factory=uuid.uuid4, primary_key=True)
+@dataclass
+class User:
+    id: UserId = field(default_factory=uuid.uuid4)

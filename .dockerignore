@@ -74,7 +74,7 @@ docs/_build/
 
 # PyBuilder
 .pybuilder/
-target/
+src/diary_ms/domain/model/value_objects/target_behavior/
 
 # Jupyter Notebook
 .ipynb_checkpoints
