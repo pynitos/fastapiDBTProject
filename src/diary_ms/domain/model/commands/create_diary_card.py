@@ -11,10 +11,10 @@ from src.diary_ms.domain.model.entities.user_id import UserId
 
 @dataclass
 class CreateDiaryCardCommand:
-    user_id: UserId
     mood: int
 
     id: DiaryCardId | None = None
+    user_id: UserId = None
     description: str | None = None
     date_of_entry: date = field(default_factory=date.today)
 
