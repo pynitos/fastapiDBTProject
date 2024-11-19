@@ -4,10 +4,11 @@ from dishka import Scope, Provider, provide, from_context, AnyOf
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from src.diary_ms.application.interactors.commands.create_diary_card import CreateDiaryCard
+from src.diary_ms.application.interactors.queries.get_own_diary_card import GetOwnDiaryCard
 from src.diary_ms.application.interactors.queries.get_own_diary_cards import GetOwnDiaryCards
-from src.diary_ms.application.interfaces.gateway import ReaderProtocol, SaverProtocol
-from src.diary_ms.application.interfaces.id_provider import IdProvider
-from src.diary_ms.application.interfaces.uow import UOWProtocol
+from src.diary_ms.application.common.interfaces.gateway import ReaderProtocol, SaverProtocol
+from src.diary_ms.application.common.interfaces.id_provider import IdProvider
+from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.infrastructure.auth.token import FakeIdProvider
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
@@ -44,5 +45,6 @@ class AdaptersProvider(Provider):
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
-    own_diary_cards = provide(GetOwnDiaryCards)
     create_diary_card = provide(CreateDiaryCard)
+    get_own_diary_cards = provide(GetOwnDiaryCards)
+    get_own_diary_card = provide(GetOwnDiaryCard)

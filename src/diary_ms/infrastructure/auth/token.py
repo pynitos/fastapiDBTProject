@@ -4,7 +4,7 @@ from typing import Literal
 
 from jose import jwt, JWTError
 
-from src.diary_ms.application.interfaces.id_provider import IdProvider
+from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.domain.common.exceptions.access import AuthenticationError
 from src.diary_ms.domain.model.entities.user_id import UserId
 

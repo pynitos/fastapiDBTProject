@@ -6,8 +6,8 @@ from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.sql.expression import select, SelectOfScalar
 
-from src.diary_ms.application.interfaces.gateway import ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol
-from src.diary_ms.application.interfaces.uow import UOWProtocol
+from src.diary_ms.application.common.interfaces.gateway import ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol
+from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 
 
 class BaseGateway[TModel: SQLModel, TDModel](ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol):

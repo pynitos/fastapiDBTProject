@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO
 from src.diary_ms.application.dto.pagination import Pagination
@@ -35,8 +35,10 @@ async def get_diary_cards(
 async def get_diary_card_by_id(
         id: UUID,
         interactor: GetDiaryCardDep, # type: ignore
-) -> list[DiaryCardDM]:
-    diary_card = await interactor(id)
+) -> DiaryCardDM:
+    diary_card: DiaryCardDM | None = await interactor(id)
+    if not diary_card:
+        raise HTTPException(404, f'Diary card with id: {id} not found.')
     return diary_card
 
 
@@ -67,3 +69,6 @@ async def create_diary_card(
         ) for x in schema.skills if schema.skills],
     )
     return await interactor(command)
+
+
+

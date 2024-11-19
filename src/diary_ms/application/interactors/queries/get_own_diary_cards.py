@@ -1,7 +1,7 @@
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO
-from src.diary_ms.application.interfaces.gateway import ReaderProtocol
-from src.diary_ms.application.interfaces.id_provider import IdProvider
-from src.diary_ms.application.interfaces.interactor import Interactor
+from src.diary_ms.application.common.interfaces.gateway import ReaderProtocol
+from src.diary_ms.application.common.interfaces.id_provider import IdProvider
+from src.diary_ms.application.common.interfaces.interactor import Interactor
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 
 

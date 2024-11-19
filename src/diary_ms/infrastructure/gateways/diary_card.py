@@ -1,3 +1,4 @@
+from uuid import UUID
 from sqlalchemy.engine import TupleResult
 from sqlmodel import select
 from sqlmodel.sql._expression_select_cls import SelectOfScalar
@@ -81,3 +82,39 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
             )
             domain_list.append(domain_entity)
         return domain_list
+
+    async def get_by_id(self, pk: UUID) -> DiaryCardDM | None:
+        entity: DiaryCard | None = await self._session.get(self._db_model, pk)
+        if not entity:
+            return None
+        return DiaryCardDM(
+                id=entity.id,
+                user_id=entity.user_id,
+                mood=DCMood(entity.mood),
+                description=DCDescription(entity.description),
+                date_of_entry=DCDateOfEntry(entity.date_of_entry),
+                targets=[TargetDM(
+                    id=x.id,
+                    user_id=entity.user_id,
+                    urge=TargetUrge(x.urge),
+                    action=TargetAction(x.action)
+                ) for x in entity.targets],
+                emotions=[EmotionDM(
+                    id=x.id,
+                    name=EmotionName(x.name),
+                    description=EmotionDescription(x.description)
+                ) for x in entity.emotions],
+                medicaments=[MedicamentDM(
+                    id=x.id,
+                    user_id=entity.user_id,
+                    name=MedicamentName(x.name),
+                    dosage=MedicamentDosage(x.dosage),
+                ) for x in entity.medicaments],
+                skills=[SkillDM(
+                    id=x.id,
+                    category=SkillCategory(x.category),
+                    group=SkillGroup(x.group),
+                    name=SkillName(x.name),
+                    type=x.type) for x in entity.skills],
+            )
+    
