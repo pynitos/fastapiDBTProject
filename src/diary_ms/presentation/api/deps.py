@@ -7,3 +7,6 @@ from src.diary_ms.application.interactors.queries.get_own_diary_cards import Get
 GetOwnDiaryCardsDep = FromDishka[GetOwnDiaryCards]
 GetDiaryCardDep = FromDishka[GetOwnDiaryCard]
 CreateDiaryCardDep = FromDishka[CreateDiaryCard]
+UpdateDiaryCardDep = FromDishka[GetOwnDiaryCard]
+DeleteDiaryCardDep = FromDishka[GetOwnDiaryCard]
+

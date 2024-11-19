@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from dishka.integrations.fastapi import DishkaRoute
+from http import HTTPStatus
 from fastapi import APIRouter, HTTPException
 
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO
@@ -11,7 +12,7 @@ from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionComma
 from src.diary_ms.domain.model.commands.create_medicament import CreateMedicamentCommand
 from src.diary_ms.domain.model.commands.create_skill import CreateSkillCommand
 from src.diary_ms.domain.model.commands.create_target import CreateTargetCommand
-from src.diary_ms.presentation.api.deps import GetOwnDiaryCardsDep, GetDiaryCardDep, CreateDiaryCardDep
+from src.diary_ms.presentation.api.deps import GetOwnDiaryCardsDep, GetDiaryCardDep, CreateDiaryCardDep, UpdateDiaryCardDep, DeleteDiaryCardDep
 from src.diary_ms.presentation.api.v1.routes.schemas.diary_card import CreateDiaryCardReq
 
 router = APIRouter(route_class=DishkaRoute)
@@ -45,7 +46,7 @@ async def get_diary_card_by_id(
 @router.post('/', status_code=201, response_model=None)
 async def create_diary_card(
         schema: CreateDiaryCardReq,
-        interactor: CreateDiaryCardDep, # type: ignore
+        interactor: CreateDiaryCardDep,
 ) -> None:
     command = CreateDiaryCardCommand(
         mood=schema.mood,
@@ -69,6 +70,22 @@ async def create_diary_card(
         ) for x in schema.skills if schema.skills],
     )
     return await interactor(command)
+
+
+@router.patch('/<id:UUID>', status_code=HTTPStatus.NO_CONTENT, response_model=None)
+async def update_diary_card(
+        id: UUID,
+        interactor: UpdateDiaryCardDep,
+) -> None:
+    await interactor(id)
+
+
+@router.delete('/<id:UUID>', status_code=204, response_model=None)
+async def delete_diary_card(
+        id: UUID,
+        interactor: DeleteDiaryCardDep,
+) -> None:
+    await interactor(id)
 
 
 
