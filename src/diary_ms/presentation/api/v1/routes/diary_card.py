@@ -86,6 +86,7 @@ async def update_diary_card(
         interactor: UpdateDiaryCardDep,
 ) -> None:
     command = UpdateDiaryCardCommand(
+        id=id,
         mood=schema.mood,
         description=schema.description,
         date_of_entry=schema.date_of_entry,

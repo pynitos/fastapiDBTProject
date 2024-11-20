@@ -21,6 +21,7 @@ class UpdateDiaryCard(Interactor[UpdateDiaryCardCommand, None]):
     def __call__(self, command: UpdateDiaryCardCommand) -> None:
         user_id: UserId = self.id_provider.get_current_user_id()
         command.user_id = user_id
-        diary_card: DiaryCardDM = DiaryCardDM.update(command=command)
-        self.db_gateway.update(diary_card)
+        old_diary_card: DiaryCardDM = self.db_gateway.get_by_id(command.id)
+        updated_diary_card: DiaryCardDM = old_diary_card.update(command=command)
+        self.db_gateway.update(updated_diary_card)
         self.uow.commit()
