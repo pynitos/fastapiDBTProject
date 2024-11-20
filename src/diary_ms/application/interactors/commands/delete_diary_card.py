@@ -3,11 +3,10 @@ from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.interactor import Interactor
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 
 
-class DeleteDiaryCard(Interactor[CreateDiaryCardCommand, DiaryCardId]):
+class DeleteDiaryCard(Interactor[DeleteDiaryCardCommand, None]):
     def __init__(
             self,
             db_gateway: DeleterProtocol,
@@ -18,7 +17,7 @@ class DeleteDiaryCard(Interactor[CreateDiaryCardCommand, DiaryCardId]):
         self.id_provider = id_provider
         self.uow = uow
 
-    async def __call__(self, command: DeleteDiaryCardCommand) -> DiaryCardId:
+    async def __call__(self, command: DeleteDiaryCardCommand) -> None:
         # user_id: UserId = self.id_provider.get_current_user_id()
-        await self.db_gateway.delete(command.id)
+        await self.db_gateway.delete(DiaryCardId(command.id))
         await self.uow.commit()

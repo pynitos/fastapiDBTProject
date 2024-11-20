@@ -5,7 +5,11 @@ class ApplicationError(AppError):
     pass
 
 
-class GatewayError(ApplicationError):
+class InfraError(AppError):
+    pass
+
+
+class GatewayError(InfraError):
     pass
 
 

@@ -26,9 +26,12 @@ from src.diary_ms.infrastructure.gateways.models.emotion import Emotion
 from src.diary_ms.infrastructure.gateways.models.medicament import Medicament
 from src.diary_ms.infrastructure.gateways.models.skill import Skill
 from src.diary_ms.infrastructure.gateways.models.target import Target
+from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
 
 
 class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
+    
     def create(self, entity: DiaryCardDM) -> None:
         db_entity: DiaryCard = DiaryCard(
             user_id=entity.user_id,
@@ -117,4 +120,32 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
                     name=SkillName(x.name),
                     type=x.type) for x in entity.skills],
             )
+    
+    async def update(self, pk: DiaryCardId, entity: DiaryCardDM) -> None:
+        db_entity: DiaryCard = await self.get_by_id(pk)
+        if not db_entity:
+            raise DiaryCardNotFoundError
+        
+        if entity.mood:
+            db_entity.mood = entity.mood
+        if entity.description:
+            db_entity.description = entity.description
+        if entity.date_of_entry:
+            db_entity.date_of_entry = entity.date_of_entry
+        if entity.targets:
+            db_entity.targets = entity.targets
+        if entity.emotions:
+            db_entity.emotions = entity.emotions
+        if entity.medicaments:
+            db_entity.medicaments = entity.medicaments
+        if entity.skills:
+            db_entity.skills = entity.skills
+        
+        self._session.add(db_entity)
+    
+    async def delete(self, pk: DiaryCardId) -> None:
+        entity: DiaryCard | None = await self._session.get(self._db_model, pk)
+        if not entity:
+            raise DiaryCardNotFoundError
+        await self._session.delete(entity)
     

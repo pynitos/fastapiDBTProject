@@ -36,3 +36,14 @@ class CreateDiaryCardReq(BaseModel):
     emotions: list[CreateEmotionReq] | None = None
     medicaments: list[CreateMedicamentReq] | None = None
     skills: list[CreateSkillReq] | None = None
+
+
+class UpdateDiaryCardReq(BaseModel):
+    mood: int | None = None
+    description: str | None = None
+    date_of_entry: date | None = None
+
+    targets: list[CreateTargetReq] | None = None
+    emotions: list[CreateEmotionReq] | None = None
+    medicaments: list[CreateMedicamentReq] | None = None
+    skills: list[CreateSkillReq] | None = None

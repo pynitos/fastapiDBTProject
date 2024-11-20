@@ -4,9 +4,11 @@ from dishka import Scope, Provider, provide, from_context, AnyOf
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from src.diary_ms.application.interactors.commands.create_diary_card import CreateDiaryCard
+from src.diary_ms.application.interactors.commands.delete_diary_card import DeleteDiaryCard
+from src.diary_ms.application.interactors.commands.update_diary_card import UpdateDiaryCard
 from src.diary_ms.application.interactors.queries.get_own_diary_card import GetOwnDiaryCard
 from src.diary_ms.application.interactors.queries.get_own_diary_cards import GetOwnDiaryCards
-from src.diary_ms.application.common.interfaces.gateway import ReaderProtocol, SaverProtocol
+from src.diary_ms.application.common.interfaces.gateway import DeleterProtocol, ReaderProtocol, SaverProtocol, UpdaterProtocol
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
@@ -24,7 +26,7 @@ class AdaptersProvider(Provider):
     id_provider = provide(FakeIdProvider, provides=IdProvider)
 
     @provide
-    def get_diary_cards_gateway(self, session: AsyncSession) -> AnyOf[DiaryCardGateway, ReaderProtocol, SaverProtocol]:
+    def get_diary_cards_gateway(self, session: AsyncSession) -> AnyOf[DiaryCardGateway, ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol]:
         return DiaryCardGateway(db_model=DiaryCard, domain_model=DiaryCardDM, session=session)
 
     @provide(scope=Scope.APP)
@@ -48,3 +50,5 @@ class InteractorProvider(Provider):
     create_diary_card = provide(CreateDiaryCard)
     get_own_diary_cards = provide(GetOwnDiaryCards)
     get_own_diary_card = provide(GetOwnDiaryCard)
+    delete_diary_card = provide(DeleteDiaryCard)
+    update_diary_card = provide(UpdateDiaryCard)
