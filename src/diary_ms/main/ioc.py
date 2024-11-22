@@ -1,16 +1,31 @@
-from typing import AsyncIterable
+from collections.abc import AsyncIterable
 
-from dishka import Scope, Provider, provide, from_context, AnyOf
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from dishka import AnyOf, Provider, Scope, from_context, provide
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from src.diary_ms.application.interactors.commands.create_diary_card import CreateDiaryCard
-from src.diary_ms.application.interactors.commands.delete_diary_card import DeleteDiaryCard
-from src.diary_ms.application.interactors.commands.update_diary_card import UpdateDiaryCard
-from src.diary_ms.application.interactors.queries.get_own_diary_card import GetOwnDiaryCard
-from src.diary_ms.application.interactors.queries.get_own_diary_cards import GetOwnDiaryCards
-from src.diary_ms.application.common.interfaces.gateway import DeleterProtocol, ReaderProtocol, SaverProtocol, UpdaterProtocol
+from src.diary_ms.application.common.interfaces.gateway import (
+    DeleterProtocol,
+    ReaderProtocol,
+    SaverProtocol,
+    UpdaterProtocol,
+)
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
+from src.diary_ms.application.interactors.commands.create_diary_card import (
+    CreateDiaryCard,
+)
+from src.diary_ms.application.interactors.commands.delete_diary_card import (
+    DeleteDiaryCard,
+)
+from src.diary_ms.application.interactors.commands.update_diary_card import (
+    UpdateDiaryCard,
+)
+from src.diary_ms.application.interactors.queries.get_own_diary_card import (
+    GetOwnDiaryCard,
+)
+from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
+    GetOwnDiaryCards,
+)
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.infrastructure.auth.token import FakeIdProvider
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
@@ -26,8 +41,18 @@ class AdaptersProvider(Provider):
     id_provider = provide(FakeIdProvider, provides=IdProvider)
 
     @provide
-    def get_diary_cards_gateway(self, session: AsyncSession) -> AnyOf[DiaryCardGateway, ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol]:
-        return DiaryCardGateway(db_model=DiaryCard, domain_model=DiaryCardDM, session=session)
+    def get_diary_cards_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        DiaryCardGateway,
+        ReaderProtocol,
+        SaverProtocol,
+        UpdaterProtocol,
+        DeleterProtocol,
+    ]:
+        return DiaryCardGateway(
+            db_model=DiaryCard, domain_model=DiaryCardDM, session=session
+        )
 
     @provide(scope=Scope.APP)
     def get_session_maker(self, settings: Settings) -> async_sessionmaker[AsyncSession]:
@@ -35,11 +60,8 @@ class AdaptersProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     async def get_session(
-            self,
-            session_maker: async_sessionmaker[AsyncSession]
-    ) -> AsyncIterable[
-        AnyOf[AsyncSession, UOWProtocol]
-    ]:
+        self, session_maker: async_sessionmaker[AsyncSession]
+    ) -> AsyncIterable[AnyOf[AsyncSession, UOWProtocol]]:
         async with session_maker() as session:
             yield session
 

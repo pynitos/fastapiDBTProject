@@ -2,4 +2,4 @@ from src.diary_ms.application.common.exceptions.base import ItemNotFoundError
 
 
 class DiaryCardNotFoundError(ItemNotFoundError):
-    _detail: str = 'Diary Card Not Found!'
+    _detail: str = "Diary Card Not Found!"

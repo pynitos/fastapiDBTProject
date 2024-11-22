@@ -9,10 +9,10 @@ from src.diary_ms.domain.model.entities.user_id import UserId
 
 class CreateDiaryCard(Interactor[CreateDiaryCardCommand, None]):
     def __init__(
-            self,
-            db_gateway: SaverProtocol,
-            id_provider: IdProvider,
-            uow: UOWProtocol,
+        self,
+        db_gateway: SaverProtocol,
+        id_provider: IdProvider,
+        uow: UOWProtocol,
     ) -> None:
         self.db_gateway = db_gateway
         self.id_provider = id_provider

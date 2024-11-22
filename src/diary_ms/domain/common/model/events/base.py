@@ -7,4 +7,6 @@ from uuid import UUID, uuid4
 @dataclass(frozen=True)
 class BaseEvent(ABC):
     event_id: UUID = field(init=False, kw_only=True, default_factory=uuid4)
-    event_timestamp: datetime = field(init=False, kw_only=True, default_factory=datetime.now)
+    event_timestamp: datetime = field(
+        init=False, kw_only=True, default_factory=datetime.now
+    )

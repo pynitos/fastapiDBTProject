@@ -15,4 +15,6 @@ class Target(Base, table=True):
     urge: str
     action: str
 
-    diary_cards: list["DiaryCard"] | None = Relationship(back_populates="targets", link_model=DiaryCardTargetLink)
+    diary_cards: list["DiaryCard"] | None = Relationship(
+        back_populates="targets", link_model=DiaryCardTargetLink
+    )

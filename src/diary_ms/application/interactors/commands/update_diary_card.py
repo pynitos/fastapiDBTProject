@@ -1,4 +1,4 @@
-from src.diary_ms.application.common.interfaces.gateway import SaverProtocol, UpdaterProtocol
+from src.diary_ms.application.common.interfaces.gateway import UpdaterProtocol
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.interactor import Interactor
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
@@ -9,10 +9,10 @@ from src.diary_ms.domain.model.entities.user_id import UserId
 
 class UpdateDiaryCard(Interactor[UpdateDiaryCardCommand, None]):
     def __init__(
-            self,
-            db_gateway: UpdaterProtocol,
-            id_provider: IdProvider,
-            uow: UOWProtocol,
+        self,
+        db_gateway: UpdaterProtocol,
+        id_provider: IdProvider,
+        uow: UOWProtocol,
     ) -> None:
         self.db_gateway = db_gateway
         self.id_provider = id_provider

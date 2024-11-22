@@ -4,4 +4,4 @@ from src.diary_ms.main.web import diary_app
 
 app: FastAPI = FastAPI()
 
-app.mount('/diary', diary_app)
+app.mount("/diary", diary_app)

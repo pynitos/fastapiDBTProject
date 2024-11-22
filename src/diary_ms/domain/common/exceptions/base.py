@@ -1,7 +1,6 @@
 class AppError(Exception):
-    _detail: str = 'Domain Error.'
+    _detail: str = "Domain Error."
     _status_code: int = 500
-
 
     def __init__(self, detail: str | None = None, status_code: int = 500):
         if detail:
@@ -18,10 +17,10 @@ class AppError(Exception):
         return self._detail
 
 
-
 class DomainError(AppError):
-   pass
+    pass
+
 
 class DomainValueError(DomainError):
-    _detail: str = 'Incorrect Value.'
+    _detail: str = "Incorrect Value."
     _status_code: int = 400

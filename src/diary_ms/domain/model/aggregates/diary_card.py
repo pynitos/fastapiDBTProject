@@ -11,7 +11,9 @@ from src.diary_ms.domain.model.entities.medicament import MedicamentDM
 from src.diary_ms.domain.model.entities.skill import SkillDM
 from src.diary_ms.domain.model.entities.target_behavior import TargetDM
 from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
+from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
+    DCDateOfEntry,
+)
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
 

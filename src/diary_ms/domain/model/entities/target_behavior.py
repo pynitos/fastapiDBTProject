@@ -22,6 +22,6 @@ class TargetDM(BaseEntity):
             id=command.id,
             user_id=command.user_id,
             urge=TargetUrge(command.urge),
-            action=TargetAction(command.action)
+            action=TargetAction(command.action),
         )
         return skill

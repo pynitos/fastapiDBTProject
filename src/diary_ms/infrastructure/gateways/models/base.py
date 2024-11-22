@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import TIMESTAMP, text
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
 
 
 class Base(SQLModel):

@@ -2,4 +2,4 @@ from typing import NewType
 
 from src.diary_ms.domain.common.types.id import TypeId
 
-EmotionId = NewType('EmotionId', TypeId)
+EmotionId = NewType("EmotionId", TypeId)

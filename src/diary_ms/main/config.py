@@ -1,6 +1,6 @@
 import secrets
 import warnings
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, Self
 
 from pydantic import (
     AnyUrl,
@@ -12,7 +12,6 @@ from pydantic import (
 )
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing_extensions import Self
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -47,13 +46,13 @@ class Settings(BaseSettings):
             self.FRONTEND_HOST
         ]
 
-    PROJECT_NAME: str = 'Diary card API'
+    PROJECT_NAME: str = "Diary card API"
     SENTRY_DSN: HttpUrl | None = None
-    POSTGRES_SERVER: str = 'localhost'
+    POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str = 'postgres'
-    POSTGRES_PASSWORD: str = 'postgres'
-    POSTGRES_DB: str = 'postgres'
+    POSTGRES_USER: str = "postgres"
+    POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_DB: str = "postgres"
 
     @computed_field  # type: ignore[prop-decorator]
     @property

@@ -12,14 +12,14 @@ from alembic import context
 from src.diary_ms.infrastructure.gateways.db.metadata import metadata
 
 # импортируем переменные окружения
-load_dotenv('.env')
+load_dotenv(".env")
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 # Установим для переменной sqlalchemy.url значение из нашего .dev.env файла.
-db_url: str = str(os.environ.get('DB_URI'))
-config.set_main_option('sqlalchemy.url', db_url)
+db_url: str = str(os.environ.get("DB_URI"))
+config.set_main_option("sqlalchemy.url", db_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

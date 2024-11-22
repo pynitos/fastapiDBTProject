@@ -8,10 +8,10 @@ from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCard
 
 class DeleteDiaryCard(Interactor[DeleteDiaryCardCommand, None]):
     def __init__(
-            self,
-            db_gateway: DeleterProtocol,
-            id_provider: IdProvider,
-            uow: UOWProtocol,
+        self,
+        db_gateway: DeleterProtocol,
+        id_provider: IdProvider,
+        uow: UOWProtocol,
     ) -> None:
         self.db_gateway = db_gateway
         self.id_provider = id_provider

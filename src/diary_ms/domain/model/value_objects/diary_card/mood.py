@@ -16,9 +16,9 @@ class DCMood(ValueObject[int]):
     def _validate(self) -> None:
         if self.value > MAX_MOOD_VALUE:
             raise WrongMoodValueError(
-                f'Mood must be lower or equal {MAX_MOOD_VALUE}, you have {self.value}',
+                f"Mood must be lower or equal {MAX_MOOD_VALUE}, you have {self.value}",
             )
         if self.value < MIN_MOOD_VALUE:
             raise WrongMoodValueError(
-                f'Mood must be greater or equal {MIN_MOOD_VALUE}, you have {self.value}',
+                f"Mood must be greater or equal {MIN_MOOD_VALUE}, you have {self.value}",
             )

@@ -6,11 +6,7 @@ from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
 
 class GetOwnDiaryCard(Interactor[DiaryCardId, DiaryCardDM | None]):
-    def __init__(
-            self,
-            db_gateway: ReaderProtocol,
-            id_provider: IdProvider
-    ):
+    def __init__(self, db_gateway: ReaderProtocol, id_provider: IdProvider):
         self.db_gateway = db_gateway
         self.id_provider = id_provider
 

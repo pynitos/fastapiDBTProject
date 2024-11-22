@@ -13,6 +13,8 @@ class Skill(Base, table=True):
     category: str
     group: str
     name: str
-    type: str = 'dbt'
+    type: str = "dbt"
 
-    diary_cards: list["DiaryCard"] | None = Relationship(back_populates="skills", link_model=DiaryCardSkillLink)
+    diary_cards: list["DiaryCard"] | None = Relationship(
+        back_populates="skills", link_model=DiaryCardSkillLink
+    )
