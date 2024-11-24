@@ -29,7 +29,7 @@ from src.diary_ms.presentation.api.v1.routes.schemas.diary_card import (
 router = APIRouter(route_class=DishkaRoute)
 
 
-@router.get("/", response_model=list[DiaryCardDM])
+@router.get("/", response_model=list[DiaryCardDM], response_model_exclude={"_events"})
 async def get_diary_cards(
     interactor: GetOwnDiaryCardsDep,
     limit: int = 10,
@@ -61,37 +61,10 @@ async def create_diary_card(
         mood=schema.mood,
         description=schema.description,
         date_of_entry=schema.date_of_entry,
-        targets=[
-            CreateTargetCommand(urge=x.urge, action=x.action) for x in schema.targets
-        ]
-        if schema.targets
-        else None,
-        emotions=[
-            CreateEmotionCommand(name=x.name, description=x.description)
-            for x in schema.emotions
-        ]
-        if schema.emotions
-        else None,
-        medicaments=[
-            CreateMedicamentCommand(
-                name=x.name,
-                dosage=x.dosage,
-            )
-            for x in schema.medicaments
-        ]
-        if schema.medicaments
-        else None,
-        skills=[
-            CreateSkillCommand(
-                category=x.category,
-                group=x.group,
-                name=x.name,
-                type=x.type,
-            )
-            for x in schema.skills
-        ]
-        if schema.skills
-        else None,
+        targets=schema.targets,
+        emotions=schema.emotions,
+        medicaments=schema.medicaments,
+        skills=schema.skills,
     )
     return await interactor(command)
 
@@ -112,10 +85,7 @@ async def update_diary_card(
         ]
         if schema.targets
         else None,
-        emotions=[
-            CreateEmotionCommand(name=x.name, description=x.description)
-            for x in schema.emotions
-        ]
+        emotions=[CreateEmotionCommand(name=x.name) for x in schema.emotions]
         if schema.emotions
         else None,
         medicaments=[

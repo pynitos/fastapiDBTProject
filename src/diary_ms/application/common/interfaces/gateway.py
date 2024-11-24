@@ -17,11 +17,17 @@ class ReaderProtocol[TDModel](Protocol):
     async def get_all(self, offset: int = 0, limit: int = 10) -> list[TDModel]: ...
 
 
-class UpdaterProtocol[TModel](ReaderProtocol, Protocol):
+class UpdaterProtocol[TDModel](Protocol):
     @abstractmethod
-    async def update(self, pk: TypeId, entity: TModel) -> None: ...
+    async def get_by_id(self, pk: TypeId) -> TDModel | None:
+        pass
+
+    @abstractmethod
+    async def update(self, entity: TDModel) -> None:
+        pass
 
 
 class DeleterProtocol(Protocol):
     @abstractmethod
-    async def delete(self, id: TypeId) -> None: ...
+    async def delete(self, id: TypeId) -> None:
+        pass

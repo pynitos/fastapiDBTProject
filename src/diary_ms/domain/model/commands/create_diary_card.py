@@ -1,24 +1,18 @@
 from dataclasses import dataclass, field
 from datetime import date
-
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionCommand
-from src.diary_ms.domain.model.commands.create_medicament import CreateMedicamentCommand
-from src.diary_ms.domain.model.commands.create_skill import CreateSkillCommand
-from src.diary_ms.domain.model.commands.create_target import CreateTargetCommand
-from src.diary_ms.domain.model.entities.user_id import UserId
+from uuid import UUID
 
 
 @dataclass
 class CreateDiaryCardCommand:
     mood: int
 
-    id: DiaryCardId | None = None
-    user_id: UserId = None
+    id: UUID | None = None
+    user_id: UUID = None
     description: str | None = None
     date_of_entry: date = field(default_factory=date.today)
 
-    targets: list[CreateTargetCommand] | None = None
-    emotions: list[CreateEmotionCommand] | None = None
-    medicaments: list[CreateMedicamentCommand] | None = None
-    skills: list[CreateSkillCommand] | None = None
+    targets: list[UUID] | None = None
+    emotions: list[UUID] | None = None
+    medicaments: list[UUID] | None = None
+    skills: list[UUID] | None = None

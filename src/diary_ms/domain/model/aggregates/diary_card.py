@@ -1,6 +1,7 @@
 import datetime
 from dataclasses import dataclass, field
 from typing import Self
+from uuid import UUID
 
 from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
@@ -25,17 +26,17 @@ class DiaryCardDM(AggregateRoot):
     mood: DCMood
     description: DCDescription | None = None
     date_of_entry: DCDateOfEntry = field(default_factory=datetime.date.today)
-    targets: list[TargetDM] | None = None
-    emotions: list[EmotionDM] | None = None
-    medicaments: list[MedicamentDM] | None = None
-    skills: list[SkillDM] | None = None
+    targets: list[TargetDM | UUID] | None = None
+    emotions: list[EmotionDM | UUID] | None = None
+    medicaments: list[MedicamentDM | UUID] | None = None
+    skills: list[SkillDM | UUID] | None = None
 
     @classmethod
     def create(cls, command: CreateDiaryCardCommand) -> Self:
-        targets = [TargetDM.create(target) for target in command.targets]
-        emotions = [EmotionDM.create(emotion) for emotion in command.emotions]
-        medicaments = [MedicamentDM.create(med) for med in command.medicaments]
-        skills = [SkillDM.create(skill) for skill in command.skills]
+        targets = command.targets
+        emotions = command.emotions
+        medicaments = command.medicaments
+        skills = command.skills
         diary_card: Self = cls(
             id=command.id,
             user_id=command.user_id,
@@ -51,11 +52,11 @@ class DiaryCardDM(AggregateRoot):
 
     def update(self, command: UpdateDiaryCardCommand) -> Self:
         if command.mood:
-            self.mood = command.mood
+            self.mood = DCMood(command.mood)
         if command.description:
-            self.description = command.description
+            self.description = DCDescription(command.description)
         if command.date_of_entry:
-            self.date_of_entry = command.date_of_entry
+            self.date_of_entry = DCDateOfEntry(command.date_of_entry)
         if command.targets:
             targets = [TargetDM.create(target) for target in command.targets]
             self.targets = targets

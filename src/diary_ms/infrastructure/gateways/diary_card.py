@@ -25,6 +25,7 @@ from src.diary_ms.domain.model.value_objects.medicament.name import MedicamentNa
 from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
+from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 from src.diary_ms.infrastructure.gateways.base import BaseGateway
@@ -37,34 +38,19 @@ from src.diary_ms.infrastructure.gateways.models.target import Target
 
 class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
     def create(self, entity: DiaryCardDM) -> None:
+        targets: list[Target] = None
+        emotions: list[Emotion] = None
+        medicaments: list[Medicament] = None
+        skills: list[Skill] = None
         db_entity: DiaryCard = DiaryCard(
             user_id=entity.user_id,
             mood=entity.mood.value,
             description=entity.description.value,
             date_of_entry=entity.date_of_entry.value,
-            targets=[
-                Target(user_id=entity.user_id, urge=x.urge.value, action=x.action.value)
-                for x in entity.targets
-            ],
-            emotions=[
-                Emotion(name=x.name.value, description=x.description.value)
-                for x in entity.emotions
-            ],
-            medicaments=[
-                Medicament(
-                    user_id=entity.user_id, name=x.name.value, dosage=x.dosage.value
-                )
-                for x in entity.medicaments
-            ],
-            skills=[
-                Skill(
-                    category=x.category.value,
-                    group=x.group.value,
-                    name=x.name.value,
-                    type=x.type,
-                )
-                for x in entity.skills
-            ],
+            targets=targets,
+            emotions=emotions,
+            medicaments=medicaments,
+            skills=skills,
         )
         self._session.add(db_entity)
 
@@ -112,7 +98,7 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
                         category=SkillCategory(x.category),
                         group=SkillGroup(x.group),
                         name=SkillName(x.name),
-                        type=x.type,
+                        type=SkillType(x.type),
                     )
                     for x in entity.skills
                 ],
@@ -120,8 +106,11 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
             domain_list.append(domain_entity)
         return domain_list
 
+    async def _get_by_id(self, pk: UUID) -> DiaryCard | None:
+        return await self._session.get(self._db_model, pk)
+
     async def get_by_id(self, pk: UUID) -> DiaryCardDM | None:
-        entity: DiaryCard | None = await self._session.get(self._db_model, pk)
+        entity: DiaryCard | None = await self._get_by_id(pk=pk)
         if not entity:
             return None
         return DiaryCardDM(
@@ -162,31 +151,51 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
                     category=SkillCategory(x.category),
                     group=SkillGroup(x.group),
                     name=SkillName(x.name),
-                    type=x.type,
+                    type=SkillType(x.type),
                 )
                 for x in entity.skills
             ],
         )
 
-    async def update(self, pk: DiaryCardId, entity: DiaryCardDM) -> None:
-        db_entity: DiaryCard = await self.get_by_id(pk)
+    async def update(self, entity: DiaryCardDM) -> None:
+        pk = entity.id
+        db_entity: DiaryCard = await self._get_by_id(pk)
         if not db_entity:
             raise DiaryCardNotFoundError
 
         if entity.mood:
-            db_entity.mood = entity.mood
+            db_entity.mood = entity.mood.value
         if entity.description:
-            db_entity.description = entity.description
+            db_entity.description = entity.description.value
         if entity.date_of_entry:
-            db_entity.date_of_entry = entity.date_of_entry
+            db_entity.date_of_entry = entity.date_of_entry.value
         if entity.targets:
-            db_entity.targets = entity.targets
+            db_entity.targets = [
+                Target(user_id=entity.user_id, urge=x.urge.value, action=x.action.value)
+                for x in entity.targets
+            ]
         if entity.emotions:
-            db_entity.emotions = entity.emotions
+            db_entity.emotions = [
+                Emotion(name=x.name.value, description=x.description.value)
+                for x in entity.emotions
+            ]
         if entity.medicaments:
-            db_entity.medicaments = entity.medicaments
+            db_entity.medicaments = [
+                Medicament(
+                    user_id=entity.user_id, name=x.name.value, dosage=x.dosage.value
+                )
+                for x in entity.medicaments
+            ]
         if entity.skills:
-            db_entity.skills = entity.skills
+            db_entity.skills = [
+                Skill(
+                    category=x.category.value,
+                    group=x.group.value,
+                    name=x.name.value,
+                    type=x.type,
+                )
+                for x in entity.skills
+            ]
 
         self._session.add(db_entity)
 

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class Emotion(Base, table=True):
     name: str
-    description: str = None
+    description: str | None = None
 
     diary_cards: list["DiaryCard"] | None = Relationship(
         back_populates="emotions", link_model=DiaryCardEmotionLink

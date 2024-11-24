@@ -13,9 +13,10 @@ from src.diary_ms.application.common.interfaces.gateway import (
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 
 
-class BaseGateway[TModel: SQLModel, TDModel](
-    ABC, ReaderProtocol, SaverProtocol, UpdaterProtocol, DeleterProtocol
-):
+class BaseGateway[
+    TDModel,
+    TModel: SQLModel,
+](ABC, ReaderProtocol, SaverProtocol, DeleterProtocol, UpdaterProtocol):
     def __init__(
         self,
         db_model: TModel,

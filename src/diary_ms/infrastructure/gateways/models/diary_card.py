@@ -20,6 +20,7 @@ class DiaryCardSkillLink(SQLModel, table=True):
     skill_id: UUID | None = Field(
         default=None, foreign_key="skill.id", primary_key=True
     )
+    description: str | None = Field(default=None)
 
 
 class DiaryCardTargetLink(SQLModel, table=True):
@@ -72,5 +73,6 @@ class DiaryCard(Base, table=True):
     skills: list["Skill"] | None = Relationship(
         back_populates="diary_cards",
         link_model=DiaryCardSkillLink,
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={"lazy": "selectin", "viewonly": True},
     )
+    skill_link: "DiaryCardSkillLink" = Relationship()

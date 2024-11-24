@@ -3,6 +3,7 @@ from typing import Self
 
 from src.diary_ms.domain.model.commands.create_skill import CreateSkillCommand
 from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
+from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
@@ -17,6 +18,8 @@ class SkillDM:
     name: SkillName
     type: SkillType = SkillType.DBT
 
+    description: SkillDescription | None = None
+
     @classmethod
     def create(cls, command: CreateSkillCommand) -> Self:
         skill = cls(
@@ -25,5 +28,6 @@ class SkillDM:
             group=SkillGroup(command.group),
             name=SkillName(command.name),
             type=command.type,
+            description=command.description,
         )
         return skill

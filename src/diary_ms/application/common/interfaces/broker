@@ -1,0 +1,12 @@
+from typing import Protocol
+
+from src.diary_ms.domain.common.model.events.base import BaseEvent
+
+
+class BrokerProtocol[TClient](Protocol):
+    def __init__(self, client: TClient):
+        self._client = client
+
+    async def publish(event: BaseEvent):
+        pass
+
