@@ -17,5 +17,7 @@ class Skill(Base, table=True):
     type: str = SkillType.DBT
 
     diary_cards: list["DiaryCard"] | None = Relationship(
-        back_populates="skills", link_model=DiaryCardSkillLink
+        back_populates="skills",
+        link_model=DiaryCardSkillLink,
+        sa_relationship_kwargs={"lazy": "selectin", "viewonly": True},
     )

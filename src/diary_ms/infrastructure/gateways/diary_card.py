@@ -1,3 +1,4 @@
+import logging
 from uuid import UUID
 
 from sqlalchemy.engine import TupleResult
@@ -35,13 +36,23 @@ from src.diary_ms.infrastructure.gateways.models.medicament import Medicament
 from src.diary_ms.infrastructure.gateways.models.skill import Skill
 from src.diary_ms.infrastructure.gateways.models.target import Target
 
+logger = logging.getLogger(__name__)
+
 
 class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
-    def create(self, entity: DiaryCardDM) -> None:
-        targets: list[Target] = None
-        emotions: list[Emotion] = None
-        medicaments: list[Medicament] = None
-        skills: list[Skill] = None
+    async def create(self, entity: DiaryCardDM) -> None:
+        targets: list[Target] = (await self._session.exec(
+            select(Target).where(id in entity.targets)
+            )).all()
+        emotions: list[Emotion] = (await self._session.exec(
+            select(Emotion).where(id in entity.emotions)
+            )).all()
+        medicaments: list[Medicament] = (await self._session.exec(
+            select(Medicament).where(id in entity.medicaments)
+            )).all()
+        skills: list[Skill] = (await self._session.exec(
+            select(Skill).where(id in entity.skills)
+            )).all()
         db_entity: DiaryCard = DiaryCard(
             user_id=entity.user_id,
             mood=entity.mood.value,

@@ -22,6 +22,6 @@ class CreateDiaryCard(Interactor[CreateDiaryCardCommand, None]):
         user_id: UserId = self.id_provider.get_current_user_id()
         command.user_id = user_id
         diary_card: DiaryCardDM = DiaryCardDM.create(command)
-        self.db_gateway.create(diary_card)
+        await self.db_gateway.create(diary_card)
         await self.uow.commit()
         return None
