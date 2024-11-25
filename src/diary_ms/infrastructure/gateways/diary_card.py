@@ -6,6 +6,7 @@ from sqlmodel import select
 from sqlmodel.sql._expression_select_cls import SelectOfScalar
 
 from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
+from src.diary_ms.application.dto.diary_card import EmotionDTO, MedicamentDTO, OwnDiaryCardDTO, SkillDTO, TargetDTO
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.emotion import EmotionDM
@@ -41,18 +42,18 @@ logger = logging.getLogger(__name__)
 
 class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
     async def create(self, entity: DiaryCardDM) -> None:
-        targets: list[Target] = (await self._session.exec(
-            select(Target).where(id in entity.targets)
-            )).all()
-        emotions: list[Emotion] = (await self._session.exec(
-            select(Emotion).where(id in entity.emotions)
-            )).all()
-        medicaments: list[Medicament] = (await self._session.exec(
-            select(Medicament).where(id in entity.medicaments)
-            )).all()
-        skills: list[Skill] = (await self._session.exec(
-            select(Skill).where(id in entity.skills)
-            )).all()
+        targets: list[Target] = (
+            await self._session.exec(select(Target).where(id in entity.targets))
+        ).all()
+        emotions: list[Emotion] = (
+            await self._session.exec(select(Emotion).where(id in entity.emotions))
+        ).all()
+        medicaments: list[Medicament] = (
+            await self._session.exec(select(Medicament).where(id in entity.medicaments))
+        ).all()
+        skills: list[Skill] = (
+            await self._session.exec(select(Skill).where(id in entity.skills))
+        ).all()
         db_entity: DiaryCard = DiaryCard(
             user_id=entity.user_id,
             mood=entity.mood.value,
@@ -69,100 +70,86 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
         stmt: SelectOfScalar = select(self._db_model).offset(offset).limit(limit)
         result: TupleResult = await self._session.exec(stmt)
         result_list: list[DiaryCard] = result.all()
-        domain_list: list[DiaryCardDM] = []
+        dto_list: list[OwnDiaryCardDTO] = []
         for entity in result_list:
-            domain_entity: DiaryCardDM = DiaryCardDM(
-                id=entity.id,
-                user_id=entity.user_id,
-                mood=DCMood(entity.mood),
-                description=DCDescription(entity.description),
-                date_of_entry=DCDateOfEntry(entity.date_of_entry),
-                targets=[
-                    TargetDM(
-                        id=x.id,
-                        user_id=entity.user_id,
-                        urge=TargetUrge(x.urge),
-                        action=TargetAction(x.action),
-                    )
-                    for x in entity.targets
-                ],
-                emotions=[
-                    EmotionDM(
-                        id=x.id,
-                        name=EmotionName(x.name),
-                        description=EmotionDescription(x.description),
-                    )
-                    for x in entity.emotions
-                ],
-                medicaments=[
-                    MedicamentDM(
-                        id=x.id,
-                        user_id=entity.user_id,
-                        name=MedicamentName(x.name),
-                        dosage=MedicamentDosage(x.dosage),
-                    )
-                    for x in entity.medicaments
-                ],
-                skills=[
-                    SkillDM(
-                        id=x.id,
-                        category=SkillCategory(x.category),
-                        group=SkillGroup(x.group),
-                        name=SkillName(x.name),
-                        type=SkillType(x.type),
-                    )
-                    for x in entity.skills
-                ],
-            )
-            domain_list.append(domain_entity)
-        return domain_list
-
-    async def _get_by_id(self, pk: UUID) -> DiaryCard | None:
-        return await self._session.get(self._db_model, pk)
-
-    async def get_by_id(self, pk: UUID) -> DiaryCardDM | None:
-        entity: DiaryCard | None = await self._get_by_id(pk=pk)
-        if not entity:
-            return None
-        return DiaryCardDM(
+            dto_entity: OwnDiaryCardDTO = OwnDiaryCardDTO(
             id=entity.id,
             user_id=entity.user_id,
-            mood=DCMood(entity.mood),
-            description=DCDescription(entity.description),
-            date_of_entry=DCDateOfEntry(entity.date_of_entry),
+            mood=entity.mood,
+            description=entity.description,
+            date_of_entry=entity.date_of_entry,
             targets=[
-                TargetDM(
-                    id=x.id,
-                    user_id=entity.user_id,
-                    urge=TargetUrge(x.urge),
-                    action=TargetAction(x.action),
+                TargetDTO(
+                    urge=x.urge,
+                    action=x.action,
                 )
                 for x in entity.targets
             ],
             emotions=[
-                EmotionDM(
-                    id=x.id,
-                    name=EmotionName(x.name),
-                    description=EmotionDescription(x.description),
+                EmotionDTO(
+                    name=x.name,
+                    description=x.description,
                 )
                 for x in entity.emotions
             ],
             medicaments=[
-                MedicamentDM(
-                    id=x.id,
-                    user_id=entity.user_id,
-                    name=MedicamentName(x.name),
-                    dosage=MedicamentDosage(x.dosage),
+                MedicamentDTO(
+                    name=x.name,
+                    dosage=x.dosage,
                 )
                 for x in entity.medicaments
             ],
             skills=[
-                SkillDM(
-                    id=x.id,
-                    category=SkillCategory(x.category),
-                    group=SkillGroup(x.group),
-                    name=SkillName(x.name),
-                    type=SkillType(x.type),
+                SkillDTO(
+                    category=x.category,
+                    group=x.group,
+                    name=x.name,
+                )
+                for x in entity.skills
+            ],
+        )
+            dto_list.append(dto_entity)
+        return dto_list
+
+    async def _get_by_id(self, pk: UUID) -> DiaryCard | None:
+        return await self._session.get(self._db_model, pk)
+
+    async def get_by_id(self, pk: UUID) -> OwnDiaryCardDTO | None:
+        entity: DiaryCard | None = await self._get_by_id(pk=pk)
+        if not entity:
+            return None
+        return OwnDiaryCardDTO(
+            id=entity.id,
+            user_id=entity.user_id,
+            mood=entity.mood,
+            description=entity.description,
+            date_of_entry=entity.date_of_entry,
+            targets=[
+                TargetDTO(
+                    urge=x.urge,
+                    action=x.action,
+                )
+                for x in entity.targets
+            ],
+            emotions=[
+                EmotionDTO(
+                    name=x.name,
+                    description=x.description,
+                )
+                for x in entity.emotions
+            ],
+            medicaments=[
+                MedicamentDTO(
+                    name=x.name,
+                    dosage=x.dosage,
+                )
+                for x in entity.medicaments
+            ],
+            skills=[
+                SkillDTO(
+                    category=x.category,
+                    group=x.group,
+                    name=x.name,
                 )
                 for x in entity.skills
             ],
