@@ -8,10 +8,6 @@ from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO, OwnDiar
 from src.diary_ms.application.dto.pagination import Pagination
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM, DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
-from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionCommand
-from src.diary_ms.domain.model.commands.create_medicament import CreateMedicamentCommand
-from src.diary_ms.domain.model.commands.create_skill import CreateSkillCommand
-from src.diary_ms.domain.model.commands.create_target import CreateTargetCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.presentation.api.deps import (
@@ -80,34 +76,10 @@ async def update_diary_card(
         mood=schema.mood,
         description=schema.description,
         date_of_entry=schema.date_of_entry,
-        targets=[
-            CreateTargetCommand(urge=x.urge, action=x.action) for x in schema.targets
-        ]
-        if schema.targets
-        else None,
-        emotions=[CreateEmotionCommand(name=x.name) for x in schema.emotions]
-        if schema.emotions
-        else None,
-        medicaments=[
-            CreateMedicamentCommand(
-                name=x.name,
-                dosage=x.dosage,
-            )
-            for x in schema.medicaments
-        ]
-        if schema.medicaments
-        else None,
-        skills=[
-            CreateSkillCommand(
-                category=x.category,
-                group=x.group,
-                name=x.name,
-                type=x.type,
-            )
-            for x in schema.skills
-        ]
-        if schema.skills
-        else None,
+        targets=schema.targets,
+        emotions=schema.emotions,
+        medicaments=schema.medicaments,
+        skills=schema.skills,
     )
     return await interactor(command)
 

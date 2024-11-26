@@ -58,15 +58,15 @@ class DiaryCardDM(AggregateRoot):
         if command.date_of_entry:
             self.date_of_entry = DCDateOfEntry(command.date_of_entry)
         if command.targets:
-            targets = [TargetDM.create(target) for target in command.targets]
+            targets = command.targets
             self.targets = targets
         if command.emotions:
-            emotions = [EmotionDM.create(emotion) for emotion in command.emotions]
+            emotions = command.emotions
             self.emotions = emotions
         if command.medicaments:
-            medicaments = [MedicamentDM.create(med) for med in command.medicaments]
+            medicaments = command.medicaments
             self.medicaments = medicaments
         if command.skills:
-            skills = [SkillDM.create(skill) for skill in command.skills]
+            skills = command.skills
             self.skills = skills
         return self

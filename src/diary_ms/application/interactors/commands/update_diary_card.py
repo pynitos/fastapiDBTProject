@@ -27,6 +27,6 @@ class UpdateDiaryCard(Interactor[UpdateDiaryCardCommand, None]):
         command.user_id = user_id
         old_diary_card: DiaryCardDM = await self.db_gateway.get_by_id(command.id)
         updated_diary_card: DiaryCardDM = old_diary_card.update(command=command)
-        logger.info(str(updated_diary_card))
         await self.db_gateway.update(updated_diary_card)
+        logger.debug(f"Diary card with id: {command.id} updated.")
         await self.uow.commit()

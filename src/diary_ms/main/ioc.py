@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.diary_ms.application.common.interfaces.gateway import (
     DeleterProtocol,
+    DTOReader,
     ReaderProtocol,
     SaverProtocol,
     UpdaterProtocol,
@@ -46,6 +47,7 @@ class AdaptersProvider(Provider):
     ) -> AnyOf[
         DiaryCardGateway,
         ReaderProtocol,
+        DTOReader,
         SaverProtocol,
         UpdaterProtocol,
         DeleterProtocol,
