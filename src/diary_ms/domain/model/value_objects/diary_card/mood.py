@@ -20,5 +20,7 @@ class DCMood(ValueObject[int]):
             )
         if self.value < MIN_MOOD_VALUE:
             raise WrongMoodValueError(
-                f"Mood must be greater or equal {MIN_MOOD_VALUE}, you have {self.value}",
+                f"Mood must be greater or equal {
+                    MIN_MOOD_VALUE
+                    }, you have {self.value}",
             )

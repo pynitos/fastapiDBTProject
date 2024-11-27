@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.diary_ms.application.common.interfaces.gateway import (
     DeleterProtocol,
+    DTOForUpdateReader,
     DTOReader,
     ReaderProtocol,
     SaverProtocol,
@@ -20,6 +21,9 @@ from src.diary_ms.application.interactors.commands.delete_diary_card import (
 )
 from src.diary_ms.application.interactors.commands.update_diary_card import (
     UpdateDiaryCard,
+)
+from src.diary_ms.application.interactors.queries.get_diary_card_for_update import (
+    GetDiaryCardForUpdate,
 )
 from src.diary_ms.application.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
@@ -48,6 +52,7 @@ class AdaptersProvider(Provider):
         DiaryCardGateway,
         ReaderProtocol,
         DTOReader,
+        DTOForUpdateReader,
         SaverProtocol,
         UpdaterProtocol,
         DeleterProtocol,
@@ -74,5 +79,6 @@ class InteractorProvider(Provider):
     create_diary_card = provide(CreateDiaryCard)
     get_own_diary_cards = provide(GetOwnDiaryCards)
     get_own_diary_card = provide(GetOwnDiaryCard)
+    get_for_update_diary_card = provide(GetDiaryCardForUpdate)
     delete_diary_card = provide(DeleteDiaryCard)
     update_diary_card = provide(UpdateDiaryCard)

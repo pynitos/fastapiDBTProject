@@ -22,6 +22,14 @@ class DTOReader[TDTO]:
     async def get_dto_by_id(self, pk: TypeId) -> TDTO | None: ...
 
 
+class DTOForUpdateReader[TDM, TDTO]:
+    @abstractmethod
+    async def get_by_id(self, pk: TypeId) -> TDTO | None: ...
+
+    @abstractmethod
+    async def get_dto_for_update(self, dm: TDM) -> TDTO: ...
+
+
 class UpdaterProtocol[TDModel](Protocol):
     @abstractmethod
     async def get_by_id(self, pk: TypeId) -> TDModel | None:

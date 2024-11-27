@@ -6,6 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.common.interfaces.gateway import (
     DeleterProtocol,
+    DTOForUpdateReader,
+    DTOReader,
     ReaderProtocol,
     SaverProtocol,
     UpdaterProtocol,
@@ -16,7 +18,15 @@ from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 class BaseGateway[
     TDModel,
     TModel: SQLModel,
-](ABC, ReaderProtocol, SaverProtocol, DeleterProtocol, UpdaterProtocol):
+](
+    ABC,
+    ReaderProtocol,
+    SaverProtocol,
+    DeleterProtocol,
+    UpdaterProtocol,
+    DTOReader,
+    DTOForUpdateReader,
+):
     def __init__(
         self,
         db_model: TModel,

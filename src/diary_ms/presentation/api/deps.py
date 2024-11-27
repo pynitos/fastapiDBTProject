@@ -9,6 +9,9 @@ from src.diary_ms.application.interactors.commands.delete_diary_card import (
 from src.diary_ms.application.interactors.commands.update_diary_card import (
     UpdateDiaryCard,
 )
+from src.diary_ms.application.interactors.queries.get_diary_card_for_update import (
+    GetDiaryCardForUpdate,
+)
 from src.diary_ms.application.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
 )
@@ -21,3 +24,4 @@ GetDiaryCardDep = FromDishka[GetOwnDiaryCard]
 CreateDiaryCardDep = FromDishka[CreateDiaryCard]
 UpdateDiaryCardDep = FromDishka[UpdateDiaryCard]
 DeleteDiaryCardDep = FromDishka[DeleteDiaryCard]
+GetDiaryCardForUpdateDep = FromDishka[GetDiaryCardForUpdate]

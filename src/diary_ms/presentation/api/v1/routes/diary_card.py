@@ -5,6 +5,7 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, HTTPException
 
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO, OwnDiaryCardDTO
+from src.diary_ms.application.dto.for_update_diary_card import DiaryCardForUpdateDTO
 from src.diary_ms.application.dto.pagination import Pagination
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM, DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
@@ -14,6 +15,7 @@ from src.diary_ms.presentation.api.deps import (
     CreateDiaryCardDep,
     DeleteDiaryCardDep,
     GetDiaryCardDep,
+    GetDiaryCardForUpdateDep,
     GetOwnDiaryCardsDep,
     UpdateDiaryCardDep,
 )
@@ -40,9 +42,20 @@ async def get_diary_cards(
 @router.get("/<id:UUID>", response_model=OwnDiaryCardDTO)
 async def get_own_diary_card_by_id(
     id: UUID,
-    interactor: GetDiaryCardDep,  # type: ignore
+    interactor: GetDiaryCardDep,
 ) -> DiaryCardDM:
     diary_card: OwnDiaryCardDTO | None = await interactor(id)
+    if not diary_card:
+        raise HTTPException(404, f"Diary card with id: {id} not found.")
+    return diary_card
+
+
+@router.get("/upd/<id:UUID>", response_model=DiaryCardForUpdateDTO)
+async def get_diary_card_for_update(
+    id: UUID,
+    interactor: GetDiaryCardForUpdateDep,
+) -> DiaryCardForUpdateDTO:
+    diary_card: DiaryCardForUpdateDTO | None = await interactor(id)
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card

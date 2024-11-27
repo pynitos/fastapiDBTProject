@@ -9,6 +9,13 @@ from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFo
 from src.diary_ms.application.dto.diary_card import (
     OwnDiaryCardDTO,
 )
+from src.diary_ms.application.dto.for_update_diary_card import (
+    DiaryCardForUpdateDTO,
+    EmotionForUpdDTO,
+    MedicamentForUpdDTO,
+    SkillForUpdDTO,
+    TargetForUpdDTO,
+)
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.infrastructure.gateways.base import BaseGateway
@@ -84,6 +91,101 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
         if not entity:
             return None
         return self._mapper.db_to_dto(entity)
+
+    async def get_dto_for_update(self, dm: DiaryCardDM) -> DiaryCardForUpdateDTO:
+        targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)
+        all_targets: list[Target] = (
+            await self._session.exec(
+                select(Target).where(Target.user_id in [t.id for t in dm.targets])
+            )
+        ).all()
+        all_emotions: list[Emotion] = (await self._session.exec(select(Emotion))).all()
+        all_medicaments: list[Medicament] = (
+            await self._session.exec(
+                select(Medicament).where(
+                    Medicament.user_id in [m.id for m in dm.medicaments]
+                )
+            )
+        ).all()
+        all_skills: list[Skill] = (
+            await self._session.exec(select(Skill).where(Skill.type == dm.type))
+        ).all()
+        dto: DiaryCardForUpdateDTO = DiaryCardForUpdateDTO(
+            id=dm.id,
+            user_id=dm.user_id,
+            mood=dm.mood.value,
+            description=dm.description.value,
+            date_of_entry=dm.date_of_entry.value,
+            type=dm.type,
+            targets=[
+                TargetForUpdDTO(
+                    id=t.id,
+                    urge=t.urge,
+                    action=t.action,
+                )
+                for t in targets
+            ],
+            emotions=[
+                EmotionForUpdDTO(
+                    id=e.id,
+                    name=e.name,
+                    description=e.description,
+                )
+                for e in emotions
+            ],
+            medicaments=[
+                MedicamentForUpdDTO(
+                    id=m.id,
+                    name=m.name,
+                    dosage=m.dosage,
+                )
+                for m in medicaments
+            ],
+            skills=[
+                SkillForUpdDTO(
+                    id=s.id,
+                    category=s.category,
+                    group=s.group,
+                    name=s.name,
+                )
+                for s in skills
+            ],
+            # For choice:
+            all_targets=[
+                TargetForUpdDTO(
+                    id=t.id,
+                    urge=t.urge,
+                    action=t.action,
+                )
+                for t in all_targets
+            ],
+            all_emotions=[
+                EmotionForUpdDTO(
+                    id=e.id,
+                    name=e.name,
+                    description=e.description,
+                )
+                for e in all_emotions
+            ],
+            all_medicaments=[
+                MedicamentForUpdDTO(
+                    id=m.id,
+                    name=m.name,
+                    dosage=m.dosage,
+                )
+                for m in all_medicaments
+            ],
+            all_skills=[
+                SkillForUpdDTO(
+                    id=s.id,
+                    category=s.category,
+                    group=s.group,
+                    name=s.name,
+                )
+                for s in all_skills
+            ],
+        )
+        return dto
 
     async def update(self, entity: DiaryCardDM) -> None:
         pk = entity.id
