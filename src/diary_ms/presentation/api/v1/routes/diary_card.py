@@ -61,6 +61,7 @@ async def create_diary_card(
         emotions=schema.emotions,
         medicaments=schema.medicaments,
         skills=schema.skills,
+        type=schema.type,
     )
     return await interactor(command)
 

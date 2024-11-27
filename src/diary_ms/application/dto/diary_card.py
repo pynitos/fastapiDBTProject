@@ -3,6 +3,7 @@ from datetime import date
 from uuid import UUID
 
 from src.diary_ms.application.dto.pagination import Pagination
+from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
@@ -41,6 +42,8 @@ class OwnDiaryCardDTO:
     emotions: list[EmotionDTO] | None = None
     medicaments: list[MedicamentDTO] | None = None
     skills: list[SkillDTO] | None = None
+
+    type: SkillType = SkillType.DBT
 
 
 @dataclass

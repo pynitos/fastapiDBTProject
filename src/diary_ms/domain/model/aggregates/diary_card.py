@@ -17,6 +17,7 @@ from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
 )
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
@@ -30,6 +31,7 @@ class DiaryCardDM(AggregateRoot):
     emotions: list[EmotionDM | UUID] | None = None
     medicaments: list[MedicamentDM | UUID] | None = None
     skills: list[SkillDM | UUID] | None = None
+    type: SkillType = SkillType.DBT
 
     @classmethod
     def create(cls, command: CreateDiaryCardCommand) -> Self:

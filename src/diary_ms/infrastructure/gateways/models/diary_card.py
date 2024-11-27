@@ -4,6 +4,7 @@ from uuid import UUID
 
 from sqlmodel import Field, Relationship, SQLModel
 
+from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.infrastructure.gateways.models.base import Base
 
 if TYPE_CHECKING:
@@ -76,3 +77,5 @@ class DiaryCard(Base, table=True):
         sa_relationship_kwargs={"lazy": "selectin", "viewonly": True},
     )
     skill_link: "DiaryCardSkillLink" = Relationship()
+
+    type: str = Field(default=SkillType.DBT, max_length=20)

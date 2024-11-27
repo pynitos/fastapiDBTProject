@@ -49,12 +49,13 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
         return targets, emotions, medicaments, skills
 
     async def create(self, entity: DiaryCardDM) -> None:
-        targets, emotions, medicaments, skills = self._get_attrs_by_entity(entity)
+        targets, emotions, medicaments, skills = await self._get_attrs_by_entity(entity)
         db_entity: DiaryCard = DiaryCard(
             user_id=entity.user_id,
             mood=entity.mood.value,
             description=entity.description.value,
             date_of_entry=entity.date_of_entry.value,
+            type=entity.type,
             targets=targets,
             emotions=emotions,
             medicaments=medicaments,
@@ -94,6 +95,7 @@ class DiaryCardGateway(BaseGateway[DiaryCard, DiaryCardDM]):
 
         if entity.mood:
             db_entity.mood = entity.mood.value
+            logger.debug(f"Update mood with value: {entity.mood.value}")
         if entity.description:
             db_entity.description = entity.description.value
         if entity.date_of_entry:

@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from datetime import date
 from uuid import UUID
 
+from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+
 
 @dataclass
 class CreateDiaryCardCommand:
@@ -16,3 +18,5 @@ class CreateDiaryCardCommand:
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
     skills: list[UUID] | None = None
+
+    type: SkillType = SkillType.DBT

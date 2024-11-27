@@ -51,6 +51,7 @@ class DiaryCardMapper:
             mood=entity.mood,
             description=entity.description,
             date_of_entry=entity.date_of_entry,
+            type=SkillType(entity.type),
             targets=[
                 TargetDTO(
                     urge=x.urge,
@@ -90,6 +91,7 @@ class DiaryCardMapper:
             mood=DCMood(entity.mood),
             description=DCDescription(entity.description),
             date_of_entry=DCDateOfEntry(entity.date_of_entry),
+            type=SkillType(entity.type),
             targets=[
                 TargetDM(
                     id=x.id,
