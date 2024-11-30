@@ -21,7 +21,7 @@ def create_fastapi_app() -> FastAPI:
     return app
 
 
-def create_app():
+def create_app() -> FastAPI:
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s  %(process)-7s %(module)-20s %(message)s",

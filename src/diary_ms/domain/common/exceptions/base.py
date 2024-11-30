@@ -9,11 +9,11 @@ class AppError(Exception):
             self._status_code = status_code
 
     @property
-    def status_code(self):
+    def status_code(self) -> int:
         return self._status_code
 
     @property
-    def detail(self):
+    def detail(self) -> str:
         return self._detail
 
 

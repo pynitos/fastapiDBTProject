@@ -7,7 +7,6 @@ from fastapi import APIRouter, HTTPException
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO, OwnDiaryCardDTO
 from src.diary_ms.application.dto.for_update_diary_card import DiaryCardForUpdateDTO
 from src.diary_ms.application.dto.pagination import Pagination
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM, DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
@@ -43,7 +42,7 @@ async def get_diary_cards(
 async def get_own_diary_card_by_id(
     id: UUID,
     interactor: GetDiaryCardDep,
-) -> DiaryCardDM:
+) -> OwnDiaryCardDTO:
     diary_card: OwnDiaryCardDTO | None = await interactor(id)
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
@@ -103,4 +102,4 @@ async def delete_diary_card(
     id: UUID,
     interactor: DeleteDiaryCardDep,
 ) -> None:
-    await interactor(DeleteDiaryCardCommand(id=DiaryCardId(id)))
+    await interactor(DeleteDiaryCardCommand(id=id))

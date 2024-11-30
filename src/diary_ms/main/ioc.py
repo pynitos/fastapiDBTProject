@@ -1,9 +1,10 @@
 from collections.abc import AsyncIterable
 
 from dishka import AnyOf, Provider, Scope, from_context, provide
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy.ext.asyncio.session import async_sessionmaker
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.interfaces.gateway import (
+from src.diary_ms.application.common.interfaces.diary_card import (
     DeleterProtocol,
     DTOForUpdateReader,
     DTOReader,

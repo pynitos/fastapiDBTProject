@@ -16,7 +16,7 @@ class TargetForUpdDTO:
 class EmotionForUpdDTO:
     id: UUID
     name: str
-    description: str
+    description: str | None
 
 
 @dataclass
@@ -41,7 +41,7 @@ class DiaryCardForUpdateDTO:
     mood: int
     description: str | None = None
     date_of_entry: date | None = None
-    type: SkillType = SkillType.DBT
+    type_: SkillType = SkillType.DBT
     targets: list[TargetForUpdDTO] | None = None
     emotions: list[EmotionForUpdDTO] | None = None
     medicaments: list[MedicamentForUpdDTO] | None = None

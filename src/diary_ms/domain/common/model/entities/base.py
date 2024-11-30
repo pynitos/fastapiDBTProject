@@ -6,4 +6,4 @@ from src.diary_ms.domain.common.types.id import TypeId
 
 @dataclass
 class BaseEntity(ABC):
-    id: TypeId
+    id: TypeId | None

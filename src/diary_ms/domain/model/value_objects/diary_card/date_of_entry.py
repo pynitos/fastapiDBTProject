@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 
 from src.diary_ms.domain.common.exceptions.base import DomainValueError
@@ -14,5 +14,7 @@ class WrongDateOfEntryValueError(ValueError, DomainValueError):
 
 @dataclass(frozen=True)
 class DCDateOfEntry(ValueObject[date]):
+    value: date = field(default_factory=date.today)
+
     def _validate(self) -> None:
         pass

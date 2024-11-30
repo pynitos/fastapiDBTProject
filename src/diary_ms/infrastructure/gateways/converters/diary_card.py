@@ -6,6 +6,7 @@ from src.diary_ms.application.dto.diary_card import (
     TargetDTO,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
+from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.emotion import EmotionDM
 from src.diary_ms.domain.model.entities.medicament import MedicamentDM
 from src.diary_ms.domain.model.entities.skill import SkillDM
@@ -86,7 +87,7 @@ class DiaryCardMapper:
     @classmethod
     def db_to_dm(cls, entity: DiaryCard) -> DiaryCardDM:
         domain_entity: DiaryCardDM = DiaryCardDM(
-            id=entity.id,
+            id=DiaryCardId(entity.id),
             user_id=entity.user_id,
             mood=DCMood(entity.mood),
             description=DCDescription(entity.description),

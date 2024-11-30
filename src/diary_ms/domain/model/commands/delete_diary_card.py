@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from uuid import UUID
 
 
 @dataclass
 class DeleteDiaryCardCommand:
-    id: DiaryCardId
+    id: UUID

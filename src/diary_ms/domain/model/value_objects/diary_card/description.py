@@ -12,6 +12,6 @@ class WrongDescriptionValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class DCDescription(ValueObject[str]):
+class DCDescription(ValueObject[str | None]):
     def _validate(self) -> None:
         pass

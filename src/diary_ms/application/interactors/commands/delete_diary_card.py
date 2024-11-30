@@ -1,4 +1,4 @@
-from src.diary_ms.application.common.interfaces.gateway import DeleterProtocol
+from src.diary_ms.application.common.interfaces.diary_card import DeleterProtocol
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.interactor import Interactor
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol

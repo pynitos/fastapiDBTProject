@@ -10,7 +10,7 @@ class CreateDiaryCardCommand:
     mood: int
 
     id: UUID | None = None
-    user_id: UUID = None
+    user_id: UUID | None = None
     description: str | None = None
     date_of_entry: date = field(default_factory=date.today)
 
