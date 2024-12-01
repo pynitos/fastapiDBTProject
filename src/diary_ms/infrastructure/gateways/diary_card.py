@@ -126,7 +126,8 @@ class DiaryCardGateway(
         entity: DiaryCard | None = await self._get_by_id(pk=id.value)
         if not entity:
             return None
-        return self._mapper.db_to_dto(entity)
+        else:
+            return self._mapper.db_to_dto(entity)
 
     async def get_dto_for_update(self, dm: DiaryCardDM) -> DiaryCardForUpdateDTO:
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)

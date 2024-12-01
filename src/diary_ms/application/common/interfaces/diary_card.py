@@ -42,7 +42,7 @@ class DTOForUpdateReader(Protocol):
 
 class UpdaterProtocol(Protocol):
     @abstractmethod
-    async def get_by_id(self, pk: UUID) -> DiaryCardDM | None:
+    async def get_by_id(self, id: DiaryCardId) -> DiaryCardDM | None:
         pass
 
     @abstractmethod

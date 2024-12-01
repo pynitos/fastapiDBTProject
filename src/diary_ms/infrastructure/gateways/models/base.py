@@ -9,7 +9,7 @@ class Base(SQLModel):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     created_at: datetime = Field(
         default=None,
-        sa_type=TIMESTAMP(),
+        sa_type=TIMESTAMP,
         sa_column_kwargs={
             "nullable": False,
             "server_default": text("CURRENT_TIMESTAMP"),
@@ -17,7 +17,7 @@ class Base(SQLModel):
     )
     updated_at: datetime = Field(
         default=None,
-        sa_type=TIMESTAMP(),
+        sa_type=TIMESTAMP,
         sa_column_kwargs={
             "nullable": False,
             "server_default": text("CURRENT_TIMESTAMP"),
