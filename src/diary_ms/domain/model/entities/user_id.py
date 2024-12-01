@@ -1,5 +1,9 @@
-from typing import NewType
+from dataclasses import dataclass
 
+from src.diary_ms.domain.common.model.value_objects.base import ValueObject
 from src.diary_ms.domain.common.types.id import TypeId
 
-UserId = NewType("UserId", TypeId)
+
+@dataclass(frozen=True)
+class UserId(ValueObject[TypeId]):
+    ...

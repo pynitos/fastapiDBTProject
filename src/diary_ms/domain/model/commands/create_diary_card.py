@@ -8,7 +8,6 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 @dataclass
 class CreateDiaryCardCommand:
     mood: int
-
     id: UUID | None = None
     user_id: UUID | None = None
     description: str | None = None

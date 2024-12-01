@@ -6,5 +6,5 @@ from uuid import UUID
 class CreateMedicamentCommand:
     name: str
     dosage: str
+    user_id: UUID
     id: UUID | None = None
-    user_id: UUID | None = None

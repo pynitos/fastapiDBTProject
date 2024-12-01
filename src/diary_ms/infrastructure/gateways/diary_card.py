@@ -59,12 +59,14 @@ class DiaryCardGateway(
 
     async def _get_attrs_by_entity(
         self, entity: DiaryCardDM
-    ) -> tuple[list[Target], list[Emotion], list[Medicament], list[Skill]]:
+    ) -> tuple[
+        Sequence[Target], Sequence[Emotion], Sequence[Medicament], Sequence[Skill]
+    ]:
         """Get targets, emotions, medicaments and skills."""
-        targets: list[Target] = []
-        emotions: list[Emotion] = []
-        medicaments: list[Medicament] = []
-        skills: list[Skill] = []
+        targets: Sequence[Target] = []
+        emotions: Sequence[Emotion] = []
+        medicaments: Sequence[Medicament] = []
+        skills: Sequence[Skill] = []
         if entity.targets:
             targets = (
                 await self._session.exec(select(Target).where(id in entity.targets))
@@ -100,12 +102,12 @@ class DiaryCardGateway(
         )
         self._session.add(db_entity)
 
-    async def get_all(self, offset: int = 0, limit: int = 10) -> list[DiaryCardDM]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[OwnDiaryCardDTO]:
         stmt: SelectOfScalar[DiaryCard] = (
             select(self._db_model).offset(offset).limit(limit)
         )
         result: ScalarResult[DiaryCard] = await self._session.exec(stmt)
-        result_list: list[DiaryCard] = result.all()
+        result_list: Sequence[DiaryCard] = result.all()
         dto_list: list[OwnDiaryCardDTO] = self._mapper.db_list_to_dto_list(result_list)
         return dto_list
 
@@ -114,24 +116,27 @@ class DiaryCardGateway(
             return None
         return await self._session.get(self._db_model, pk)
 
-    async def get_by_id(self, pk: UUID) -> DiaryCardDM | None:
-        entity: DiaryCard | None = await self._get_by_id(pk=pk)
+    async def get_by_id(self, id: DiaryCardId) -> DiaryCardDM | None:
+        entity: DiaryCard | None = await self._get_by_id(pk=id.value)
         if not entity:
             return None
         return self._mapper.db_to_dm(entity)
 
-    async def get_dto_by_id(self, pk: UUID) -> OwnDiaryCardDTO | None:
-        entity: DiaryCard | None = await self._get_by_id(pk=pk)
+    async def get_dto_by_id(self, id: DiaryCardId) -> OwnDiaryCardDTO | None:
+        entity: DiaryCard | None = await self._get_by_id(pk=id.value)
         if not entity:
             return None
         return self._mapper.db_to_dto(entity)
 
     async def get_dto_for_update(self, dm: DiaryCardDM) -> DiaryCardForUpdateDTO:
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)
-        all_targets: Sequence[Target] = (
+        all_targets: Sequence[Target] | None = (
             (
                 await self._session.exec(
-                    select(Target).where(Target.user_id in [t.id for t in dm.targets])
+                    select(Target).where(
+                        Target.user_id
+                        in [t.id for t in dm.targets if not isinstance(t, UUID)]
+                    )
                 )
             ).all()
             if dm.targets
@@ -140,11 +145,12 @@ class DiaryCardGateway(
         all_emotions: Sequence[Emotion] = (
             await self._session.exec(select(Emotion))
         ).all()
-        all_medicaments: Sequence[Medicament] = (
+        all_medicaments: Sequence[Medicament] | None = (
             (
                 await self._session.exec(
                     select(Medicament).where(
-                        Medicament.user_id in [m.id for m in dm.medicaments]
+                        Medicament.user_id
+                        in [m.id for m in dm.medicaments if not isinstance(m, UUID)]
                     )
                 )
             ).all()
@@ -158,7 +164,7 @@ class DiaryCardGateway(
             raise Exception
         dto: DiaryCardForUpdateDTO = DiaryCardForUpdateDTO(
             id=dm.id.value,
-            user_id=dm.user_id,
+            user_id=dm.user_id.value,
             mood=dm.mood.value,
             description=dm.description.value,
             date_of_entry=dm.date_of_entry.value,
@@ -267,13 +273,13 @@ class DiaryCardGateway(
         if entity.date_of_entry:
             db_entity.date_of_entry = entity.date_of_entry.value
         if entity.targets:
-            db_entity.targets = targets
+            db_entity.targets = list(targets)
         if entity.emotions:
-            db_entity.emotions = emotions
+            db_entity.emotions = list(emotions)
         if entity.medicaments:
-            db_entity.medicaments = medicaments
+            db_entity.medicaments = list(medicaments)
         if entity.skills:
-            db_entity.skills = skills
+            db_entity.skills = list(skills)
 
         self._session.add(db_entity)
 

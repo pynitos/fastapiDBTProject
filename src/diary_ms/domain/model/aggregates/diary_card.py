@@ -24,9 +24,9 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 @dataclass
 class DiaryCardDM(AggregateRoot):
-    id: DiaryCardId
     user_id: UserId
     mood: DCMood
+    id: DiaryCardId = DiaryCardId(value=None)
     description: DCDescription = DCDescription(value=None)
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
     targets: list[TargetDM] | list[UUID] | None = None
@@ -44,7 +44,7 @@ class DiaryCardDM(AggregateRoot):
         medicaments = command.medicaments
         skills = command.skills
         diary_card: Self = cls(
-            id=DiaryCardId(command.id) if command.id else None,
+            id=DiaryCardId(command.id),
             user_id=UserId(command.user_id),
             mood=DCMood(command.mood),
             description=DCDescription(command.description),

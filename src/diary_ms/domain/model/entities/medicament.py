@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
 from src.diary_ms.domain.model.commands.create_medicament import CreateMedicamentCommand
@@ -10,16 +11,16 @@ from src.diary_ms.domain.model.value_objects.medicament.name import MedicamentNa
 
 @dataclass
 class MedicamentDM(BaseEntity):
-    id: MedicamentId
     user_id: UserId
     name: MedicamentName
     dosage: MedicamentDosage
+    id: MedicamentId
 
     @classmethod
-    def create(cls, command: CreateMedicamentCommand):
+    def create(cls, command: CreateMedicamentCommand) -> Self:
         medicament = cls(
-            id=command.id,
-            user_id=command.user_id,
+            id=MedicamentId(value=None),
+            user_id=UserId(command.user_id),
             name=MedicamentName(command.name),
             dosage=MedicamentDosage(command.dosage),
         )

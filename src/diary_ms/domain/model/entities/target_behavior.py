@@ -11,7 +11,7 @@ from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetU
 
 @dataclass
 class TargetDM(BaseEntity):
-    id: TargetId
+    id: TargetId | None
     user_id: UserId
     urge: TargetUrge
     action: TargetAction

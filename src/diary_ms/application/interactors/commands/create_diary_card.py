@@ -1,3 +1,4 @@
+from uuid import UUID
 from src.diary_ms.application.common.interfaces.diary_card import SaverProtocol
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.interactor import Interactor
@@ -19,7 +20,7 @@ class CreateDiaryCard(Interactor[CreateDiaryCardCommand, None]):
         self.uow = uow
 
     async def __call__(self, command: CreateDiaryCardCommand) -> None:
-        user_id: UserId = self.id_provider.get_current_user_id()
+        user_id: UUID = self.id_provider.get_current_user_id()
         command.user_id = user_id
         diary_card: DiaryCardDM = DiaryCardDM.create(command)
         await self.db_gateway.create(diary_card)

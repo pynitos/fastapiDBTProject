@@ -6,4 +6,4 @@ from src.diary_ms.domain.model.entities.user_id import UserId
 
 @dataclass
 class User:
-    id: UserId = field(default_factory=uuid.uuid4)
+    id: UserId

@@ -12,6 +12,6 @@ class WrongEmotionDescriptionValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class EmotionDescription(ValueObject[str]):
+class EmotionDescription(ValueObject[str | None]):
     def _validate(self) -> None:
         pass

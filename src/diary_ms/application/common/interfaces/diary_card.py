@@ -26,16 +26,18 @@ class ReaderProtocol(Protocol):
 
 class DTOReader(Protocol):
     @abstractmethod
-    async def get_dto_by_id(self, pk: UUID) -> OwnDiaryCardDTO | None:
+    async def get_dto_by_id(self, id: DiaryCardId) -> OwnDiaryCardDTO | None:
         raise NotImplementedError
 
 
 class DTOForUpdateReader(Protocol):
     @abstractmethod
-    async def get_by_id(self, pk: UUID) -> DiaryCardDM | None: ...
+    async def get_by_id(self, pk: DiaryCardId) -> DiaryCardDM | None:
+        raise NotImplementedError
 
     @abstractmethod
-    async def get_dto_for_update(self, dm: DiaryCardDM) -> DiaryCardForUpdateDTO: ...
+    async def get_dto_for_update(self, dm: DiaryCardDM) -> DiaryCardForUpdateDTO:
+        raise NotImplementedError
 
 
 class UpdaterProtocol(Protocol):

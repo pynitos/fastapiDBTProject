@@ -1,6 +1,6 @@
 import uuid
 from datetime import UTC, datetime, timedelta
-from typing import Literal
+from typing import Any, Literal
 
 from jose import JWTError, jwt
 
@@ -24,7 +24,7 @@ class JwtTokenProcessor:
         secret: str,
         expires: timedelta,
         algorithm: Algorithm,
-    ):
+    ) -> None:
         self.secret = secret
         self.expires = expires
         self.algorithm = algorithm
@@ -33,7 +33,7 @@ class JwtTokenProcessor:
         self,
         user_id: UserId,
     ) -> str:
-        to_encode = {"sub": str(user_id)}
+        to_encode: dict[str, Any] = {"sub": str(user_id)}
         expire = datetime.now(UTC) + self.expires
         to_encode["exp"] = expire
         return jwt.encode(
@@ -42,9 +42,9 @@ class JwtTokenProcessor:
             algorithm=self.algorithm,
         )
 
-    def validate_token(self, token: str) -> UserId:
+    def validate_token(self, token: str) -> uuid.UUID:
         try:
-            payload = jwt.decode(
+            payload: dict[str, Any] = jwt.decode(
                 token,
                 self.secret,
                 algorithms=[self.algorithm],
@@ -53,7 +53,7 @@ class JwtTokenProcessor:
             raise AuthenticationError
 
         try:
-            return UserId(int(payload["sub"]))
+            return uuid.UUID(payload["sub"])
         except ValueError:
             raise AuthenticationError
 
@@ -67,10 +67,10 @@ class TokenIdProvider(IdProvider):
         self.token_processor = token_processor
         self.token = token
 
-    def get_current_user_id(self) -> UserId:
+    def get_current_user_id(self) -> uuid.UUID:
         return self.token_processor.validate_token(self.token)
 
 
 class FakeIdProvider(IdProvider):
-    def get_current_user_id(self) -> UserId:
+    def get_current_user_id(self) -> uuid.UUID:
         return uuid.uuid4()

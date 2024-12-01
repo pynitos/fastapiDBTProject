@@ -30,6 +30,7 @@ sqlmodel = "^0.0.22"
 ruff = "^0.7.4"
 mypy = "^1.13.0"
 pre-commit = "^4.0.1"
+types-python-jose = "^3.3.4.20240106"
 
 [build-system]
 requires = ["poetry-core"]

@@ -15,7 +15,7 @@ class TargetDTO:
 @dataclass
 class EmotionDTO:
     name: str
-    description: str
+    description: str | None
 
 
 @dataclass

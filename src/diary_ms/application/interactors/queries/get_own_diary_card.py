@@ -4,6 +4,7 @@ from src.diary_ms.application.common.interfaces.diary_card import DTOReader
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.interactor import Interactor
 from src.diary_ms.application.dto.diary_card import OwnDiaryCardDTO
+from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
 
 class GetOwnDiaryCard(Interactor[UUID, OwnDiaryCardDTO | None]):
@@ -12,5 +13,7 @@ class GetOwnDiaryCard(Interactor[UUID, OwnDiaryCardDTO | None]):
         self.id_provider = id_provider
 
     async def __call__(self, id: UUID) -> OwnDiaryCardDTO | None:
-        diary_card: OwnDiaryCardDTO | None = await self.db_gateway.get_dto_by_id(id)
+        diary_card: OwnDiaryCardDTO | None = await self.db_gateway.get_dto_by_id(
+            DiaryCardId(id)
+        )
         return diary_card
