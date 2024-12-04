@@ -5,5 +5,4 @@ from src.diary_ms.domain.common.types.id import TypeId
 
 
 @dataclass(frozen=True)
-class UserId(ValueObject[TypeId]):
-    ...
+class UserId(ValueObject[TypeId]): ...

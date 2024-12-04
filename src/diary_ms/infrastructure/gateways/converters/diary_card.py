@@ -1,7 +1,5 @@
 from collections.abc import Sequence
 
-from pydantic import NonNegativeInt
-
 from src.diary_ms.application.dto.diary_card import (
     EmotionDTO,
     MedicamentDTO,
@@ -73,14 +71,18 @@ class DiaryCardMapper:
                     description=x.description,
                 )
                 for x in entity.emotions
-            ] if isinstance(entity.emotions, list) else None,
+            ]
+            if isinstance(entity.emotions, list)
+            else None,
             medicaments=[
                 MedicamentDTO(
                     name=x.name,
                     dosage=x.dosage,
                 )
                 for x in entity.medicaments
-            ] if isinstance(entity.medicaments, list) else None,
+            ]
+            if isinstance(entity.medicaments, list)
+            else None,
             skills=[
                 SkillDTO(
                     category=x.category,
@@ -88,7 +90,9 @@ class DiaryCardMapper:
                     name=x.name,
                 )
                 for x in entity.skills
-            ]  if isinstance(entity.skills, list) else None,
+            ]
+            if isinstance(entity.skills, list)
+            else None,
         )
 
     @classmethod

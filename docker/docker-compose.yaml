@@ -11,7 +11,7 @@ volumes:
 
 services:
   db-diary:
-    image: postgres
+    image: postgres:latest
     container_name: db
     env_file:
       - ../.env

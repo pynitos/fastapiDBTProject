@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterable
 
 from dishka import AnyOf, Provider, Scope, from_context, provide
+from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import async_sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -34,6 +35,7 @@ from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.infrastructure.auth.token import FakeIdProvider
+from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.models.diary_card import DiaryCard
@@ -73,13 +75,23 @@ class AdaptersProvider(Provider):
         async with session_maker() as session:
             yield session
 
+    @provide(scope=Scope.APP)
+    def get_broker_client(self, settings: Settings) -> KafkaBroker:
+        return KafkaBroker("localhost:9092")
+
+    @provide(scope=Scope.REQUEST)
+    async def get_broker(self, broker_client: KafkaBroker) -> AsyncIterable[Broker]:
+        async with broker_client() as broker:
+            yield broker
+
 
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
     create_diary_card = provide(CreateDiaryCard)
+    delete_diary_card = provide(DeleteDiaryCard)
+    update_diary_card = provide(UpdateDiaryCard)
+
     get_own_diary_cards = provide(GetOwnDiaryCards)
     get_own_diary_card = provide(GetOwnDiaryCard)
     get_for_update_diary_card = provide(GetDiaryCardForUpdate)
-    delete_diary_card = provide(DeleteDiaryCard)
-    update_diary_card = provide(UpdateDiaryCard)

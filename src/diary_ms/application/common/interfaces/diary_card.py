@@ -1,6 +1,5 @@
 from abc import abstractmethod
 from typing import Protocol
-from uuid import UUID
 
 from src.diary_ms.application.dto.diary_card import OwnDiaryCardDTO
 from src.diary_ms.application.dto.for_update_diary_card import DiaryCardForUpdateDTO

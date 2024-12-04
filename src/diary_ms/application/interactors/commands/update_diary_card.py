@@ -24,7 +24,9 @@ class UpdateDiaryCard(Interactor[UpdateDiaryCardCommand, None]):
 
     async def __call__(self, command: UpdateDiaryCardCommand) -> None:
         # user_id: UserId = self.id_provider.get_current_user_id()
-        old_diary_card: DiaryCardDM | None = await self.db_gateway.get_by_id(DiaryCardId(command.id))
+        old_diary_card: DiaryCardDM | None = await self.db_gateway.get_by_id(
+            DiaryCardId(command.id)
+        )
         if old_diary_card:
             updated_diary_card: DiaryCardDM = old_diary_card.update(command=command)
             await self.db_gateway.update(updated_diary_card)
