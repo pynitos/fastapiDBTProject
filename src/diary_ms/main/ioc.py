@@ -1,6 +1,6 @@
 from collections.abc import AsyncIterable
 
-from dishka import AnyOf, Provider, Scope, from_context, provide
+from dishka import AnyOf, Provider, Scope, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import async_sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -24,6 +24,9 @@ from src.diary_ms.application.interactors.commands.delete_diary_card import (
 from src.diary_ms.application.interactors.commands.update_diary_card import (
     UpdateDiaryCard,
 )
+from src.diary_ms.application.interactors.events.diary_card_created import (
+    DiaryCardCreatedEventHandler,
+)
 from src.diary_ms.application.interactors.queries.get_diary_card_for_update import (
     GetDiaryCardForUpdate,
 )
@@ -35,6 +38,7 @@ from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.infrastructure.auth.token import FakeIdProvider
+from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
@@ -65,8 +69,8 @@ class AdaptersProvider(Provider):
         )
 
     @provide(scope=Scope.APP)
-    def get_session_maker(self, settings: Settings) -> async_sessionmaker[AsyncSession]:
-        return new_session_maker(settings)
+    def get_session_maker(self, config: Settings) -> async_sessionmaker[AsyncSession]:
+        return new_session_maker(config)
 
     @provide(scope=Scope.REQUEST)
     async def get_session(
@@ -76,13 +80,21 @@ class AdaptersProvider(Provider):
             yield session
 
     @provide(scope=Scope.APP)
-    def get_broker_client(self, settings: Settings) -> KafkaBroker:
-        return KafkaBroker("localhost:9092")
+    def get_broker_client(self, config: Settings) -> KafkaBroker:
+        return KafkaBroker(config.BROKER_URI)
+
+    @decorate
+    async def get_broker_session(
+        self, broker_client: KafkaBroker
+    ) -> AsyncIterable[KafkaBroker]:
+        async with broker_client as broker:
+            yield broker
 
     @provide(scope=Scope.REQUEST)
-    async def get_broker(self, broker_client: KafkaBroker) -> AsyncIterable[Broker]:
-        async with broker_client() as broker:
-            yield broker
+    async def get_broker(
+        self, broker_session: KafkaBroker
+    ) -> AnyOf[BrokerImpl, Broker]:
+        return BrokerImpl(broker_session=broker_session)
 
 
 class InteractorProvider(Provider):
@@ -95,3 +107,7 @@ class InteractorProvider(Provider):
     get_own_diary_cards = provide(GetOwnDiaryCards)
     get_own_diary_card = provide(GetOwnDiaryCard)
     get_for_update_diary_card = provide(GetDiaryCardForUpdate)
+
+    event_handlers = provide_all(
+        DiaryCardCreatedEventHandler,
+    )

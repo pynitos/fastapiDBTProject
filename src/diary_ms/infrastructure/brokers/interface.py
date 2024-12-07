@@ -1,26 +1,20 @@
+from datetime import datetime
 from typing import Any, Protocol
+
+type BrokerMessageType = str | bytes | datetime | bool | None
+type BrokerKeyType = bytes | Any | None
+type BrokerTopicType = str
 
 
 class Broker(Protocol):
-    async def publish(self, message: Any, **kwargs: Any) -> Any | None:
-        raise NotImplementedError
-
-    async def request(self, message: Any, **kwargs: Any) -> Any | None:
-        raise NotImplementedError
-
-    async def connect(
-        self,
-        **kwargs: Any,
-    ) -> Any:
-        """Connect to Kafka servers manually.
-
-        Consumes the same with `Broker.__init__` arguments and overrides them.
-        To startup subscribers too you should use `broker.start()` after/instead this method.
-        """
+    async def publish(self, message: BrokerMessageType, topic: Any) -> Any | None:
         raise NotImplementedError
 
     async def start(self) -> None:
         """ "Connect broker and startup all subscribers."""
+        raise NotImplementedError
+
+    async def close(self) -> None:
         raise NotImplementedError
 
     async def ping(self, timeout: float | None) -> bool:

@@ -24,6 +24,7 @@ faststream = {extras = ["kafka"], version = "^0.5.30"}
 
 [tool.poetry.group.diary.dependencies]
 sqlmodel = "^0.0.22"
+orjson = "^3.10.12"
 
 
 [tool.poetry.group.dev.dependencies]

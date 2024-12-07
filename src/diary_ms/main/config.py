@@ -5,6 +5,7 @@ from typing import Annotated, Any, Literal, Self
 from pydantic import (
     AnyUrl,
     BeforeValidator,
+    Field,
     HttpUrl,
     PostgresDsn,
     computed_field,
@@ -24,8 +25,7 @@ def parse_cors(v: Any) -> list[str] | str:
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        # Use top level .env file (one level above ./backend/)
-        env_file="../.env",
+        env_file=".env",
         env_ignore_empty=True,
         extra="ignore",
     )
@@ -65,6 +65,8 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+
+    BROKER_URI: str = Field(examples=["kafka:9092"])
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False

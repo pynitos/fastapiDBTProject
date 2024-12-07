@@ -90,6 +90,7 @@ class DiaryCardGateway(
     async def create(self, entity: DiaryCardDM) -> None:
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(entity)
         db_entity: DiaryCard = DiaryCard(
+            id=entity.id.value,
             user_id=entity.user_id.value,
             mood=entity.mood.value,
             description=entity.description.value,

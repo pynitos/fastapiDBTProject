@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Self
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import (
     UserIdNotProvidedError,
@@ -14,6 +14,7 @@ from src.diary_ms.domain.model.entities.medicament import MedicamentDM
 from src.diary_ms.domain.model.entities.skill import SkillDM
 from src.diary_ms.domain.model.entities.target_behavior import TargetDM
 from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
     DCDateOfEntry,
 )
@@ -39,6 +40,8 @@ class DiaryCardDM(AggregateRoot):
     def create(cls, command: CreateDiaryCardCommand) -> Self:
         if not command.user_id:
             raise UserIdNotProvidedError
+        id: UUID = uuid4()
+        command.id = uuid4()
         targets = command.targets
         emotions = command.emotions
         medicaments = command.medicaments
@@ -53,6 +56,14 @@ class DiaryCardDM(AggregateRoot):
             emotions=emotions,
             medicaments=medicaments,
             skills=skills,
+        )
+        diary_card.record_event(
+            DiaryCardCreatedEvent(
+                diary_card_id=id,
+                user_id=diary_card.user_id.value,
+                date_of_entry=diary_card.date_of_entry.value,
+                type=diary_card.type.value,
+            )
         )
         return diary_card
 
