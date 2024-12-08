@@ -4,7 +4,7 @@ from src.diary_ms.application.common.interfaces.diary_card import (
     DTOForUpdateReader,
 )
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.interactor import Interactor
+from src.diary_ms.application.common.interfaces.interactor import QueryHandler
 from src.diary_ms.application.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
 )
@@ -12,7 +12,7 @@ from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
 
-class GetDiaryCardForUpdate(Interactor[UUID, DiaryCardForUpdateDTO | None]):
+class GetDiaryCardForUpdate(QueryHandler[UUID, DiaryCardForUpdateDTO | None]):
     def __init__(self, db_gateway: DTOForUpdateReader, id_provider: IdProvider):
         self.db_gateway = db_gateway
         self.id_provider = id_provider

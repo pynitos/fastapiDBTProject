@@ -15,3 +15,11 @@ class GatewayError(InfraError):
 
 class ItemNotFoundError(GatewayError):
     pass
+
+
+class MediatorError(ApplicationError):
+    pass
+
+
+class CommandHandlersNotRegisteredError(MediatorError):
+    _detail: str = "Command handlers not registered."

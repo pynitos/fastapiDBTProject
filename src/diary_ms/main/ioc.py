@@ -37,6 +37,7 @@ from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
     GetOwnDiaryCards,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
+from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.infrastructure.auth.token import FakeIdProvider
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
@@ -100,13 +101,15 @@ class AdaptersProvider(Provider):
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
-    create_diary_card = provide(CreateDiaryCard)
-    delete_diary_card = provide(DeleteDiaryCard)
-    update_diary_card = provide(UpdateDiaryCard)
+    command_handlers = provide_all(
+        CreateDiaryCard,
+        UpdateDiaryCard,
+        DeleteDiaryCard,
+    )
 
-    get_own_diary_cards = provide(GetOwnDiaryCards)
-    get_own_diary_card = provide(GetOwnDiaryCard)
-    get_for_update_diary_card = provide(GetDiaryCardForUpdate)
+    query_handlers = provide_all(
+        GetOwnDiaryCards, GetOwnDiaryCard, GetDiaryCardForUpdate
+    )
 
     event_handlers = provide_all(
         DiaryCardCreatedEventHandler,
