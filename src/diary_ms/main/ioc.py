@@ -37,7 +37,6 @@ from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
     GetOwnDiaryCards,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
-from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.infrastructure.auth.token import FakeIdProvider
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker

@@ -1,8 +1,8 @@
 import logging
 
 from src.diary_ms.application.common.interfaces.diary_card import UpdaterProtocol
+from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.interactor import Interactor
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
@@ -11,7 +11,7 @@ from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCard
 logger = logging.getLogger()
 
 
-class UpdateDiaryCard(Interactor[UpdateDiaryCardCommand, None]):
+class UpdateDiaryCard(CommandHandler[UpdateDiaryCardCommand, None]):
     def __init__(
         self,
         db_gateway: UpdaterProtocol,

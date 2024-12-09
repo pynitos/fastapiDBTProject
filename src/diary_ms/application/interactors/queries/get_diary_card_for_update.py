@@ -3,8 +3,8 @@ from uuid import UUID
 from src.diary_ms.application.common.interfaces.diary_card import (
     DTOForUpdateReader,
 )
+from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.interactor import QueryHandler
 from src.diary_ms.application.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
 )

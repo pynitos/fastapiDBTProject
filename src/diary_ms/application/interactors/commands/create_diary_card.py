@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from src.diary_ms.application.common.interfaces.diary_card import SaverProtocol
+from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.interactor import CommandHandler
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.application.interactors.events.diary_card_created import (
     DiaryCardCreatedEventHandler,
