@@ -29,4 +29,3 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
         await self.db_gateway.create(diary_card)
         await self.mediator.publish(diary_card.pull_events())
         await self.uow.commit()
-
