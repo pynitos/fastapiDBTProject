@@ -1,12 +1,11 @@
-from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import ClassVar
+from typing import ClassVar, Protocol
 from uuid import UUID, uuid4
 
 
 @dataclass(frozen=True)
-class BaseEvent(ABC):  # noqa: B024
+class BaseEvent(Protocol):
     event_title: ClassVar[str] = ""
 
     event_id: UUID = field(init=False, kw_only=True, default_factory=uuid4)
