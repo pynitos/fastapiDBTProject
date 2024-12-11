@@ -13,4 +13,4 @@ class QueryHandler(Handler[QT, QR], Protocol[QT, QR]):
         raise NotImplementedError
 
 
-QueryHandlerType = type[QueryHandler[QT, QR]] | QueryHandler[QT, QR]
+QueryHandlerType = QueryHandler[QT, QR]

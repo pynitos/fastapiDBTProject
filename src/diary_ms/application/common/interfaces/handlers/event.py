@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Generic, Protocol, TypeVar
+from typing import Generic, Protocol, TypeVar
 
 from src.diary_ms.application.common.interfaces.handlers.base import Handler
 from src.diary_ms.domain.common.model.events.base import BaseEvent
@@ -14,10 +14,10 @@ class EventHandler(Handler[ET, ER], Protocol[ET, ER]):
         raise NotImplementedError
 
 
-EventHandlerType = type[EventHandler[ET, ER]] | EventHandler[ET, ER]
+EventHandlerType = EventHandler[ET, ER]
 
 
-class EventListener(Generic[ET]):
+class EventListener(Generic[ET, ER]):
     def __init__(self, event: type[ET], handler: EventHandlerType[ET, ER]):
         self._event = event
         self._handler = handler
@@ -30,5 +30,5 @@ class EventListener(Generic[ET]):
         return self._event
 
     @property
-    def handler(self) -> EventHandlerType[ET, Any]:
+    def handler(self) -> EventHandlerType[ET, ER]:
         return self._handler

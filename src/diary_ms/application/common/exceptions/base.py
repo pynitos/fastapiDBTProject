@@ -21,5 +21,5 @@ class MediatorError(ApplicationError):
     pass
 
 
-class CommandHandlersNotRegisteredError(MediatorError):
-    _detail: str = "Command handlers not registered."
+class HandlerNotFoundError(MediatorError):
+    _detail: str = "Command or query handler not registered."
