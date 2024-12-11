@@ -27,7 +27,7 @@ class MediatorImpl(Mediator):
     def __init__(self) -> None:
         self._command_handlers: dict[type[Any], CommandHandlerType[Any, Any]] = {}
         self._query_handlers: dict[type[Any], QueryHandlerType[Any, Any]] = {}
-        self._event_listeners: list[EventListener[BaseEvent, Any]] = []
+        self._event_listeners: list[EventListener[Any, Any]] = []
 
     def register_command_handler(
         self, command: type[CT], handler: CommandHandlerType[Any, Any]
@@ -40,9 +40,9 @@ class MediatorImpl(Mediator):
         self._query_handlers[query] = handler
 
     def register_event_handler(
-        self, event: type[ET], handler: EventHandlerType[BaseEvent, Any]
+        self, event: type[ET], handler: EventHandlerType[ET, Any]
     ) -> None:
-        listener = EventListener[BaseEvent, Any](event, handler)
+        listener = EventListener[Any, Any](event, handler)
         self._event_listeners.append(listener)
 
     async def handle_command(self, command: Any) -> CR:

@@ -32,7 +32,7 @@ class Mediator(Protocol):
         raise NotImplementedError
 
     def register_event_handler(
-        self, event: type[ET], handler: EventHandler[BaseEvent, ER]
+        self, event: type[ET], handler: EventHandler[ET, ER]
     ) -> None:
         raise NotImplementedError
 

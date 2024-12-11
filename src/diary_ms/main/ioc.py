@@ -14,6 +14,7 @@ from src.diary_ms.application.common.interfaces.diary_card import (
     UpdaterProtocol,
 )
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
+from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.application.interactors.commands.create_diary_card import (
     CreateDiaryCard,
@@ -43,6 +44,7 @@ from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.models.diary_card import DiaryCard
+from src.diary_ms.infrastructure.mediator.base import init_mediator
 from src.diary_ms.main.config import Settings
 
 
@@ -107,9 +109,13 @@ class InteractorProvider(Provider):
     )
 
     query_handlers = provide_all(
-        GetOwnDiaryCards, GetOwnDiaryCard, GetDiaryCardForUpdate
+        GetOwnDiaryCards,
+        GetOwnDiaryCard,
+        GetDiaryCardForUpdate,
     )
 
     event_handlers = provide_all(
         DiaryCardCreatedEventHandler,
     )
+
+    mediator = provide(init_mediator, provides=Mediator)
