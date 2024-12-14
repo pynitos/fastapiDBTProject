@@ -32,6 +32,7 @@ ruff = "^0.7.4"
 mypy = "^1.13.0"
 pre-commit = "^4.0.1"
 types-python-jose = "^3.3.4.20240106"
+pytest-asyncio = "^0.24.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -72,3 +73,14 @@ ignore = [
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.
 keep-runtime-typing = true
+
+[tool.pytest.ini_options]
+pythonpath = ".src"
+asyncio_mode = "auto"
+python_files = "*_test.py *_tests.py test_*.py"
+
+testpaths = [
+    "tests",
+    "integration",
+]
+
