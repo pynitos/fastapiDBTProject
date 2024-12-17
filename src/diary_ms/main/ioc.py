@@ -1,4 +1,5 @@
 from collections.abc import AsyncIterable
+from datetime import timedelta
 
 from dishka import AnyOf, Provider, Scope, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
@@ -38,7 +39,10 @@ from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
     GetOwnDiaryCards,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
-from src.diary_ms.infrastructure.auth.token import FakeIdProvider
+from src.diary_ms.infrastructure.auth.token import (
+    FakeIdProvider,
+    JwtTokenProcessor,
+)
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
@@ -52,7 +56,16 @@ class AdaptersProvider(Provider):
     scope = Scope.REQUEST
 
     settings = from_context(provides=Settings, scope=Scope.APP)
+
     id_provider = provide(FakeIdProvider, provides=IdProvider)
+
+    @provide(scope=Scope.APP)
+    def get_jwt_token_processor(config: Settings) -> JwtTokenProcessor:
+        return JwtTokenProcessor(
+            secret=config.JWT_SECRET_KEY,
+            expires=timedelta(minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES),
+            algorithm=config.JWT_ALGORITHM,
+        )
 
     @provide
     def get_diary_cards_gateway(

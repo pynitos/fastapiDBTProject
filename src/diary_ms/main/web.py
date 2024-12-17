@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 
 from dishka import make_async_container
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
@@ -7,17 +8,32 @@ from fastapi_versioning import VersionedFastAPI
 
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorProvider
+from src.diary_ms.presentation.api.dependencies.base_provider import (
+    AdaptersFastapiProvider,
+)
 from src.diary_ms.presentation.api.v1.api import api_v1
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+
+
 def create_fastapi_app() -> FastAPI:
-    app = FastAPI(title=settings.PROJECT_NAME)
+    app = FastAPI(
+        title=settings.PROJECT_NAME,
+    )
+
     app.include_router(api_v1)
+
     app = VersionedFastAPI(
         app,
         version_format="{major}",
         prefix_format="/api/v{major}",
+        enable_latest=True,
+        lifespan=lifespan,
     )
+
     return app
 
 
@@ -31,6 +47,7 @@ def create_app() -> FastAPI:
         AdaptersProvider(),
         InteractorProvider(),
         FastapiProvider(),
+        AdaptersFastapiProvider(),
         context={Settings: settings},
     )
     setup_dishka(container, app)

@@ -49,7 +49,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 strict = true
-exclude = ["venv", ".venv", "migrations"]
+exclude = ["venv", ".venv", "migrations", "django", "src.user_ms"]
 plugins = ['pydantic.mypy']
 
 [[tool.mypy.overrides]]

@@ -2,7 +2,8 @@ from http import HTTPStatus
 from uuid import UUID
 
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPBearer
 
 from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO, OwnDiaryCardDTO
 from src.diary_ms.application.dto.for_update_diary_card import DiaryCardForUpdateDTO
@@ -23,7 +24,15 @@ from src.diary_ms.presentation.api.v1.routes.schemas.diary_card import (
     UpdateDiaryCardReq,
 )
 
-router = APIRouter(route_class=DishkaRoute)
+router = APIRouter(
+    route_class=DishkaRoute,
+    responses={
+        HTTPStatus.UNAUTHORIZED: {
+            HTTPStatus.UNAUTHORIZED.phrase: "No permission.",
+        }
+    },
+    dependencies=[Depends(HTTPBearer)],
+)
 
 
 @router.get("/", response_model=list[OwnDiaryCardDTO])

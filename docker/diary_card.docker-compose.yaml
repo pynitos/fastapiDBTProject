@@ -1,5 +1,5 @@
 name: dbt
-version: "3.9"
+version: "3.8"
 
 networks:
   diary_backend_nw:

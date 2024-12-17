@@ -1,5 +1,5 @@
 name: dbt-user
-version: "3.9"
+version: "3.8"
 
 networks:
   user_backend_nw:
@@ -26,5 +26,25 @@ services:
     volumes:
       - postgres-user-ms-data:/var/lib/postgresql/data'
     networks:
-      user_backend_nw:
+      - user_backend_nw
+
+  api:
+    build:
+      target: dev_image
+      context: ..
+      dockerfile: ./docker/user-ms.Dockerfile
+    env_file: ../user_ms.env
+    environment:
+      POSTGRES_HOST: db-user
+    depends_on:
+      db-user:
+        condition: service_healthy
+    restart: always
+    ports:
+      - "5000:8000"
+    volumes:
+      - ../src/user_ms/:/code/src/user_ms/
+      - ../user_ms.env:/code/user_ms.env
+    networks:
+      - user_backend_nw
     
