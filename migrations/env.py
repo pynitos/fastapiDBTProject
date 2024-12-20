@@ -18,8 +18,8 @@ load_dotenv(".env")
 config = context.config
 
 # Установим для переменной sqlalchemy.url значение из нашего .dev.env файла.
-db_url: str = str(os.environ.get("DB_URI"))
-config.set_main_option("sqlalchemy.url", db_url)
+db_uri: str = str(os.environ.get("DB_URI"))
+config.set_main_option("sqlalchemy.url", db_uri)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

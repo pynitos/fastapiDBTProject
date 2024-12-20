@@ -1,8 +1,9 @@
-name: dbt-user
+name: dbt_user
 version: "3.8"
 
 networks:
   user_backend_nw:
+    name: user_backend_nw
     driver: bridge
 
 volumes:
@@ -28,7 +29,8 @@ services:
     networks:
       - user_backend_nw
 
-  api:
+  api-user:
+    container_name: api-user
     build:
       target: dev_image
       context: ..

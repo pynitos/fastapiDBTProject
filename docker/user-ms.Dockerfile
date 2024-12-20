@@ -26,7 +26,7 @@ ENTRYPOINT ["bash", "./user-ms.sh"]
 FROM base_image as prod_image
 
 # Install project's dependencies
-RUN poetry config virtualenvs.create false && poetry install --without dev diary-ms --no-interaction --no-root
+RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
 
 # Run server
 WORKDIR /code/todolist

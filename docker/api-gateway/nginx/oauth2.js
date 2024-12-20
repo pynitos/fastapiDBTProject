@@ -1,6 +1,6 @@
 
-function introspectAccessToken(r) {
-    r.subrequest("/_oauth2_send_request",
+export default function verifyAccessToken(r) {
+    r.subrequest("/auth/jwt/verify",
         function(reply) {
             if (reply.status == 200) {
                 var response = JSON.parse(reply.responseBody);
