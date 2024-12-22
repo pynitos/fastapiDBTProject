@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 
-from src.diary_ms.application.dto.diary_card import (
+from src.diary_ms.application.diary_card.dto.diary_card import (
     EmotionDTO,
     MedicamentDTO,
     OwnDiaryCardDTO,

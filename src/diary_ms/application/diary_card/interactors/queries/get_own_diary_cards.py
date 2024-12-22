@@ -1,14 +1,14 @@
-from src.diary_ms.application.common.interfaces.diary_card import ReaderProtocol
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.dto.diary_card import (
+from src.diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardsDTO,
     OwnDiaryCardDTO,
 )
+from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
 
 
 class GetOwnDiaryCards(QueryHandler[GetOwnDiaryCardsDTO, list[OwnDiaryCardDTO]]):
-    def __init__(self, db_gateway: ReaderProtocol, id_provider: IdProvider):
+    def __init__(self, db_gateway: DiaryCardReader, id_provider: IdProvider):
         self.db_gateway = db_gateway
         self.id_provider = id_provider
 

@@ -1,10 +1,10 @@
 from uuid import UUID
 
-from src.diary_ms.application.common.interfaces.diary_card import SaverProtocol
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
+from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardSaver
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 
@@ -12,7 +12,7 @@ from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCard
 class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
     def __init__(
         self,
-        db_gateway: SaverProtocol,
+        db_gateway: DiaryCardSaver,
         id_provider: IdProvider,
         uow: UOWProtocol,
         mediator: Mediator,

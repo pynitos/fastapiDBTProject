@@ -8,7 +8,6 @@ from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor, TokenIdPro
 class AdaptersFastapiProvider(Provider):
     scope = Scope.REQUEST
 
-
     @provide
     def get_user_id_provider(
         self,

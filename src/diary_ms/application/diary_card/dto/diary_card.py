@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
-from src.diary_ms.application.dto.pagination import Pagination
+from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 

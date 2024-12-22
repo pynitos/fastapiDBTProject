@@ -6,41 +6,39 @@ from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import async_sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.interfaces.diary_card import (
-    DeleterProtocol,
-    DTOForUpdateReader,
-    DTOReader,
-    ReaderProtocol,
-    SaverProtocol,
-    UpdaterProtocol,
-)
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
-from src.diary_ms.application.interactors.commands.create_diary_card import (
+from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
-from src.diary_ms.application.interactors.commands.delete_diary_card import (
+from src.diary_ms.application.diary_card.interactors.commands.delete_diary_card import (
     DeleteDiaryCard,
 )
-from src.diary_ms.application.interactors.commands.update_diary_card import (
+from src.diary_ms.application.diary_card.interactors.commands.update_diary_card import (
     UpdateDiaryCard,
 )
-from src.diary_ms.application.interactors.events.diary_card_created import (
+from src.diary_ms.application.diary_card.interactors.events.diary_card_created import (
     DiaryCardCreatedEventHandler,
 )
-from src.diary_ms.application.interactors.queries.get_diary_card_for_update import (
+from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_update import (
     GetDiaryCardForUpdate,
 )
-from src.diary_ms.application.interactors.queries.get_own_diary_card import (
+from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
 )
-from src.diary_ms.application.interactors.queries.get_own_diary_cards import (
+from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_cards import (
     GetOwnDiaryCards,
+)
+from src.diary_ms.application.diary_card.interfaces.gateway import (
+    DiaryCardDeleter,
+    DiaryCardDTOForUpdateReader,
+    DiaryCardDTOReader,
+    DiaryCardReader,
+    DiaryCardSaver,
+    DiaryCardUpdater,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.infrastructure.auth.token import (
-    FakeIdProvider,
     JwtTokenProcessor,
 )
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
@@ -57,10 +55,8 @@ class AdaptersProvider(Provider):
 
     settings = from_context(provides=Settings, scope=Scope.APP)
 
-    id_provider = provide(FakeIdProvider, provides=IdProvider)
-
     @provide(scope=Scope.APP)
-    def get_jwt_token_processor(config: Settings) -> JwtTokenProcessor:
+    def get_jwt_token_processor(self, config: Settings) -> JwtTokenProcessor:
         return JwtTokenProcessor(
             secret=config.JWT_SECRET_KEY,
             expires=timedelta(minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -72,12 +68,12 @@ class AdaptersProvider(Provider):
         self, session: AsyncSession
     ) -> AnyOf[
         DiaryCardGateway,
-        ReaderProtocol,
-        DTOReader,
-        DTOForUpdateReader,
-        SaverProtocol,
-        UpdaterProtocol,
-        DeleterProtocol,
+        DiaryCardReader,
+        DiaryCardDTOReader,
+        DiaryCardDTOForUpdateReader,
+        DiaryCardSaver,
+        DiaryCardUpdater,
+        DiaryCardDeleter,
     ]:
         return DiaryCardGateway(
             db_model=DiaryCard, domain_model=DiaryCardDM, session=session

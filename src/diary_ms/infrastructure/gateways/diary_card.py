@@ -8,24 +8,17 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.sql._expression_select_cls import SelectOfScalar
 
 from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
-from src.diary_ms.application.common.interfaces.diary_card import (
-    DeleterProtocol,
-    DTOForUpdateReader,
-    DTOReader,
-    ReaderProtocol,
-    SaverProtocol,
-    UpdaterProtocol,
-)
-from src.diary_ms.application.dto.diary_card import (
+from src.diary_ms.application.diary_card.dto.diary_card import (
     OwnDiaryCardDTO,
 )
-from src.diary_ms.application.dto.for_update_diary_card import (
+from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
     EmotionForUpdDTO,
     MedicamentForUpdDTO,
     SkillForUpdDTO,
     TargetForUpdDTO,
 )
+from src.diary_ms.application.diary_card.interfaces.gateway import *
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.infrastructure.gateways.converters.diary_card import DiaryCardMapper
@@ -39,12 +32,12 @@ logger = logging.getLogger(__name__)
 
 
 class DiaryCardGateway(
-    ReaderProtocol,
-    SaverProtocol,
-    DeleterProtocol,
-    UpdaterProtocol,
-    DTOReader,
-    DTOForUpdateReader,
+    DiaryCardReader,
+    DiaryCardDTOReader,
+    DiaryCardDTOForUpdateReader,
+    DiaryCardSaver,
+    DiaryCardUpdater,
+    DiaryCardDeleter,
 ):
     def __init__(
         self,
@@ -128,7 +121,8 @@ class DiaryCardGateway(
         if not entity:
             return None
         else:
-            return self._mapper.db_to_dto(entity)
+            dto: OwnDiaryCardDTO = self._mapper.db_to_dto(entity)
+            return dto
 
     async def get_dto_for_update(self, dm: DiaryCardDM) -> DiaryCardForUpdateDTO:
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)

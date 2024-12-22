@@ -5,9 +5,14 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPBearer
 
-from src.diary_ms.application.dto.diary_card import GetOwnDiaryCardsDTO, OwnDiaryCardDTO
-from src.diary_ms.application.dto.for_update_diary_card import DiaryCardForUpdateDTO
-from src.diary_ms.application.dto.pagination import Pagination
+from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.diary_card.dto.diary_card import (
+    GetOwnDiaryCardsDTO,
+    OwnDiaryCardDTO,
+)
+from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
+    DiaryCardForUpdateDTO,
+)
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand

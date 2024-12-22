@@ -1,4 +1,5 @@
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from dishka import make_async_container
@@ -15,8 +16,8 @@ from src.diary_ms.presentation.api.v1.api import api_v1
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
-    yield
+async def lifespan(app: FastAPI) -> AsyncGenerator[FastAPI]:
+    yield app
 
 
 def create_fastapi_app() -> FastAPI:
