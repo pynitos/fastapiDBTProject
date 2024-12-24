@@ -15,7 +15,6 @@ RUN poetry config virtualenvs.create false && \
 poetry install --without dev --without user-ms --no-interaction --no-root 
 
 COPY alembic.ini .
-COPY ./migrations ./migrations
 COPY .env .
 COPY ./src/__init__.py ./src/__init__.py
 COPY ./src/diary_ms/ ./src/diary_ms/
