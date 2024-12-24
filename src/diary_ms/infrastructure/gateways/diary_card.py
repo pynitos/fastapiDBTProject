@@ -2,10 +2,8 @@ import logging
 from collections.abc import Sequence
 from uuid import UUID
 
-from sqlalchemy import ScalarResult
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel.sql._expression_select_cls import SelectOfScalar
+from sqlalchemy import ScalarResult, Select, select
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.dto.diary_card import (
@@ -18,7 +16,14 @@ from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     SkillForUpdDTO,
     TargetForUpdDTO,
 )
-from src.diary_ms.application.diary_card.interfaces.gateway import *
+from src.diary_ms.application.diary_card.interfaces.gateway import (
+    DiaryCardDeleter,
+    DiaryCardDTOForUpdateReader,
+    DiaryCardDTOReader,
+    DiaryCardReader,
+    DiaryCardSaver,
+    DiaryCardUpdater,
+)
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.infrastructure.gateways.converters.diary_card import DiaryCardMapper
@@ -62,21 +67,27 @@ class DiaryCardGateway(
         skills: Sequence[Skill] = []
         if entity.targets:
             targets = (
-                await self._session.exec(select(Target).where(id in entity.targets))
+                await self._session.scalars(
+                    select(Target).where(Target.id._in(entity.targets))
+                )
             ).all()
         if entity.emotions:
             emotions = (
-                await self._session.exec(select(Emotion).where(id in entity.emotions))
+                await self._session.scalars(
+                    select(Emotion).where(Emotion.id._in(entity.emotions))
+                )
             ).all()
         if entity.medicaments:
             medicaments = (
-                await self._session.exec(
-                    select(Medicament).where(id in entity.medicaments)
+                await self._session.scalars(
+                    select(Medicament).where(Medicament.id._in(entity.medicaments))
                 )
             ).all()
         if entity.skills:
             skills = (
-                await self._session.exec(select(Skill).where(id in entity.skills))
+                await self._session.scalars(
+                    select(Skill).where(Skill.id._in(entity.skills))
+                )
             ).all()
         return targets, emotions, medicaments, skills
 
@@ -97,10 +108,10 @@ class DiaryCardGateway(
         self._session.add(db_entity)
 
     async def get_all(self, offset: int = 0, limit: int = 10) -> list[OwnDiaryCardDTO]:
-        stmt: SelectOfScalar[DiaryCard] = (
+        stmt: Select[tuple[DiaryCard]] = (
             select(self._db_model).offset(offset).limit(limit)
         )
-        result: ScalarResult[DiaryCard] = await self._session.exec(stmt)
+        result: ScalarResult[DiaryCard] = await self._session.scalars(stmt)
         result_list: Sequence[DiaryCard] = result.all()
         dto_list: list[OwnDiaryCardDTO] = self._mapper.db_list_to_dto_list(result_list)
         return dto_list
@@ -128,10 +139,11 @@ class DiaryCardGateway(
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)
         all_targets: Sequence[Target] | None = (
             (
-                await self._session.exec(
+                await self._session.scalars(
                     select(Target).where(
-                        Target.user_id
-                        in [t.id for t in dm.targets if not isinstance(t, UUID)]
+                        Target.user_id._in(
+                            (t.id for t in dm.targets if not isinstance(t, UUID))
+                        )
                     )
                 )
             ).all()
@@ -139,14 +151,15 @@ class DiaryCardGateway(
             else None
         )
         all_emotions: Sequence[Emotion] = (
-            await self._session.exec(select(Emotion))
+            await self._session.scalars(select(Emotion))
         ).all()
         all_medicaments: Sequence[Medicament] | None = (
             (
-                await self._session.exec(
+                await self._session.scalars(
                     select(Medicament).where(
-                        Medicament.user_id
-                        in [m.id for m in dm.medicaments if not isinstance(m, UUID)]
+                        Medicament.user_id._in(
+                            (m.id for m in dm.medicaments if not isinstance(m, UUID))
+                        )
                     )
                 )
             ).all()
@@ -154,7 +167,7 @@ class DiaryCardGateway(
             else None
         )
         all_skills: Sequence[Skill] = (
-            await self._session.exec(select(Skill).where(Skill.type == dm.type))
+            await self._session.scalars(select(Skill).where(Skill.type == dm.type))
         ).all()
         if not dm.id.value:
             raise Exception

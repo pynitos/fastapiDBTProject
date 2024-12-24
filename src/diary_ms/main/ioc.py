@@ -3,8 +3,7 @@ from datetime import timedelta
 
 from dishka import AnyOf, Provider, Scope, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
-from sqlalchemy.ext.asyncio.session import async_sessionmaker
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
 from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol

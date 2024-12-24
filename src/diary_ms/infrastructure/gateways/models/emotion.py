@@ -1,21 +1,23 @@
 from typing import TYPE_CHECKING
 
-from sqlmodel import Relationship
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.diary_ms.infrastructure.gateways.models.base import Base
+from src.diary_ms.infrastructure.gateways.models.base import BaseMixin
 from src.diary_ms.infrastructure.gateways.models.diary_card import (
     DiaryCard,
-    DiaryCardEmotionLink,
 )
 
 if TYPE_CHECKING:
     from src.diary_ms.infrastructure.gateways.models.diary_card import DiaryCard
 
 
-class Emotion(Base, table=True):
-    name: str
-    description: str | None = None
+class Emotion(BaseMixin):
+    __tablename__ = "emotions"
 
-    diary_cards: list["DiaryCard"] | None = Relationship(
-        back_populates="emotions", link_model=DiaryCardEmotionLink
+    name: Mapped[str] = mapped_column(String(20))
+    description: Mapped[str | None] = mapped_column(String(100), default=None)
+
+    diary_cards: Mapped[list["DiaryCard"] | None] = relationship(
+        back_populates="emotions", secondary="DiaryCardEmotion"
     )

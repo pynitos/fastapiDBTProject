@@ -1,22 +1,22 @@
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlmodel import Relationship
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.diary_ms.infrastructure.gateways.models.base import Base
-from src.diary_ms.infrastructure.gateways.models.diary_card import (
-    DiaryCardMedicamentLink,
-)
+from src.diary_ms.infrastructure.gateways.models.base import BaseMixin
 
 if TYPE_CHECKING:
     from src.diary_ms.infrastructure.gateways.models.diary_card import DiaryCard
 
 
-class Medicament(Base, table=True):
-    user_id: UUID
-    name: str
-    dosage: str
+class Medicament(BaseMixin):
+    __tablename__ = "medicaments"
 
-    diary_cards: list["DiaryCard"] | None = Relationship(
-        back_populates="medicaments", link_model=DiaryCardMedicamentLink
+    user_id: Mapped[UUID]
+    name: Mapped[str] = mapped_column(String(20))
+    dosage: Mapped[str] = mapped_column(String(20))
+
+    diary_cards: Mapped[list["DiaryCard"] | None] = relationship(
+        back_populates="medicaments", secondary="DiaryCardMedicament"
     )

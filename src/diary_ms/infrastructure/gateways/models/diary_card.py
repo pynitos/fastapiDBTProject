@@ -2,10 +2,12 @@ import datetime
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy import ForeignKey, String, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.infrastructure.gateways.models.base import Base
+from src.diary_ms.infrastructure.gateways.db.base import Base
+from src.diary_ms.infrastructure.gateways.models.base import BaseMixin
 
 if TYPE_CHECKING:
     from src.diary_ms.infrastructure.gateways.models.emotion import Emotion
@@ -14,68 +16,79 @@ if TYPE_CHECKING:
     from src.diary_ms.infrastructure.gateways.models.target import Target
 
 
-class DiaryCardSkillLink(SQLModel, table=True):
-    diary_card_id: UUID | None = Field(
-        default=None, foreign_key="diarycard.id", primary_key=True
+class DiaryCardSkill(Base):
+    __tablename__ = "diary_card_skill"
+
+    diary_card_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("diary_cards.id"), primary_key=True
     )
-    skill_id: UUID | None = Field(
-        default=None, foreign_key="skill.id", primary_key=True
+    skill_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("skills.id"), primary_key=True
     )
-    description: str | None = Field(default=None)
+    description: Mapped[str | None] = mapped_column(default=None)
 
 
-class DiaryCardTargetLink(SQLModel, table=True):
-    diary_card_id: UUID | None = Field(
-        default=None, foreign_key="diarycard.id", primary_key=True
-    )
-    skill_id: UUID | None = Field(
-        default=None, foreign_key="target.id", primary_key=True
-    )
+class DiaryCardTarget(Base):
+    __tablename__ = "diary_card_target"
 
-
-class DiaryCardEmotionLink(SQLModel, table=True):
-    diary_card_id: UUID | None = Field(
-        default=None, foreign_key="diarycard.id", primary_key=True
+    diary_card_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("diary_cards.id"), primary_key=True
     )
-    skill_id: UUID | None = Field(
-        default=None, foreign_key="emotion.id", primary_key=True
+    skill_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("targets.id"), primary_key=True
     )
 
 
-class DiaryCardMedicamentLink(SQLModel, table=True):
-    diary_card_id: UUID | None = Field(
-        default=None, foreign_key="diarycard.id", primary_key=True
+class DiaryCardEmotion(Base):
+    __tablename__ = "diary_card_emotion"
+    diary_card_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("diary_cards.id"), primary_key=True
     )
-    skill_id: UUID | None = Field(
-        default=None, foreign_key="medicament.id", primary_key=True
+    skill_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("emotions.id"), primary_key=True
     )
 
 
-class DiaryCard(Base, table=True):
-    user_id: UUID
-    mood: int
-    description: str | None = None
-    date_of_entry: datetime.date = Field(default_factory=datetime.date.today)
-    targets: list["Target"] | None = Relationship(
+class DiaryCardMedicament(Base):
+    __tablename__ = "diary_card_medicament"
+
+    diary_card_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("diary_cards.id"), primary_key=True
+    )
+    skill_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("medicaments.id"), primary_key=True
+    )
+
+
+class DiaryCard(BaseMixin):
+    __tablename__ = "diary_cards"
+
+    user_id: Mapped[UUID]
+    mood: Mapped[int]
+    description: Mapped[str | None] = mapped_column(String(100))
+    date_of_entry: Mapped[datetime.date] = mapped_column(server_default=func.now())
+
+    targets: Mapped[list["Target"] | None] = relationship(
         back_populates="diary_cards",
-        link_model=DiaryCardTargetLink,
-        sa_relationship_kwargs={"lazy": "selectin"},
+        secondary="DiaryCardTarget",
+        # lazy="selectin",
     )
-    emotions: list["Emotion"] | None = Relationship(
+    emotions: Mapped[list["Emotion"] | None] = relationship(
         back_populates="diary_cards",
-        link_model=DiaryCardEmotionLink,
-        sa_relationship_kwargs={"lazy": "selectin"},
+        secondary="DiaryCardEmotion",
+        # lazy="joined",
     )
-    medicaments: list["Medicament"] | None = Relationship(
+    medicaments: Mapped[list["Medicament"] | None] = relationship(
         back_populates="diary_cards",
-        link_model=DiaryCardMedicamentLink,
-        sa_relationship_kwargs={"lazy": "selectin"},
+        secondary="DiaryCardMedicament",
+        # lazy="joined",
     )
-    skills: list["Skill"] | None = Relationship(
+    skills: Mapped[list["Skill"] | None] = relationship(
         back_populates="diary_cards",
-        link_model=DiaryCardSkillLink,
-        sa_relationship_kwargs={"lazy": "selectin", "viewonly": True},
+        secondary="DiaryCardSkill",
+        # lazy="joined",
+        viewonly=True,
     )
-    skill_link: "DiaryCardSkillLink" = Relationship()
+    skill_link: Mapped["DiaryCardSkill"] = relationship()
 
-    type: str = Field(default=SkillType.DBT, max_length=20)
+    type: Mapped[str] = mapped_column(String(20), default=SkillType.DBT)

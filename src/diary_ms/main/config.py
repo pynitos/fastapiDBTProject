@@ -6,7 +6,6 @@ from pydantic import (
     BeforeValidator,
     Field,
     HttpUrl,
-    PostgresDsn,
     computed_field,
     model_validator,
 )
@@ -54,17 +53,20 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "postgres"
+    DB_URI: str
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
-        return MultiHostUrl.build(
-            scheme="postgresql+asyncpg",
-            username=self.POSTGRES_USER,
-            password=self.POSTGRES_PASSWORD,
-            host=self.POSTGRES_SERVER,
-            port=self.POSTGRES_PORT,
-            path=self.POSTGRES_DB,
+    def SQLALCHEMY_DATABASE_URI(self) -> str:
+        return str(
+            MultiHostUrl.build(
+                scheme="postgresql+asyncpg",
+                username=self.POSTGRES_USER,
+                password=self.POSTGRES_PASSWORD,
+                host=self.POSTGRES_SERVER,
+                port=self.POSTGRES_PORT,
+                path=self.POSTGRES_DB,
+            )
         )
 
     BROKER_URI: str = Field(examples=["kafka:9092"])

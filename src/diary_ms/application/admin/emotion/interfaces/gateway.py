@@ -1,12 +1,12 @@
-
 from abc import abstractmethod
 from typing import Protocol
 
+from src.diary_ms.application.diary_card.dto.diary_card import EmotionDTO
 from src.diary_ms.domain.model.entities.emotion import EmotionDM
 from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 
 
-class EmotionSaver(Protocol):
+class AdminEmotionSaver(Protocol):
     @abstractmethod
     async def create(self, entity: EmotionDM) -> None:
         raise NotImplementedError
@@ -18,7 +18,7 @@ class EmotionReader(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all(self, offset: int = 0, limit: int = 10) -> list[OwnEmotionDTO]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[EmotionDTO]:
         raise NotImplementedError
 
 

@@ -14,10 +14,14 @@ from src.diary_ms.presentation.api.dependencies.base_provider import (
 )
 from src.diary_ms.presentation.api.v1.api import api_v1
 
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[FastAPI]:
-    yield app
+async def lifespan(app: FastAPI) -> AsyncGenerator[FastAPI]:  # noqa: ARG001
+    logger.debug("Start app lifespan.")
+    yield
+    logger.debug("Close app lifespan.")
 
 
 def create_fastapi_app() -> FastAPI:

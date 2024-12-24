@@ -21,8 +21,8 @@ alembic = "^1.14.0"
 greenlet = "^3.1.1"
 asyncpg = "^0.30.0"
 faststream = {extras = ["kafka"], version = "^0.5.30"}
-sqlmodel = "^0.0.22"
 orjson = "^3.10.12"
+sqlalchemy = {extras = ["asycio"], version = "^2.0.36"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -31,6 +31,7 @@ mypy = "^1.13.0"
 pre-commit = "^4.0.1"
 types-python-jose = "^3.3.4.20240106"
 pytest-asyncio = "^0.24.0"
+
 
 
 [tool.poetry.group.user-ms.dependencies]
@@ -51,6 +52,7 @@ build-backend = "poetry.core.masonry.api"
 strict = true
 exclude = ["venv", ".venv", "migrations", "django", "src.user_ms"]
 plugins = ['pydantic.mypy']
+
 
 [[tool.mypy.overrides]]
 module = [

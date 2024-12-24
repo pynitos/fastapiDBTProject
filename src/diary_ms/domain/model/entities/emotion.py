@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
+from src.diary_ms.domain.common.model.entities.base import BaseEntity
 from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionCommand
 from src.diary_ms.domain.model.value_objects.emotion.description import (
     EmotionDescription,
@@ -10,7 +11,7 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 
 
 @dataclass
-class EmotionDM:
+class EmotionDM(BaseEntity):
     name: EmotionName
     id: EmotionId = EmotionId(value=None)
     description: EmotionDescription = EmotionDescription(value=None)

@@ -2,8 +2,7 @@ from http import HTTPStatus
 from uuid import UUID
 
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPBearer
+from fastapi import APIRouter, HTTPException
 
 from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.application.diary_card.dto.diary_card import (
@@ -36,7 +35,6 @@ router = APIRouter(
             HTTPStatus.UNAUTHORIZED.phrase: "No permission.",
         }
     },
-    dependencies=[Depends(HTTPBearer)],
 )
 
 

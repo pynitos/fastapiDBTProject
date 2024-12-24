@@ -1,26 +1,19 @@
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 
-from sqlalchemy import TIMESTAMP, text
-from sqlmodel import Field, SQLModel
+from sqlalchemy import func
+from sqlalchemy.orm import Mapped, mapped_column
+
+from src.diary_ms.infrastructure.gateways.db.base import Base
 
 
-class Base(SQLModel):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    created_at: datetime = Field(
-        default=None,
-        sa_type=TIMESTAMP,
-        sa_column_kwargs={
-            "nullable": False,
-            "server_default": text("CURRENT_TIMESTAMP"),
-        },
-    )
-    updated_at: datetime = Field(
-        default=None,
-        sa_type=TIMESTAMP,
-        sa_column_kwargs={
-            "nullable": False,
-            "server_default": text("CURRENT_TIMESTAMP"),
-            "server_onupdate": text("CURRENT_TIMESTAMP"),
-        },
+class BaseMixin(Base):
+    __abstract__ = True
+
+    id: Mapped[UUID] = mapped_column(default=uuid4, primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        nullable=False,
+        server_default=func.now(),
+        server_onupdate=func.now(),
     )
