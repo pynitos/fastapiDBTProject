@@ -37,9 +37,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardUpdater,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
-from src.diary_ms.infrastructure.auth.token import (
-    JwtTokenProcessor,
-)
+from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker

@@ -68,25 +68,25 @@ class DiaryCardGateway(
         if entity.targets:
             targets = (
                 await self._session.scalars(
-                    select(Target).where(Target.id._in(entity.targets))
+                    select(Target).where(Target.id.in_(entity.targets))
                 )
             ).all()
         if entity.emotions:
             emotions = (
                 await self._session.scalars(
-                    select(Emotion).where(Emotion.id._in(entity.emotions))
+                    select(Emotion).where(Emotion.id.in_(entity.emotions))
                 )
             ).all()
         if entity.medicaments:
             medicaments = (
                 await self._session.scalars(
-                    select(Medicament).where(Medicament.id._in(entity.medicaments))
+                    select(Medicament).where(Medicament.id.in_(entity.medicaments))
                 )
             ).all()
         if entity.skills:
             skills = (
                 await self._session.scalars(
-                    select(Skill).where(Skill.id._in(entity.skills))
+                    select(Skill).where(Skill.id.in_(entity.skills))
                 )
             ).all()
         return targets, emotions, medicaments, skills
@@ -141,7 +141,7 @@ class DiaryCardGateway(
             (
                 await self._session.scalars(
                     select(Target).where(
-                        Target.user_id._in(
+                        Target.user_id.in_(
                             (t.id for t in dm.targets if not isinstance(t, UUID))
                         )
                     )
@@ -157,7 +157,7 @@ class DiaryCardGateway(
             (
                 await self._session.scalars(
                     select(Medicament).where(
-                        Medicament.user_id._in(
+                        Medicament.user_id.in_(
                             (m.id for m in dm.medicaments if not isinstance(m, UUID))
                         )
                     )

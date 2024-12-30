@@ -1,8 +1,8 @@
-"""Initial.
+"""empty message
 
-Revision ID: 86a4f79f2040
+Revision ID: b70cc0b03799
 Revises: 
-Create Date: 2024-12-24 12:35:30.070973
+Create Date: 2024-12-28 19:20:48.203913
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '86a4f79f2040'
+revision: str = 'b70cc0b03799'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,9 +23,9 @@ def upgrade() -> None:
     op.create_table('diary_cards',
     sa.Column('user_id', sa.Uuid(), nullable=False),
     sa.Column('mood', sa.Integer(), nullable=False),
-    sa.Column('description', sa.String(), nullable=True),
+    sa.Column('description', sa.String(length=100), nullable=True),
     sa.Column('date_of_entry', sa.Date(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('type', sa.String(length=20), nullable=False),
+    sa.Column('type', sa.Enum('DBT', 'RO_DBT', name='skilltype'), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
@@ -69,17 +69,17 @@ def upgrade() -> None:
     )
     op.create_table('diary_card_emotion',
     sa.Column('diary_card_id', sa.Uuid(), nullable=False),
-    sa.Column('skill_id', sa.Uuid(), nullable=False),
+    sa.Column('emotion_id', sa.Uuid(), nullable=False),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['skill_id'], ['emotions.id'], ),
-    sa.PrimaryKeyConstraint('diary_card_id', 'skill_id')
+    sa.ForeignKeyConstraint(['emotion_id'], ['emotions.id'], ),
+    sa.PrimaryKeyConstraint('diary_card_id', 'emotion_id')
     )
     op.create_table('diary_card_medicament',
     sa.Column('diary_card_id', sa.Uuid(), nullable=False),
-    sa.Column('skill_id', sa.Uuid(), nullable=False),
+    sa.Column('medicament_id', sa.Uuid(), nullable=False),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['skill_id'], ['medicaments.id'], ),
-    sa.PrimaryKeyConstraint('diary_card_id', 'skill_id')
+    sa.ForeignKeyConstraint(['medicament_id'], ['medicaments.id'], ),
+    sa.PrimaryKeyConstraint('diary_card_id', 'medicament_id')
     )
     op.create_table('diary_card_skill',
     sa.Column('diary_card_id', sa.Uuid(), nullable=False),
@@ -91,10 +91,10 @@ def upgrade() -> None:
     )
     op.create_table('diary_card_target',
     sa.Column('diary_card_id', sa.Uuid(), nullable=False),
-    sa.Column('skill_id', sa.Uuid(), nullable=False),
+    sa.Column('target_id', sa.Uuid(), nullable=False),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['skill_id'], ['targets.id'], ),
-    sa.PrimaryKeyConstraint('diary_card_id', 'skill_id')
+    sa.ForeignKeyConstraint(['target_id'], ['targets.id'], ),
+    sa.PrimaryKeyConstraint('diary_card_id', 'target_id')
     )
     # ### end Alembic commands ###
 

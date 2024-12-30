@@ -27,7 +27,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data'
     networks:
-      diary_backend_nw:
+      - diary_backend_nw
     
   zookeeper:
     image: bitnami/zookeeper:latest
@@ -95,7 +95,7 @@ services:
     env_file: ../.env
     environment:
       DB_HOST: db-diary
-
+      DB_PORT: 5432
     depends_on:
       db-diary:
         condition: service_healthy

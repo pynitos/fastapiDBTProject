@@ -35,7 +35,7 @@ CMD ["gunicorn", "src.user_ms.wsgi", "-w", "2", "-b", "0.0.0.0:8000"]
 FROM base_image as dev_image
 
 # Install project's dependencies
-RUN poetry config virtualenvs.create false && poetry install --without diary-ms --no-interaction --no-root
+RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
 
 # Run server
 

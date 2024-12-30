@@ -63,7 +63,7 @@ class DiaryCardMapper:
                 )
                 for x in entity.targets
             ]
-            if entity.targets and isinstance(entity.targets, list)
+            if isinstance(entity.targets, list)
             else None,
             emotions=[
                 EmotionDTO(
