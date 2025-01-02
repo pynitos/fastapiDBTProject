@@ -5,39 +5,52 @@ from contextlib import asynccontextmanager
 from dishka import make_async_container
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
-from fastapi_versioning import VersionedFastAPI
 
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorProvider
+from src.diary_ms.presentation.api import v1
 from src.diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
 )
-from src.diary_ms.presentation.api.v1.api import api_v1
 
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None]:  # noqa: ARG001
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.debug("Start app lifespan.")
     yield
+    app.state.dishka_container.close()
     logger.debug("Close app lifespan.")
 
 
+def add_exteption_handlers(app: FastAPI) -> None:
+    pass
+
+
 def create_fastapi_app() -> FastAPI:
-    app = FastAPI(
+    app: FastAPI = FastAPI(
         title=settings.PROJECT_NAME,
-    )
-
-    app.include_router(api_v1)
-
-    app = VersionedFastAPI(
-        app,
-        version_format="{major}",
-        prefix_format="/api/v{major}",
-        enable_latest=True,
+        docs_url=f"{settings.API_PREFIX}/docs",
+        redoc_url=f"{settings.API_PREFIX}/redoc",
         lifespan=lifespan,
     )
+
+    app.mount(f"{settings.API_PREFIX}/v1", v1.api)
+
+    @app.get(f"{settings.API_PREFIX}/v1/openapi.json", name="1.0", tags=["Versions"])
+    @app.get(f"{settings.API_PREFIX}/v1/docs", name="1.0", tags=["Documentations"])
+    @app.get(
+        f"{settings.API_PREFIX}/v1/admin/openapi.json",
+        name="Admin 1.0",
+        tags=["Versions"],
+    )
+    @app.get(
+        f"{settings.API_PREFIX}/v1/admin/docs",
+        name="Admin 1.0",
+        tags=["Documentations"],
+    )
+    def noop() -> None: ...
 
     return app
 

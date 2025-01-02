@@ -29,6 +29,8 @@ class Settings(BaseSettings):
         env_ignore_empty=True,
         extra="ignore",
     )
+
+    API_PREFIX: str = "/api"
     JWT_SECRET_KEY: str
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     JWT_ALGORITHM: AlgorithmT = "HS256"

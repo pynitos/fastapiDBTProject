@@ -21,7 +21,7 @@ class AdminCreateEmotion(CommandHandler[CreateEmotionCommand, None]):
 
     async def __call__(self, command: CreateEmotionCommand) -> None:
         user_id: UUID = self.id_provider.get_current_user_id()
-        # command.user_id = user_id
+        command.user_id = user_id
         emotion: EmotionDM = EmotionDM.create(command)
         await self.db_gateway.create(emotion)
         await self.uow.commit()

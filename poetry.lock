@@ -720,21 +720,6 @@ uvicorn = {version = ">=0.15.0", extras = ["standard"]}
 standard = ["uvicorn[standard] (>=0.15.0)"]
 
 [[package]]
-name = "fastapi-versioning"
-version = "0.10.0"
-description = "api versioning for fastapi web applications"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "fastapi_versioning-0.10.0-py3-none-any.whl", hash = "sha256:afe0ad7a56383b884c399341260bd3301b40e5a1cf9f6dc4211a349489087e1b"},
-    {file = "fastapi_versioning-0.10.0.tar.gz", hash = "sha256:5c18ea4e9ae1afd39c9e5bed1c240bf1cabdc75217579af78249ccb651c7b5b5"},
-]
-
-[package.dependencies]
-fastapi = ">=0.56.0"
-starlette = "*"
-
-[[package]]
 name = "faststream"
 version = "0.5.33"
 description = "FastStream: the simplest way to work with a messaging queues"
@@ -2631,4 +2616,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "6614073b5ad80fbbe7299c7b209297b0b9cfc7bdc7041b38dbfe1c8ef9efe52b"
+content-hash = "75d80792d2bb9e67ded6872643e1a08e9a17ce6fbff90e04a097dbc5731357fd"
