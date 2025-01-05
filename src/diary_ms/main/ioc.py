@@ -5,6 +5,18 @@ from dishka import AnyOf, Provider, Scope, decorate, from_context, provide, prov
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
+from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion import (
+    CreateEmotionAdminHandler,
+)
+from src.diary_ms.application.admin.emotion.interactors.queries.get_emotions import (
+    GetEmotionsAdminHandler,
+)
+from src.diary_ms.application.admin.emotion.interfaces.gateway import (
+    EmotionAdminDeleter,
+    EmotionAdminReader,
+    EmotionAdminSaver,
+    EmotionAdminUpdater,
+)
 from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
@@ -36,13 +48,17 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardSaver,
     DiaryCardUpdater,
 )
+from src.diary_ms.application.mediator import MediatorImpl
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
+from src.diary_ms.domain.model.entities.emotion import EmotionDM
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
+from src.diary_ms.infrastructure.gateways.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.models.diary_card import DiaryCard
+from src.diary_ms.infrastructure.gateways.models.emotion import Emotion
 from src.diary_ms.infrastructure.mediator.base import init_mediator
 from src.diary_ms.main.config import Settings
 
@@ -58,22 +74,6 @@ class AdaptersProvider(Provider):
             secret=config.JWT_SECRET_KEY,
             expires=timedelta(minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES),
             algorithm=config.JWT_ALGORITHM,
-        )
-
-    @provide
-    def get_diary_cards_gateway(
-        self, session: AsyncSession
-    ) -> AnyOf[
-        DiaryCardGateway,
-        DiaryCardReader,
-        DiaryCardDTOReader,
-        DiaryCardDTOForUpdateReader,
-        DiaryCardSaver,
-        DiaryCardUpdater,
-        DiaryCardDeleter,
-    ]:
-        return DiaryCardGateway(
-            db_model=DiaryCard, domain_model=DiaryCardDM, session=session
         )
 
     @provide(scope=Scope.APP)
@@ -104,6 +104,36 @@ class AdaptersProvider(Provider):
     ) -> AnyOf[BrokerImpl, Broker]:
         return BrokerImpl(broker_session=broker_session)
 
+    @provide
+    def get_diary_cards_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        DiaryCardGateway,
+        DiaryCardReader,
+        DiaryCardDTOReader,
+        DiaryCardDTOForUpdateReader,
+        DiaryCardSaver,
+        DiaryCardUpdater,
+        DiaryCardDeleter,
+    ]:
+        return DiaryCardGateway(
+            db_model=DiaryCard, domain_model=DiaryCardDM, session=session
+        )
+
+    @provide
+    def get_emotion_admin_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        EmotionAdminGateway,
+        EmotionAdminReader,
+        EmotionAdminSaver,
+        EmotionAdminUpdater,
+        EmotionAdminDeleter,
+    ]:
+        return EmotionAdminGateway(
+            db_model=Emotion, domain_model=EmotionDM, session=session
+        )
+
 
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
@@ -112,16 +142,18 @@ class InteractorProvider(Provider):
         CreateDiaryCard,
         UpdateDiaryCard,
         DeleteDiaryCard,
+        CreateEmotionAdminHandler,
     )
 
     query_handlers = provide_all(
         GetOwnDiaryCards,
         GetOwnDiaryCard,
         GetDiaryCardForUpdate,
+        GetEmotionsAdminHandler,
     )
 
     event_handlers = provide_all(
         DiaryCardCreatedEventHandler,
     )
 
-    mediator = provide(init_mediator, provides=Mediator)
+    mediator = provide(init_mediator, provides=AnyOf[Mediator, MediatorImpl])

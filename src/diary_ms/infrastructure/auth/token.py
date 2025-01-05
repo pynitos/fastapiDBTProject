@@ -6,7 +6,10 @@ from typing import Any, Literal
 
 import jwt
 
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
+from src.diary_ms.application.common.interfaces.id_provider import (
+    AdminIdProvider,
+    IdProvider,
+)
 from src.diary_ms.domain.common.exceptions.access import AuthenticationError
 
 logger = logging.getLogger(__name__)
@@ -39,8 +42,7 @@ class JwtTokenProcessor:
         self.issuer = issuer
         self.leeway = leeway
 
-    def validate_token(self, token: str, verify: bool = True) -> uuid.UUID:
-        logger.info(f'Token: "{token}" \n Secret, {self.secret}')
+    def validate_token(self, token: str, verify: bool = True) -> dict[str, Any]:
         try:
             payload: dict[str, Any] = jwt.decode(
                 token,
@@ -54,10 +56,21 @@ class JwtTokenProcessor:
                     "verify_signature": verify,
                 },
             )
+            return payload
         except jwt.PyJWTError as e:
             logger.debug(e)
             raise AuthenticationError
 
+    def authorize_user(self, token: str) -> uuid.UUID:
+        payload: dict[str, Any] = self.validate_token(token)
+        try:
+            return uuid.UUID(payload["sub"])
+        except (ValueError, KeyError) as e:
+            logger.debug(e)
+            raise AuthenticationError
+
+    def authorize_admin(self, token: str) -> uuid.UUID:
+        payload: dict[str, Any] = self.validate_token(token)
         try:
             return uuid.UUID(payload["sub"])
         except (ValueError, KeyError) as e:
@@ -65,17 +78,20 @@ class JwtTokenProcessor:
             raise AuthenticationError
 
 
-class TokenIdProvider(IdProvider):
+class TokenIdProvider(IdProvider, AdminIdProvider):
     def __init__(
         self,
         token_processor: JwtTokenProcessor,
         token: str,
-    ):
+    ) -> None:
         self.token_processor = token_processor
         self.token = token
 
     def get_current_user_id(self) -> uuid.UUID:
-        return self.token_processor.validate_token(self.token)
+        return self.token_processor.authorize_user(self.token)
+
+    def get_admin_user_id(self) -> uuid.UUID:
+        return self.token_processor.authorize_admin(self.token)
 
 
 class FakeIdProvider(IdProvider):

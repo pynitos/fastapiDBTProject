@@ -9,5 +9,7 @@ class IdProvider(Protocol):
         raise NotImplementedError
 
 
-class AdminIdProvider(IdProvider, Protocol):
-    pass
+class AdminIdProvider(Protocol):
+    @abstractmethod
+    def get_admin_user_id(self) -> UUID:
+        raise NotImplementedError
