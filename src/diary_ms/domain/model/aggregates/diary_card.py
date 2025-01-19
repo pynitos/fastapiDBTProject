@@ -9,10 +9,10 @@ from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
-from src.diary_ms.domain.model.entities.emotion import EmotionDM
-from src.diary_ms.domain.model.entities.medicament import MedicamentDM
-from src.diary_ms.domain.model.entities.skill import SkillDM
-from src.diary_ms.domain.model.entities.target_behavior import TargetDM
+from src.diary_ms.domain.model.entities.emotion import Emotion
+from src.diary_ms.domain.model.entities.medicament import Medicament
+from src.diary_ms.domain.model.entities.skill import Skill
+from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
@@ -24,16 +24,16 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class DiaryCardDM(AggregateRoot):
+class DiaryCard(AggregateRoot):
     user_id: UserId
     mood: DCMood
     id: DiaryCardId = DiaryCardId(value=None)
     description: DCDescription = DCDescription(value=None)
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
-    targets: list[TargetDM] | list[UUID] | None = None
-    emotions: list[EmotionDM] | list[UUID] | None = None
-    medicaments: list[MedicamentDM] | list[UUID] | None = None
-    skills: list[SkillDM] | list[UUID] | None = None
+    targets: list[Target] | list[UUID] | None = None
+    emotions: list[Emotion] | list[UUID] | None = None
+    medicaments: list[Medicament] | list[UUID] | None = None
+    skills: list[Skill] | list[UUID] | None = None
     type: SkillType = SkillType.DBT
 
     @classmethod

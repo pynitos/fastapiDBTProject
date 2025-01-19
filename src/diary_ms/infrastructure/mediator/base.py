@@ -5,7 +5,6 @@ from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion 
 from src.diary_ms.application.admin.emotion.interactors.queries.get_emotions import (
     GetEmotionsAdminHandler,
 )
-from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardDTO,
     GetOwnDiaryCardsDTO,

@@ -15,6 +15,4 @@ def new_session_maker(settings: Settings) -> async_sessionmaker[AsyncSession]:
         },
     )
     init_mapper()
-    return async_sessionmaker(
-        engine, class_=AsyncSession, autoflush=False, expire_on_commit=False
-    )
+    return async_sessionmaker(engine, class_=AsyncSession, autoflush=False, expire_on_commit=False)

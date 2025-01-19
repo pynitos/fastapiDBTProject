@@ -49,16 +49,14 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardUpdater,
 )
 from src.diary_ms.application.mediator import MediatorImpl
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCardDM
-from src.diary_ms.domain.model.entities.emotion import EmotionDM
+from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
-from src.diary_ms.infrastructure.gateways.admin.emotion import EmotionAdminGateway
-from src.diary_ms.infrastructure.gateways.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
-from src.diary_ms.infrastructure.gateways.models.diary_card import DiaryCard
-from src.diary_ms.infrastructure.gateways.models.emotion import Emotion
+from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
+from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
 from src.diary_ms.infrastructure.mediator.base import init_mediator
 from src.diary_ms.main.config import Settings
 
@@ -92,16 +90,12 @@ class AdaptersProvider(Provider):
         return KafkaBroker(config.BROKER_URI)
 
     @decorate
-    async def get_broker_session(
-        self, broker_client: KafkaBroker
-    ) -> AsyncIterable[KafkaBroker]:
+    async def get_broker_session(self, broker_client: KafkaBroker) -> AsyncIterable[KafkaBroker]:
         async with broker_client as broker:
             yield broker
 
     @provide(scope=Scope.REQUEST)
-    async def get_broker(
-        self, broker_session: KafkaBroker
-    ) -> AnyOf[BrokerImpl, Broker]:
+    async def get_broker(self, broker_session: KafkaBroker) -> AnyOf[BrokerImpl, Broker]:
         return BrokerImpl(broker_session=broker_session)
 
     @provide
@@ -116,9 +110,7 @@ class AdaptersProvider(Provider):
         DiaryCardUpdater,
         DiaryCardDeleter,
     ]:
-        return DiaryCardGateway(
-            db_model=DiaryCard, domain_model=DiaryCardDM, session=session
-        )
+        return DiaryCardGateway(db_model=DiaryCard, session=session)
 
     @provide
     def get_emotion_admin_gateway(
@@ -130,9 +122,7 @@ class AdaptersProvider(Provider):
         EmotionAdminUpdater,
         EmotionAdminDeleter,
     ]:
-        return EmotionAdminGateway(
-            db_model=Emotion, domain_model=EmotionDM, session=session
-        )
+        return EmotionAdminGateway(db_model=Emotion, session=session)
 
 
 class InteractorProvider(Provider):

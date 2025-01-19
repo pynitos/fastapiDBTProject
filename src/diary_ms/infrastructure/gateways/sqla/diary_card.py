@@ -50,42 +50,26 @@ class DiaryCardGateway(
         self._session = session
         self._db_model = db_model
 
-    async def _set_entity_fields(
-        self, entity: DiaryCard
-    ) -> None:
+    async def _set_entity_fields(self, entity: DiaryCard) -> None:
         if entity.targets:
-            entity.targets = (
-                await self._session.scalars(
-                    select(Target).where(Target.id.in_(entity.targets))
-                )
-            ).all()
+            entity.targets = (await self._session.scalars(select(Target).where(Target.id.in_(entity.targets)))).all()
         if entity.emotions:
             entity.emotions = (
-                await self._session.scalars(
-                    select(Emotion).where(Emotion.id.in_(entity.emotions))
-                )
+                await self._session.scalars(select(Emotion).where(Emotion.id.in_(entity.emotions)))
             ).all()
         if entity.medicaments:
             entity.medicaments = (
-                await self._session.scalars(
-                    select(Medicament).where(Medicament.id.in_(entity.medicaments))
-                )
+                await self._session.scalars(select(Medicament).where(Medicament.id.in_(entity.medicaments)))
             ).all()
         if entity.skills:
-            entity.skills = (
-                await self._session.scalars(
-                    select(Skill).where(Skill.id.in_(entity.skills))
-                )
-            ).all()
+            entity.skills = (await self._session.scalars(select(Skill).where(Skill.id.in_(entity.skills)))).all()
 
     async def create(self, entity: DiaryCard) -> None:
         await self._set_entity_fields(entity)
         self._session.add(entity)
 
     async def get_all(self, offset: int = 0, limit: int = 10) -> list[OwnDiaryCardDTO]:
-        stmt: Select[tuple[DiaryCard]] = (
-            select(self._db_model).offset(offset).limit(limit)
-        )
+        stmt: Select[tuple[DiaryCard]] = select(self._db_model).offset(offset).limit(limit)
         result: ScalarResult[DiaryCard] = await self._session.scalars(stmt)
         result_list: Sequence[DiaryCard] = result.all()
         return result_list
@@ -114,35 +98,25 @@ class DiaryCardGateway(
         all_targets: Sequence[Target] | None = (
             (
                 await self._session.scalars(
-                    select(Target).where(
-                        Target.user_id.in_(
-                            (t.id for t in dm.targets if not isinstance(t, UUID))
-                        )
-                    )
+                    select(Target).where(Target.user_id.in_((t.id for t in dm.targets if not isinstance(t, UUID))))
                 )
             ).all()
             if dm.targets
             else None
         )
-        all_emotions: Sequence[Emotion] = (
-            await self._session.scalars(select(Emotion))
-        ).all()
+        all_emotions: Sequence[Emotion] = (await self._session.scalars(select(Emotion))).all()
         all_medicaments: Sequence[Medicament] | None = (
             (
                 await self._session.scalars(
                     select(Medicament).where(
-                        Medicament.user_id.in_(
-                            (m.id for m in dm.medicaments if not isinstance(m, UUID))
-                        )
+                        Medicament.user_id.in_((m.id for m in dm.medicaments if not isinstance(m, UUID)))
                     )
                 )
             ).all()
             if dm.medicaments
             else None
         )
-        all_skills: Sequence[Skill] = (
-            await self._session.scalars(select(Skill).where(Skill.type == dm.type))
-        ).all()
+        all_skills: Sequence[Skill] = (await self._session.scalars(select(Skill).where(Skill.type == dm.type))).all()
         if not dm.id.value:
             raise Exception
         dto: DiaryCardForUpdateDTO = DiaryCardForUpdateDTO(

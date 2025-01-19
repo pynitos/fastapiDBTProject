@@ -3,10 +3,10 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from src.diary_ms.domain.model.entities.emotion import EmotionDM
-from src.diary_ms.domain.model.entities.medicament import MedicamentDM
-from src.diary_ms.domain.model.entities.skill import SkillDM
-from src.diary_ms.domain.model.entities.target_behavior import TargetDM
+from src.diary_ms.domain.model.entities.emotion import Emotion
+from src.diary_ms.domain.model.entities.medicament import Medicament
+from src.diary_ms.domain.model.entities.skill import Skill
+from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -16,10 +16,10 @@ class DiaryCardReq(BaseModel):
     date_of_entry: date = Field(default_factory=date.today)
     type: SkillType = SkillType.DBT
 
-    targets: list[TargetDM] | None = None
-    emotions: list[EmotionDM] | None = None
-    medicaments: list[MedicamentDM] | None = None
-    skills: list[SkillDM] | None = None
+    targets: list[Target] | None = None
+    emotions: list[Emotion] | None = None
+    medicaments: list[Medicament] | None = None
+    skills: list[Skill] | None = None
 
 
 class CreateDiaryCardReq(BaseModel):

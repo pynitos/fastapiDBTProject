@@ -2,19 +2,19 @@ from abc import abstractmethod
 from typing import Protocol
 
 from src.diary_ms.application.admin.emotion.dto.emotion import EmotionAdminDTO
-from src.diary_ms.domain.model.entities.emotion import EmotionDM
+from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 
 
 class EmotionAdminSaver(Protocol):
     @abstractmethod
-    async def create(self, entity: EmotionDM) -> None:
+    async def create(self, entity: Emotion) -> None:
         raise NotImplementedError
 
 
 class EmotionAdminReader(Protocol):
     @abstractmethod
-    async def get_by_id(self, id: EmotionId) -> EmotionDM | None:
+    async def get_by_id(self, id: EmotionId) -> Emotion | None:
         raise NotImplementedError
 
     @abstractmethod
@@ -30,11 +30,11 @@ class EmotionAdminReader(Protocol):
 
 class EmotionAdminUpdater(Protocol):
     @abstractmethod
-    async def get_by_id(self, id: EmotionId) -> EmotionDM | None:
+    async def get_by_id(self, id: EmotionId) -> Emotion | None:
         raise NotImplementedError
 
     @abstractmethod
-    async def update(self, entity: EmotionDM) -> None:
+    async def update(self, entity: Emotion) -> None:
         raise NotImplementedError
 
 

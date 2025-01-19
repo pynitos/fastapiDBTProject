@@ -44,9 +44,7 @@ async def get_diary_cards(
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO]:
-    diary_cards = await interactor(
-        GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset))
-    )
+    diary_cards = await interactor(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
     return diary_cards
 
 

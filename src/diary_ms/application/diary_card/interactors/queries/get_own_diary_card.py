@@ -13,7 +13,5 @@ class GetOwnDiaryCard(QueryHandler[UUID, OwnDiaryCardDTO | None]):
         self.id_provider = id_provider
 
     async def __call__(self, id: UUID) -> OwnDiaryCardDTO | None:
-        diary_card: OwnDiaryCardDTO | None = await self.db_gateway.get_dto_by_id(
-            DiaryCardId(id)
-        )
+        diary_card: OwnDiaryCardDTO | None = await self.db_gateway.get_dto_by_id(DiaryCardId(id))
         return diary_card

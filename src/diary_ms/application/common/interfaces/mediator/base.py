@@ -21,19 +21,13 @@ ET = TypeVar("ET", bound=BaseEvent)
 
 
 class Mediator(Protocol):
-    def register_command_handler(
-        self, command: type[CT], handler: CommandHandler[CT, CR]
-    ) -> None:
+    def register_command_handler(self, command: type[CT], handler: CommandHandler[CT, CR]) -> None:
         raise NotImplementedError
 
-    def register_query_handler(
-        self, query: type[QT], handler: QueryHandler[QT, QR]
-    ) -> None:
+    def register_query_handler(self, query: type[QT], handler: QueryHandler[QT, QR]) -> None:
         raise NotImplementedError
 
-    def register_event_handler(
-        self, event: type[ET], handler: EventHandler[ET, ER]
-    ) -> None:
+    def register_event_handler(self, event: type[ET], handler: EventHandler[ET, ER]) -> None:
         raise NotImplementedError
 
     async def handle_command(self, command: Any) -> CR:

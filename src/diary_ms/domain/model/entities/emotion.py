@@ -11,7 +11,7 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 
 
 @dataclass
-class EmotionDM(BaseEntity):
+class Emotion(BaseEntity):
     name: EmotionName
     id: EmotionId = EmotionId(value=None)
     description: EmotionDescription = EmotionDescription(value=None)

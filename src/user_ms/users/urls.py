@@ -8,7 +8,5 @@ urlpatterns = [
     re_path(r"^auth/", include("djoser.social.urls")),
     re_path(r"^auth/", include("social_django.urls", namespace="social")),
     re_path(r"^auth/", include("djoser.urls.jwt")),
-    re_path(
-        r"^auth/jwt/blacklist/", TokenBlacklistView.as_view(), name="jwt-blacklist"
-    ),
+    re_path(r"^auth/jwt/blacklist/", TokenBlacklistView.as_view(), name="jwt-blacklist"),
 ]
