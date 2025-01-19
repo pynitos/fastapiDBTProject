@@ -10,7 +10,7 @@ from src.diary_ms.domain.model.value_objects.medicament.name import MedicamentNa
 
 
 @dataclass
-class MedicamentDM(BaseEntity):
+class Medicament(BaseEntity):
     user_id: UserId
     name: MedicamentName
     dosage: MedicamentDosage

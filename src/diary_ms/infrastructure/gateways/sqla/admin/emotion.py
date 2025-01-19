@@ -26,9 +26,7 @@ class EmotionAdminGateway(EmotionAdminSaver, EmotionAdminReader):  # noqa: F821
         self._session.add(entity)
 
     async def get_all(self, offset: int = 0, limit: int = 10) -> list[EmotionAdminDTO]:
-        stmt: Select[tuple[Emotion]] = (
-            select(self._db_model).offset(offset).limit(limit)
-        )
+        stmt: Select[tuple[Emotion]] = select(self._db_model).offset(offset).limit(limit)
         result: ScalarResult[Emotion] = await self._session.scalars(stmt)
         result_list: Sequence[Emotion] = result.all()
         return result_list

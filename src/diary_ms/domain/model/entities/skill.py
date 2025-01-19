@@ -11,7 +11,7 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class SkillDM:
+class Skill:
     id: SkillId | None
     category: SkillCategory
     group: SkillGroup

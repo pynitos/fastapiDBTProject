@@ -29,34 +29,24 @@ class MediatorImpl(Mediator):
         self._query_handlers: dict[type[Any], QueryHandlerType[Any, Any]] = {}
         self._event_listeners: list[EventListener[Any, Any]] = []
 
-    def register_command_handler(
-        self, command: type[CT], handler: CommandHandlerType[Any, Any]
-    ) -> None:
+    def register_command_handler(self, command: type[CT], handler: CommandHandlerType[Any, Any]) -> None:
         self._command_handlers[command] = handler
 
-    def register_query_handler(
-        self, query: type[QT], handler: QueryHandlerType[Any, Any]
-    ) -> None:
+    def register_query_handler(self, query: type[QT], handler: QueryHandlerType[Any, Any]) -> None:
         self._query_handlers[query] = handler
 
-    def register_event_handler(
-        self, event: type[ET], handler: EventHandlerType[ET, Any]
-    ) -> None:
+    def register_event_handler(self, event: type[ET], handler: EventHandlerType[ET, Any]) -> None:
         listener = EventListener[Any, Any](event, handler)
         self._event_listeners.append(listener)
 
     async def handle_command(self, command: Any) -> CR:
-        handler: CommandHandlerType[Any, Any] | None = self._command_handlers.get(
-            type(command)
-        )
+        handler: CommandHandlerType[Any, Any] | None = self._command_handlers.get(type(command))
         if not handler:
             raise HandlerNotFoundError()
         return await handler(command)
 
     async def handle_query(self, query: Any) -> QR:
-        handler: QueryHandlerType[Any, Any] | None = self._query_handlers.get(
-            type(query)
-        )
+        handler: QueryHandlerType[Any, Any] | None = self._query_handlers.get(type(query))
         if not handler:
             raise HandlerNotFoundError()
         return await handler(query)

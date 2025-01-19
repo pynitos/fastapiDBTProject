@@ -20,7 +20,6 @@ from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_card 
 from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_cards import (  # noqa: E501
     GetOwnDiaryCards,
 )
-from src.diary_ms.application.mediator import MediatorImpl
 from src.diary_ms.presentation.api.dependencies.security import security
 
 TokenDep = Depends(security)

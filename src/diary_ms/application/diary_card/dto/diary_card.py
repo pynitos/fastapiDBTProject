@@ -42,7 +42,6 @@ class OwnDiaryCardDTO:
     emotions: list[EmotionDTO] | None = None
     medicaments: list[MedicamentDTO] | None = None
     skills: list[SkillDTO] | None = None
-
     type: SkillType = SkillType.DBT
 
 

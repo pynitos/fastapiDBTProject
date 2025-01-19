@@ -9,6 +9,4 @@ class BaseEvent(Protocol):
     event_title: ClassVar[str] = ""
 
     event_id: UUID = field(init=False, kw_only=True, default_factory=uuid4)
-    event_timestamp: datetime = field(
-        init=False, kw_only=True, default_factory=datetime.now
-    )
+    event_timestamp: datetime = field(init=False, kw_only=True, default_factory=datetime.now)

@@ -16,5 +16,20 @@ class GetOwnDiaryCards(QueryHandler[GetOwnDiaryCardsDTO, list[OwnDiaryCardDTO]])
         diary_cards: list[OwnDiaryCardDTO] = await self.db_gateway.get_all(
             offset=query.pagination.offset, limit=query.pagination.limit
         )
+        dtos: list[OwnDiaryCardDTO] = [
+            OwnDiaryCardDTO(
+                id=x.id.value,
+                user_id=x.id.value,
+                mood=x.mood.value,
+                description=x.description.value,
+                date_of_entry=x.date_of_entry.value,
+                type=x.type.value,
+                targets=[],
+                emotions=[],
+                medicaments=[],
+                skills=[],
+            )
+            for x in diary_cards
+        ]
 
-        return diary_cards
+        return dtos

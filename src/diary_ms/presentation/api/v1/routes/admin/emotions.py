@@ -71,9 +71,7 @@ async def admin_create_emotion(
     schema: CreateEmotionAdminReq,
     mediator: MediatorDep,
 ) -> None:
-    command = CreateEmotionAdminCommand(
-        name=schema.name, description=schema.description
-    )
+    command = CreateEmotionAdminCommand(name=schema.name, description=schema.description)
     await mediator.handle_command(command)
 
 

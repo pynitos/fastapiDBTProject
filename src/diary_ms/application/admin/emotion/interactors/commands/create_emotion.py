@@ -3,7 +3,7 @@ from src.diary_ms.application.common.interfaces.handlers.command import CommandH
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
-from src.diary_ms.domain.model.entities.emotion import EmotionDM
+from src.diary_ms.domain.model.entities.emotion import Emotion
 
 
 class CreateEmotionAdminHandler(CommandHandler[CreateEmotionAdminCommand, None]):
@@ -19,6 +19,6 @@ class CreateEmotionAdminHandler(CommandHandler[CreateEmotionAdminCommand, None])
 
     async def __call__(self, command: CreateEmotionAdminCommand) -> None:
         self.id_provider.get_admin_user_id()
-        emotion: EmotionDM = EmotionDM.create(command)
+        emotion: Emotion = Emotion.create(command)
         await self.db_gateway.create(emotion)
         await self.uow.commit()
