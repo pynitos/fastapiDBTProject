@@ -19,7 +19,6 @@ from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
     DiaryCardDTOForUpdateReader,
-    DiaryCardDTOReader,
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
@@ -42,7 +41,6 @@ logger = logging.getLogger(__name__)
 
 class DiaryCardGateway(
     DiaryCardReader,
-    DiaryCardDTOReader,
     DiaryCardDTOForUpdateReader,
     DiaryCardSaver,
     DiaryCardUpdater,
@@ -91,14 +89,6 @@ class DiaryCardGateway(
 
     async def get_by_id(self, id: DiaryCardId) -> DiaryCard | None:
         return await self._get_by_id(pk=id.value)
-
-    async def get_dto_by_id(self, id: DiaryCardId) -> OwnDiaryCardDTO | None:
-        entity: DiaryCard | None = await self._get_by_id(pk=id.value)
-        if not entity:
-            return None
-        else:
-            dto: OwnDiaryCardDTO = self._mapper.db_to_dto(entity)
-            return dto
 
     async def get_dto_for_update(self, dm: DiaryCard) -> DiaryCardForUpdateDTO:
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)
@@ -222,30 +212,8 @@ class DiaryCardGateway(
         return dto
 
     async def update(self, entity: DiaryCard) -> None:
-        pk: UUID | None = entity.id.value
-        db_entity: DiaryCard | None = await self._get_by_id(pk)
-        if not db_entity:
-            raise DiaryCardNotFoundError
-
-        targets, emotions, medicaments, skills = await self._get_attrs_by_entity(entity)
-
-        if entity.mood:
-            db_entity.mood = entity.mood.value
-            logger.debug(f"Update mood with value: {entity.mood.value}")
-        if entity.description:
-            db_entity.description = entity.description.value
-        if entity.date_of_entry:
-            db_entity.date_of_entry = entity.date_of_entry.value
-        if entity.targets:
-            db_entity.targets = list(targets)
-        if entity.emotions:
-            db_entity.emotions = list(emotions)
-        if entity.medicaments:
-            db_entity.medicaments = list(medicaments)
-        if entity.skills:
-            db_entity.skills = list(skills)
-
-        self._session.add(db_entity)
+        await self._set_entity_relationships(entity)
+        self._session.add(entity)
 
     async def delete(self, id: DiaryCardId) -> None:
         entity: DiaryCard | None = await self._get_by_id(id.value)

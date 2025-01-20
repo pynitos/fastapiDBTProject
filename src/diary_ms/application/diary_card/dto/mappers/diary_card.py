@@ -25,8 +25,9 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     action=x.action.value,
                 )
                 for x in dm.targets
-                if dm.targets
-            ],
+            ]
+            if dm.targets
+            else None,
             emotions=[
                 Emotion(
                     x.id.value,
@@ -34,8 +35,9 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     x.description.value,
                 )
                 for x in dm.emotions
-                if dm.emotions
-            ],
+            ]
+            if dm.emotions
+            else None,
             medicaments=[
                 Medicament(
                     id=x.id.value,
@@ -44,8 +46,9 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     dosage=x.dosage.value,
                 )
                 for x in dm.medicaments
-                if dm.medicaments
-            ],
+            ]
+            if dm.medicaments
+            else None,
             skills=[
                 Skill(
                     id=x.id.value,
@@ -56,8 +59,9 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     description=x.value.description,
                 )
                 for x in dm.skills
-                if dm.skills
-            ],
+            ]
+            if dm.skills
+            else None,
         )
 
     @classmethod
