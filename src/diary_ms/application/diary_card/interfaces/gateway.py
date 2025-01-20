@@ -25,12 +25,6 @@ class DiaryCardReader(Protocol):
         raise NotImplementedError
 
 
-class DiaryCardDTOReader(Protocol):
-    @abstractmethod
-    async def get_dto_by_id(self, id: DiaryCardId) -> OwnDiaryCardDTO | None:
-        raise NotImplementedError
-
-
 class DiaryCardDTOForUpdateReader(Protocol):
     @abstractmethod
     async def get_by_id(self, pk: DiaryCardId) -> DiaryCard | None:

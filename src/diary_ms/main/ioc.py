@@ -19,6 +19,7 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
 )
 from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
+from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
@@ -43,7 +44,6 @@ from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_cards
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
     DiaryCardDTOForUpdateReader,
-    DiaryCardDTOReader,
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
@@ -58,7 +58,7 @@ from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
-from src.diary_ms.infrastructure.mediator.base import init_mediator
+from src.diary_ms.infrastructure.mediator.base import MediatorInitializer
 from src.diary_ms.main.config import Settings
 
 
@@ -105,7 +105,6 @@ class AdaptersProvider(Provider):
     ) -> AnyOf[
         DiaryCardGateway,
         DiaryCardReader,
-        DiaryCardDTOReader,
         DiaryCardDTOForUpdateReader,
         DiaryCardSaver,
         DiaryCardUpdater,
@@ -129,7 +128,7 @@ class AdaptersProvider(Provider):
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
-    mappers = provide_all(DiaryCardDTOMapper)
+    diary_card_mapper = provide(DiaryCardDTOMapperImpl, provides=DiaryCardDTOMapper)
 
     command_handlers = provide_all(
         CreateDiaryCard,
@@ -149,4 +148,4 @@ class InteractorProvider(Provider):
         DiaryCardCreatedEventHandler,
     )
 
-    mediator = provide(init_mediator, provides=AnyOf[Mediator, MediatorImpl])
+    mediator = provide(MediatorInitializer.init_mediator, provides=AnyOf[Mediator, MediatorImpl])
