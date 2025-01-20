@@ -48,6 +48,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardSaver,
     DiaryCardUpdater,
 )
+from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
 from src.diary_ms.application.mediator import MediatorImpl
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.entities.emotion import Emotion
@@ -127,6 +128,8 @@ class AdaptersProvider(Provider):
 
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
+
+    mappers = provide_all(DiaryCardDTOMapper)
 
     command_handlers = provide_all(
         CreateDiaryCard,

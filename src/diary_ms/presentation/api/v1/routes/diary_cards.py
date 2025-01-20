@@ -12,17 +12,11 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
 )
+from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_update import GetDiaryCardForUpdate
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
-from src.diary_ms.presentation.api.deps import (
-    CreateDiaryCardDep,
-    DeleteDiaryCardDep,
-    GetDiaryCardDep,
-    GetDiaryCardForUpdateDep,
-    GetOwnDiaryCardsDep,
-    UpdateDiaryCardDep,
-)
+from src.diary_ms.presentation.api.deps import MediatorDep
 from src.diary_ms.presentation.api.v1.routes.schemas.diary_card import (
     CreateDiaryCardReq,
     UpdateDiaryCardReq,
@@ -40,20 +34,20 @@ router = APIRouter(
 
 @router.get("/", response_model=list[OwnDiaryCardDTO])
 async def get_diary_cards(
-    interactor: GetOwnDiaryCardsDep,
+    mediator: MediatorDep,
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO]:
-    diary_cards = await interactor(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
+    diary_cards = await mediator.handle_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
     return diary_cards
 
 
 @router.get("/<id:UUID>", response_model=OwnDiaryCardDTO)
 async def get_own_diary_card_by_id(
     id: UUID,
-    interactor: GetDiaryCardDep,
+    mediator: MediatorDep,
 ) -> OwnDiaryCardDTO:
-    diary_card: OwnDiaryCardDTO | None = await interactor(id)
+    diary_card: OwnDiaryCardDTO | None = await mediator.handle_query(id)
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card
@@ -62,9 +56,9 @@ async def get_own_diary_card_by_id(
 @router.get("/upd/<id:UUID>", response_model=DiaryCardForUpdateDTO)
 async def get_diary_card_for_update(
     id: UUID,
-    interactor: GetDiaryCardForUpdateDep,
+    mediator: MediatorDep,
 ) -> DiaryCardForUpdateDTO:
-    diary_card: DiaryCardForUpdateDTO | None = await interactor(id)
+    diary_card: DiaryCardForUpdateDTO | None = await mediator.handle_query(GetDiaryCardForUpdate(id))
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card
@@ -73,7 +67,7 @@ async def get_diary_card_for_update(
 @router.post("/", status_code=201, response_model=None)
 async def create_diary_card(
     schema: CreateDiaryCardReq,
-    interactor: CreateDiaryCardDep,
+    mediator: MediatorDep,
 ) -> None:
     command = CreateDiaryCardCommand(
         mood=schema.mood,
@@ -85,14 +79,14 @@ async def create_diary_card(
         skills=schema.skills,
         type=schema.type,
     )
-    return await interactor(command)
+    return await mediator.handle_command(command)
 
 
 @router.patch("/<id:UUID>", status_code=HTTPStatus.NO_CONTENT, response_model=None)
 async def update_diary_card(
     id: UUID,
     schema: UpdateDiaryCardReq,
-    interactor: UpdateDiaryCardDep,
+    mediator: MediatorDep,
 ) -> None:
     command = UpdateDiaryCardCommand(
         id=id,
@@ -104,12 +98,12 @@ async def update_diary_card(
         medicaments=schema.medicaments,
         skills=schema.skills,
     )
-    return await interactor(command)
+    return await mediator.handle_command(command)
 
 
 @router.delete("/<id:UUID>", status_code=204, response_model=None)
 async def delete_diary_card(
     id: UUID,
-    interactor: DeleteDiaryCardDep,
+    mediator: MediatorDep,
 ) -> None:
-    await interactor(DeleteDiaryCardCommand(id=id))
+    await mediator.handle_command(DeleteDiaryCardCommand(id=id))
