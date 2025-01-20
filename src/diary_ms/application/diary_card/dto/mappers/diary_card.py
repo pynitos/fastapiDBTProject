@@ -1,0 +1,65 @@
+from src.diary_ms.application.diary_card.dto.diary_card import OwnDiaryCardDTO
+from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
+from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from src.diary_ms.domain.model.entities.emotion import Emotion
+from src.diary_ms.domain.model.entities.medicament import Medicament
+from src.diary_ms.domain.model.entities.skill import Skill
+from src.diary_ms.domain.model.entities.target_behavior import Target
+
+
+class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
+    @staticmethod
+    def dm_to_dto(dm: DiaryCard) -> OwnDiaryCardDTO:
+        return OwnDiaryCardDTO(
+            id=dm.id.value,
+            user_id=dm.id.value,
+            mood=dm.mood.value,
+            description=dm.description.value,
+            date_of_entry=dm.date_of_entry.value,
+            type=dm.type.value,
+            targets=[
+                Target(
+                    id=x.id.value,
+                    user_id=x.user_id.value,
+                    urge=x.urge.value,
+                    action=x.action.value,
+                )
+                for x in dm.targets
+                if dm.targets
+            ],
+            emotions=[
+                Emotion(
+                    x.id.value,
+                    x.name.value,
+                    x.description.value,
+                )
+                for x in dm.emotions
+                if dm.emotions
+            ],
+            medicaments=[
+                Medicament(
+                    id=x.id.value,
+                    user_id=x.user_id.value,
+                    name=x.name.value,
+                    dosage=x.dosage.value,
+                )
+                for x in dm.medicaments
+                if dm.medicaments
+            ],
+            skills=[
+                Skill(
+                    id=x.id.value,
+                    category=x.category.value,
+                    group=x.group.value,
+                    name=x.name.value,
+                    type=x.value.type,
+                    description=x.value.description,
+                )
+                for x in dm.skills
+                if dm.skills
+            ],
+        )
+
+    @classmethod
+    def dm_list_to_dto_list(cls, dm_list: list[DiaryCard]) -> list[OwnDiaryCardDTO]:
+        return [cls.dm_to_dto(dm) for dm in dm_list]
