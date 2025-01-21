@@ -13,7 +13,7 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 @dataclass
 class Emotion(BaseEntity):
     name: EmotionName
-    id: EmotionId = EmotionId(value=None)
+    id: EmotionId | None = EmotionId(value=None)
     description: EmotionDescription = EmotionDescription(value=None)
 
     @classmethod

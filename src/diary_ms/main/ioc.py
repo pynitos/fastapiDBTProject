@@ -152,18 +152,16 @@ class InteractorProvider(Provider):
     )
 
     event_handlers = provide_all(
-        DiaryCardCreatedEventHandler,
+        DiaryCardCreatedEventHandler, scope=Scope.REQUEST
     )
 
-    dispather = provide(WithParents[DispatcherImpl])
-    resolver = provide(DishkaResolver, provides=Resolver)
+    dispather = provide(WithParents[DispatcherImpl], scope=Scope.REQUEST)
+    resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
 
-    @provide
+    @provide(scope=Scope.APP)
     def init_registry(self) -> Registry:
         registry = Registry()
         # Diary cards
-        registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEvent)
-
         registry.register_command_handler(CreateDiaryCardCommand, CreateDiaryCard)
         registry.register_command_handler(UpdateDiaryCardCommand, UpdateDiaryCard)
         registry.register_command_handler(DeleteDiaryCardCommand, DeleteDiaryCard)
@@ -175,4 +173,6 @@ class InteractorProvider(Provider):
         # Emotions Admin
         registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
         registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminDTO)
+
+        registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
         return registry
