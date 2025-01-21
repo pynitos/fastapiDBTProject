@@ -60,14 +60,14 @@ class DispatcherImpl(Dispatcher):
         handler: CommandHandlerType[Any, Any] | None = self._registry._command_handlers.get(type(command))
         if not handler:
             raise HandlerNotFoundError()
-        handler = self._resolver.resolve(handler)
+        handler = await self._resolver.resolve(handler)
         return await handler(command)
 
     async def handle_query(self, query: Any) -> QR:
         handler: QueryHandlerType[Any, Any] | None = self._registry._query_handlers.get(type(query))
         if not handler:
             raise HandlerNotFoundError()
-        handler = self._resolver.resolve(handler)
+        handler = await self._resolver.resolve(handler)
         return await handler(query)
 
     async def publish(self, events: BaseEvent | Sequence[BaseEvent]) -> Iterable[ER]:
@@ -77,6 +77,6 @@ class DispatcherImpl(Dispatcher):
         for event in events:
             for listener in self._registry._event_listeners:
                 if listener.is_listen(event):
-                    handler = self._resolver.resolve(listener.handler(event))
-                    result.extend([await handler])
+                    handler = await self._resolver.resolve(listener.handler)
+                    result.extend([await handler(event)])
         return result
