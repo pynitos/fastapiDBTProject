@@ -13,4 +13,4 @@ class CommandHandler(Handler[CT, CR], Protocol[CT, CR]):
         raise NotImplementedError
 
 
-CommandHandlerType = CommandHandler[CT, CR]
+CommandHandlerType = CommandHandler[CT, CR] | type[CommandHandler[CT, CR]]

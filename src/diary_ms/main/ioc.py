@@ -1,10 +1,11 @@
 from collections.abc import AsyncIterable
 from datetime import timedelta
 
-from dishka import AnyOf, Provider, Scope, decorate, from_context, provide, provide_all
+from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
+from src.diary_ms.application.admin.emotion.dto.emotion import GetEmotionsAdminDTO
 from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion import (
     CreateEmotionAdminHandler,
 )
@@ -17,8 +18,9 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminSaver,
     EmotionAdminUpdater,
 )
-from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
+from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
+from src.diary_ms.application.diary_card.dto.for_update_diary_card import GetDiaryCardForUpdateDTO
 from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
@@ -49,16 +51,20 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardUpdater,
 )
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.application.mediator import MediatorImpl
+from src.diary_ms.application.dispatcher import DispatcherImpl, Registry
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
+from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
+from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
+from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
+from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
-from src.diary_ms.infrastructure.mediator.base import MediatorInitializer
 from src.diary_ms.main.config import Settings
 
 
@@ -148,4 +154,23 @@ class InteractorProvider(Provider):
         DiaryCardCreatedEventHandler,
     )
 
-    mediator = provide(MediatorInitializer.init_mediator, provides=AnyOf[Mediator, MediatorImpl])
+    dispather = provide(WithParents[DispatcherImpl])
+
+    @provide
+    def init_registry(self) -> Registry:
+        registry = Registry()
+        # Diary cards
+        registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEvent)
+
+        registry.register_command_handler(CreateDiaryCardCommand, CreateDiaryCard)
+        registry.register_command_handler(UpdateDiaryCardCommand, UpdateDiaryCard)
+        registry.register_command_handler(DeleteDiaryCardCommand, DeleteDiaryCard)
+
+        registry.register_query_handler(GetOwnDiaryCardDTO, GetOwnDiaryCard)
+        registry.register_query_handler(GetOwnDiaryCardsDTO, GetOwnDiaryCards)
+        registry.register_query_handler(GetDiaryCardForUpdateDTO, GetDiaryCardForUpdate)
+
+        # Emotions Admin
+        registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
+        registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminDTO)
+        return registry

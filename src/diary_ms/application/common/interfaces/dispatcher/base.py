@@ -20,7 +20,7 @@ QR = Any
 ET = TypeVar("ET", bound=BaseEvent)
 
 
-class Mediator(Protocol):
+class Dispatcher(Protocol):
     def register_command_handler(self, command: type[CT], handler: CommandHandler[CT, CR]) -> None:
         raise NotImplementedError
 

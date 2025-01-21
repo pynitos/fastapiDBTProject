@@ -1,7 +1,11 @@
 from collections.abc import Iterable, Sequence
 from typing import Any, TypeVar
 
+from dishka import AsyncContainer
+
 from src.diary_ms.application.common.exceptions.base import HandlerNotFoundError
+from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher
+from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.handlers.command import (
     CommandHandlerType,
 )
@@ -13,7 +17,6 @@ from src.diary_ms.application.common.interfaces.handlers.event import (
 from src.diary_ms.application.common.interfaces.handlers.query import (
     QueryHandlerType,
 )
-from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.domain.common.model.events.base import BaseEvent
 
 CT = TypeVar("CT", bound=Any)
@@ -23,7 +26,15 @@ QR = Any
 ET = TypeVar("ET", bound=BaseEvent)
 
 
-class MediatorImpl(Mediator):
+class DishkaResolver[T](Resolver):
+    def __init__(self, container: AsyncContainer) -> None:
+        self._container = container
+
+    async def resolve(self, dependency_type: type[T]) -> T:
+        return await self._container.get(dependency_type)
+
+
+class Registry:
     def __init__(self) -> None:
         self._command_handlers: dict[type[Any], CommandHandlerType[Any, Any]] = {}
         self._query_handlers: dict[type[Any], QueryHandlerType[Any, Any]] = {}
@@ -39,16 +50,24 @@ class MediatorImpl(Mediator):
         listener = EventListener[Any, Any](event, handler)
         self._event_listeners.append(listener)
 
+
+class DispatcherImpl(Dispatcher):
+    def __init__(self, resolver: Resolver, registry: Registry) -> None:
+        self._resolver = resolver
+        self._registry = registry
+
     async def handle_command(self, command: Any) -> CR:
-        handler: CommandHandlerType[Any, Any] | None = self._command_handlers.get(type(command))
+        handler: CommandHandlerType[Any, Any] | None = self._registry._command_handlers.get(type(command))
         if not handler:
             raise HandlerNotFoundError()
+        handler = self._resolver.resolve(handler)
         return await handler(command)
 
     async def handle_query(self, query: Any) -> QR:
-        handler: QueryHandlerType[Any, Any] | None = self._query_handlers.get(type(query))
+        handler: QueryHandlerType[Any, Any] | None = self._registry._query_handlers.get(type(query))
         if not handler:
             raise HandlerNotFoundError()
+        handler = self._resolver.resolve(handler)
         return await handler(query)
 
     async def publish(self, events: BaseEvent | Sequence[BaseEvent]) -> Iterable[ER]:
@@ -56,7 +75,8 @@ class MediatorImpl(Mediator):
             events = [events]
         result = []
         for event in events:
-            for listener in self._event_listeners:
+            for listener in self._registry._event_listeners:
                 if listener.is_listen(event):
-                    result.extend([await listener.handler(event)])
+                    handler = self._resolver.resolve(listener.handler(event))
+                    result.extend([await handler])
         return result
