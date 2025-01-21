@@ -18,6 +18,7 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminSaver,
     EmotionAdminUpdater,
 )
+from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import GetDiaryCardForUpdateDTO
@@ -51,7 +52,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardUpdater,
 )
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.application.dispatcher import DispatcherImpl, Registry
+from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, Registry
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
@@ -155,6 +156,7 @@ class InteractorProvider(Provider):
     )
 
     dispather = provide(WithParents[DispatcherImpl])
+    resolver = provide(DishkaResolver, provides=Resolver)
 
     @provide
     def init_registry(self) -> Registry:
