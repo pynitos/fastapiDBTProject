@@ -7,7 +7,6 @@ from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardUpda
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
-from src.diary_ms.domain.model.entities.user_id import UserId
 
 logger = logging.getLogger()
 

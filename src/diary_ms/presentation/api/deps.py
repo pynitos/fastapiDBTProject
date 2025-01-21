@@ -1,7 +1,7 @@
 from dishka import FromDishka
 from fastapi import Depends
 
-from src.diary_ms.application.common.interfaces.mediator.base import Mediator
+from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
@@ -24,7 +24,7 @@ from src.diary_ms.presentation.api.dependencies.security import security
 
 TokenDep = Depends(security)
 
-MediatorDep = FromDishka[Mediator]
+MediatorDep = FromDishka[Dispatcher]
 
 GetOwnDiaryCardsDep = FromDishka[GetOwnDiaryCards]
 GetDiaryCardDep = FromDishka[GetOwnDiaryCard]

@@ -1,8 +1,8 @@
 from uuid import UUID
 
+from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.mediator.base import Mediator
 from src.diary_ms.application.common.interfaces.uow import UOWProtocol
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardSaver
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
@@ -15,7 +15,7 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
         db_gateway: DiaryCardSaver,
         id_provider: IdProvider,
         uow: UOWProtocol,
-        mediator: Mediator,
+        mediator: Dispatcher,
     ) -> None:
         self.db_gateway = db_gateway
         self.id_provider = id_provider

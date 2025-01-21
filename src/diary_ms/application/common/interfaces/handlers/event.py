@@ -14,7 +14,7 @@ class EventHandler(Handler[ET, ER], Protocol[ET, ER]):
         raise NotImplementedError
 
 
-EventHandlerType = EventHandler[ET, ER]
+EventHandlerType = EventHandler[ET, ER] | type[EventHandler[ET, ER]]
 
 
 class EventListener(Generic[ET, ER]):
