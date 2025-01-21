@@ -151,9 +151,7 @@ class InteractorProvider(Provider):
         GetEmotionsAdminHandler,
     )
 
-    event_handlers = provide_all(
-        DiaryCardCreatedEventHandler, scope=Scope.REQUEST
-    )
+    event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
 
     dispather = provide(WithParents[DispatcherImpl], scope=Scope.REQUEST)
     resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
