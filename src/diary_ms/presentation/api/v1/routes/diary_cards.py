@@ -12,6 +12,7 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
 )
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
+    GetDiaryCardForUpdateDTO,
 )
 from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_update import GetDiaryCardForUpdate
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
@@ -35,20 +36,20 @@ router = APIRouter(
 
 @router.get("/", response_model=list[OwnDiaryCardDTO])
 async def get_diary_cards(
-    mediator: SenderDep,
+    sender: SenderDep,
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO]:
-    diary_cards = await mediator.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
+    diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
     return diary_cards
 
 
 @router.get("/<id:UUID>", response_model=OwnDiaryCardDTO)
 async def get_own_diary_card_by_id(
     id: UUID,
-    mediator: SenderDep,
+    sender: SenderDep,
 ) -> OwnDiaryCardDTO:
-    diary_card: OwnDiaryCardDTO | None = await mediator.send_query(GetOwnDiaryCardDTO(id))
+    diary_card: OwnDiaryCardDTO | None = await sender.send_query(GetOwnDiaryCardDTO(id))
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card
@@ -57,9 +58,9 @@ async def get_own_diary_card_by_id(
 @router.get("/upd/<id:UUID>", response_model=DiaryCardForUpdateDTO)
 async def get_diary_card_for_update(
     id: UUID,
-    mediator: SenderDep,
+    sender: SenderDep,
 ) -> DiaryCardForUpdateDTO:
-    diary_card: DiaryCardForUpdateDTO | None = await mediator.send_query(GetDiaryCardForUpdate(id))
+    diary_card: DiaryCardForUpdateDTO | None = await sender.send_query(GetDiaryCardForUpdateDTO(id))
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card
@@ -68,7 +69,7 @@ async def get_diary_card_for_update(
 @router.post("/", status_code=201, response_model=None)
 async def create_diary_card(
     schema: CreateDiaryCardReq,
-    mediator: SenderDep,
+    sender: SenderDep,
 ) -> None:
     command = CreateDiaryCardCommand(
         mood=schema.mood,
@@ -80,7 +81,7 @@ async def create_diary_card(
         skills=schema.skills,
         type=schema.type,
     )
-    result = await mediator.send_command(command)
+    result = await sender.send_command(command)
     return result
 
 
@@ -106,6 +107,6 @@ async def update_diary_card(
 @router.delete("/<id:UUID>", status_code=204, response_model=None)
 async def delete_diary_card(
     id: UUID,
-    mediator: SenderDep,
+    sender: SenderDep,
 ) -> None:
-    await mediator.send_command(DeleteDiaryCardCommand(id=id))
+    await sender.send_command(DeleteDiaryCardCommand(id=id))
