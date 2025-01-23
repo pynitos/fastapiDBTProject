@@ -39,7 +39,7 @@ async def get_diary_cards(
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO]:
-    diary_cards = await mediator.handle_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
+    diary_cards = await mediator.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
     return diary_cards
 
 
@@ -48,7 +48,7 @@ async def get_own_diary_card_by_id(
     id: UUID,
     mediator: MediatorDep,
 ) -> OwnDiaryCardDTO:
-    diary_card: OwnDiaryCardDTO | None = await mediator.handle_query(GetOwnDiaryCardDTO(id))
+    diary_card: OwnDiaryCardDTO | None = await mediator.send_query(GetOwnDiaryCardDTO(id))
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card
@@ -59,7 +59,7 @@ async def get_diary_card_for_update(
     id: UUID,
     mediator: MediatorDep,
 ) -> DiaryCardForUpdateDTO:
-    diary_card: DiaryCardForUpdateDTO | None = await mediator.handle_query(GetDiaryCardForUpdate(id))
+    diary_card: DiaryCardForUpdateDTO | None = await mediator.send_query(GetDiaryCardForUpdate(id))
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card
@@ -80,7 +80,7 @@ async def create_diary_card(
         skills=schema.skills,
         type=schema.type,
     )
-    result = await mediator.handle_command(command)
+    result = await mediator.send_command(command)
     return result
 
 
@@ -100,7 +100,7 @@ async def update_diary_card(
         medicaments=schema.medicaments,
         skills=schema.skills,
     )
-    return await mediator.handle_command(command)
+    return await mediator.send_command(command)
 
 
 @router.delete("/<id:UUID>", status_code=204, response_model=None)
@@ -108,4 +108,4 @@ async def delete_diary_card(
     id: UUID,
     mediator: MediatorDep,
 ) -> None:
-    await mediator.handle_command(DeleteDiaryCardCommand(id=id))
+    await mediator.send_command(DeleteDiaryCardCommand(id=id))

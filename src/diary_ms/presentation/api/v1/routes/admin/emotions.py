@@ -38,7 +38,7 @@ async def admin_get_emotions(
     limit: int = 10,
     offset: int = 0,
 ) -> list[EmotionAdminDTO]:
-    emotions: list[EmotionAdminDTO] = await mediator.handle_query(
+    emotions: list[EmotionAdminDTO] = await mediator.send_query(
         GetEmotionsAdminDTO(pagination=Pagination(limit=limit, offset=offset))
     )
     return emotions
@@ -72,7 +72,7 @@ async def admin_create_emotion(
     mediator: MediatorDep,
 ) -> None:
     command = CreateEmotionAdminCommand(name=schema.name, description=schema.description)
-    await mediator.handle_command(command)
+    await mediator.send_command(command)
 
 
 @router.patch("/<id:UUID>", status_code=HTTPStatus.NO_CONTENT, response_model=None)

@@ -52,7 +52,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardUpdater,
 )
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, Registry
+from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
@@ -157,8 +157,8 @@ class InteractorProvider(Provider):
     resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
 
     @provide(scope=Scope.APP)
-    def init_registry(self) -> Registry:
-        registry = Registry()
+    def init_registry(self) -> RegistryImpl:
+        registry = RegistryImpl()
         # Diary cards
         registry.register_command_handler(CreateDiaryCardCommand, CreateDiaryCard)
         registry.register_command_handler(UpdateDiaryCardCommand, UpdateDiaryCard)

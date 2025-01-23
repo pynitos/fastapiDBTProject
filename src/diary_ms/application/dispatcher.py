@@ -4,7 +4,7 @@ from typing import Any, TypeVar
 from dishka import AsyncContainer
 
 from src.diary_ms.application.common.exceptions.base import HandlerNotFoundError
-from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher
+from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher, Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.handlers.command import (
     CommandHandlerType,
@@ -34,7 +34,7 @@ class DishkaResolver[T](Resolver):
         return await self._container.get(dependency_type)
 
 
-class Registry:
+class RegistryImpl(Registry):
     def __init__(self) -> None:
         self._command_handlers: dict[type[Any], CommandHandlerType[Any, Any]] = {}
         self._query_handlers: dict[type[Any], QueryHandlerType[Any, Any]] = {}
@@ -52,18 +52,18 @@ class Registry:
 
 
 class DispatcherImpl(Dispatcher):
-    def __init__(self, resolver: Resolver, registry: Registry) -> None:
+    def __init__(self, resolver: Resolver, registry: RegistryImpl) -> None:
         self._resolver = resolver
         self._registry = registry
 
-    async def handle_command(self, command: Any) -> CR:
+    async def send_command(self, command: Any) -> CR:
         handler: CommandHandlerType[Any, Any] | None = self._registry._command_handlers.get(type(command))
         if not handler:
             raise HandlerNotFoundError()
         handler = await self._resolver.resolve(handler)
         return await handler(command)
 
-    async def handle_query(self, query: Any) -> QR:
+    async def send_query(self, query: Any) -> QR:
         handler: QueryHandlerType[Any, Any] | None = self._registry._query_handlers.get(type(query))
         if not handler:
             raise HandlerNotFoundError()
