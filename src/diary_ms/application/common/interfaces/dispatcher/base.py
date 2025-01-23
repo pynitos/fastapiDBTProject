@@ -44,13 +44,4 @@ class Publisher(Protocol):
         raise NotImplementedError
 
 
-class Dispatcher(Sender, Publisher, Protocol):
-    ...
-    # async def send_command(self, command: Any) -> CR:
-    #     raise NotImplementedError
-
-    # async def send_query(self, query: Any) -> QR:
-    #     raise NotImplementedError
-
-    # async def publish(self, events: BaseEvent | Sequence[BaseEvent]) -> Iterable[ER]:
-    #     raise NotImplementedError
+class Dispatcher(Sender, Publisher, Protocol): ...

@@ -63,9 +63,9 @@ from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreated
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
-from src.diary_ms.infrastructure.gateways.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
+from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
 from src.diary_ms.main.config import Settings
 
 

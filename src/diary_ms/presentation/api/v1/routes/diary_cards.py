@@ -17,7 +17,7 @@ from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
-from src.diary_ms.presentation.api.deps import MediatorDep
+from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.routes.schemas.diary_card import (
     CreateDiaryCardReq,
     UpdateDiaryCardReq,
@@ -35,7 +35,7 @@ router = APIRouter(
 
 @router.get("/", response_model=list[OwnDiaryCardDTO])
 async def get_diary_cards(
-    mediator: MediatorDep,
+    mediator: SenderDep,
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO]:
@@ -46,7 +46,7 @@ async def get_diary_cards(
 @router.get("/<id:UUID>", response_model=OwnDiaryCardDTO)
 async def get_own_diary_card_by_id(
     id: UUID,
-    mediator: MediatorDep,
+    mediator: SenderDep,
 ) -> OwnDiaryCardDTO:
     diary_card: OwnDiaryCardDTO | None = await mediator.send_query(GetOwnDiaryCardDTO(id))
     if not diary_card:
@@ -57,7 +57,7 @@ async def get_own_diary_card_by_id(
 @router.get("/upd/<id:UUID>", response_model=DiaryCardForUpdateDTO)
 async def get_diary_card_for_update(
     id: UUID,
-    mediator: MediatorDep,
+    mediator: SenderDep,
 ) -> DiaryCardForUpdateDTO:
     diary_card: DiaryCardForUpdateDTO | None = await mediator.send_query(GetDiaryCardForUpdate(id))
     if not diary_card:
@@ -68,7 +68,7 @@ async def get_diary_card_for_update(
 @router.post("/", status_code=201, response_model=None)
 async def create_diary_card(
     schema: CreateDiaryCardReq,
-    mediator: MediatorDep,
+    mediator: SenderDep,
 ) -> None:
     command = CreateDiaryCardCommand(
         mood=schema.mood,
@@ -88,7 +88,7 @@ async def create_diary_card(
 async def update_diary_card(
     id: UUID,
     schema: UpdateDiaryCardReq,
-    mediator: MediatorDep,
+    sender: SenderDep,
 ) -> None:
     command = UpdateDiaryCardCommand(
         id=id,
@@ -100,12 +100,12 @@ async def update_diary_card(
         medicaments=schema.medicaments,
         skills=schema.skills,
     )
-    return await mediator.send_command(command)
+    return await sender.send_command(command)
 
 
 @router.delete("/<id:UUID>", status_code=204, response_model=None)
 async def delete_diary_card(
     id: UUID,
-    mediator: MediatorDep,
+    mediator: SenderDep,
 ) -> None:
     await mediator.send_command(DeleteDiaryCardCommand(id=id))
