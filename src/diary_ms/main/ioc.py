@@ -6,6 +6,7 @@ from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
 from src.diary_ms.application.admin.emotion.dto.emotion import GetEmotionsAdminDTO
+from src.diary_ms.application.admin.emotion.dto.mapper.emotion import EmotionAdminMapper
 from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion import (
     CreateEmotionAdminHandler,
 )
@@ -51,7 +52,6 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardSaver,
     DiaryCardUpdater,
 )
-from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
 from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
@@ -135,7 +135,10 @@ class AdaptersProvider(Provider):
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
-    diary_card_mapper = provide(DiaryCardDTOMapperImpl, provides=DiaryCardDTOMapper)
+    mappers = provide_all(
+        EmotionAdminMapper,
+        WithParents[DiaryCardDTOMapperImpl],
+    )
 
     command_handlers = provide_all(
         CreateDiaryCard,
