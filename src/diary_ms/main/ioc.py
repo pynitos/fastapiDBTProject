@@ -170,7 +170,7 @@ class InteractorProvider(Provider):
 
         # Emotions Admin
         registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
-        registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminDTO)
+        registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminHandler)
 
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
         return registry

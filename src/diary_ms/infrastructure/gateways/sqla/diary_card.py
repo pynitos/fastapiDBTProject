@@ -93,8 +93,10 @@ class DiaryCardGateway(
     async def get_by_id(self, id: DiaryCardId) -> DiaryCard | None:
         return await self._get_by_id(pk=id.value)
 
-    async def get_dto_for_update(self, dm: DiaryCard) -> DiaryCardForUpdateDTO:
-        targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)
+    async def get_dto_for_update(self, id: DiaryCardId) -> DiaryCardForUpdateDTO:
+        dm: DiaryCard | None = await self._get_by_id(id.value)
+        if not dm:
+            return None
         all_targets: Sequence[Target] | None = (
             (
                 await self._session.scalars(
@@ -116,7 +118,7 @@ class DiaryCardGateway(
             if dm.medicaments
             else None
         )
-        all_skills: Sequence[Skill] = (await self._session.scalars(select(Skill).where(Skill.type == dm.type))).all()
+        all_skills: Sequence[Skill] = (await self._session.scalars(select(skills_table).where(skills_table.c.type == dm.type))).all()
         if not dm.id.value:
             raise Exception
         dto: DiaryCardForUpdateDTO = DiaryCardForUpdateDTO(
@@ -132,9 +134,9 @@ class DiaryCardGateway(
                     urge=t.urge,
                     action=t.action,
                 )
-                for t in targets
+                for t in dm.targets
             ]
-            if targets
+            if dm.targets
             else None,
             emotions=[
                 EmotionForUpdDTO(
@@ -142,10 +144,10 @@ class DiaryCardGateway(
                     name=e.name,
                     description=e.description,
                 )
-                for e in emotions
-                if emotions
+                for e in dm.emotions
+                if dm.emotions
             ]
-            if emotions
+            if dm.emotions
             else None,
             medicaments=[
                 MedicamentForUpdDTO(
@@ -153,10 +155,10 @@ class DiaryCardGateway(
                     name=m.name,
                     dosage=m.dosage,
                 )
-                for m in medicaments
-                if medicaments
+                for m in dm.medicaments
+                if dm.medicaments
             ]
-            if medicaments
+            if dm.medicaments
             else None,
             skills=[
                 SkillForUpdDTO(
@@ -165,9 +167,9 @@ class DiaryCardGateway(
                     group=s.group,
                     name=s.name,
                 )
-                for s in skills
+                for s in dm.skills
             ]
-            if skills
+            if dm.skills
             else None,
             # For choice:
             all_targets=[

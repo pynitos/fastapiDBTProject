@@ -31,7 +31,7 @@ class DiaryCardDTOForUpdateReader(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_dto_for_update(self, dm: DiaryCard) -> DiaryCardForUpdateDTO:
+    async def get_dto_for_update(self, id: DiaryCardId) -> DiaryCardForUpdateDTO:
         raise NotImplementedError
 
 
