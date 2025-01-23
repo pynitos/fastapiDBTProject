@@ -6,5 +6,5 @@ from src.diary_ms.domain.common.types.id import TypeId
 
 @dataclass(frozen=True)
 class TargetId(ValueObject[TypeId | None]):
-    def __composite_values__(self) -> tuple[str]:
+    def __composite_values__(self) -> tuple[str | None]:
         return (str(self.value),) if self.value else ()
