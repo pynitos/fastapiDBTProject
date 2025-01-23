@@ -1,5 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -19,5 +20,5 @@ class ValueObject[V](BaseValueObject, ABC):
     def to_raw(self) -> V:
         return self.value
 
-    def __composite_values__(self) -> tuple[V]:
+    def __composite_values__(self) -> tuple[V | Any]:
         return (self.value,)
