@@ -14,7 +14,6 @@ from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
     GetDiaryCardForUpdateDTO,
 )
-from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_update import GetDiaryCardForUpdate
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand

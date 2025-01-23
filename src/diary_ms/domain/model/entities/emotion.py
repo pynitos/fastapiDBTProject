@@ -13,13 +13,12 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 @dataclass
 class Emotion(BaseEntity):
     name: EmotionName
-    id: EmotionId | None = EmotionId(value=None)
+    id: EmotionId | None = None
     description: EmotionDescription = EmotionDescription(value=None)
 
     @classmethod
     def create(cls, command: CreateEmotionAdminCommand) -> Self:
         emotion = cls(
-            id=EmotionId(None),
             name=EmotionName(command.name),
             description=EmotionDescription(command.description),
         )

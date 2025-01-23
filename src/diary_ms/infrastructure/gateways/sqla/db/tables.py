@@ -66,6 +66,12 @@ diary_cards_table = Table(
     Column("mood", Integer),
     Column("description", String(1000)),
     Column("date_of_entry", TIMESTAMP(timezone=False), server_default=func.now()),
+    Column(
+        "type",
+        Enum(SkillType, name="skill_type", create_type=False),
+        nullable=False,
+        default=SkillType.DBT,
+    ),
 )
 
 emotions_table = Table(
