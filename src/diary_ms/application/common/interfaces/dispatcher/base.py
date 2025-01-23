@@ -20,7 +20,7 @@ QR = Any | None
 ET = TypeVar("ET", bound=BaseEvent)
 
 
-class Dispatcher(Protocol):
+class Registry(Protocol):
     def register_command_handler(self, command: type[CT], handler: CommandHandler[CT, CR]) -> None:
         raise NotImplementedError
 
@@ -30,11 +30,27 @@ class Dispatcher(Protocol):
     def register_event_handler(self, event: type[ET], handler: EventHandler[ET, ER]) -> None:
         raise NotImplementedError
 
-    async def handle_command(self, command: Any) -> CR:
+
+class Sender(Protocol):
+    async def send_command(self, command: Any) -> CR:
         raise NotImplementedError
 
-    async def handle_query(self, query: Any) -> QR:
+    async def send_query(self, query: Any) -> QR:
         raise NotImplementedError
 
+
+class Publisher(Protocol):
     async def publish(self, events: BaseEvent | Sequence[BaseEvent]) -> Iterable[ER]:
         raise NotImplementedError
+
+
+class Dispatcher(Sender, Publisher, Protocol):
+    ...
+    # async def send_command(self, command: Any) -> CR:
+    #     raise NotImplementedError
+
+    # async def send_query(self, query: Any) -> QR:
+    #     raise NotImplementedError
+
+    # async def publish(self, events: BaseEvent | Sequence[BaseEvent]) -> Iterable[ER]:
+    #     raise NotImplementedError
