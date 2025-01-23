@@ -118,7 +118,9 @@ class DiaryCardGateway(
             if dm.medicaments
             else None
         )
-        all_skills: Sequence[Skill] = (await self._session.scalars(select(skills_table).where(skills_table.c.type == dm.type))).all()
+        all_skills: Sequence[Skill] = (
+            await self._session.scalars(select(skills_table).where(skills_table.c.type == dm.type))
+        ).all()
         if not dm.id.value:
             raise Exception
         dto: DiaryCardForUpdateDTO = DiaryCardForUpdateDTO(
