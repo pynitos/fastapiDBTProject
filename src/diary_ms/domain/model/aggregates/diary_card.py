@@ -30,11 +30,17 @@ class DiaryCard(AggregateRoot):
     id: DiaryCardId = DiaryCardId(value=None)
     description: DCDescription = DCDescription(value=None)
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
-    targets: list[Target] | list[UUID] | None = None
-    emotions: list[Emotion] | list[UUID] | None = None
-    medicaments: list[Medicament] | list[UUID] | None = None
-    skills: list[Skill] | list[UUID] | None = None
+    targets: list[Target] | None = None
+    emotions: list[Emotion] | None = None
+    emotions_ids: list[UUID] | None = None
+    medicaments: list[Medicament] | None = None
+    skills: list[Skill] | None = None
     type: SkillType = SkillType.DBT
+
+    targets_ids: list[UUID] | None = None
+    emotions_ids: list[UUID] | None = None
+    medicaments_ids: list[UUID] | None = None
+    skills_ids: list[UUID] | None = None
 
     @classmethod
     def create(cls, command: CreateDiaryCardCommand) -> Self:
@@ -52,10 +58,14 @@ class DiaryCard(AggregateRoot):
             mood=DCMood(command.mood),
             description=DCDescription(command.description),
             date_of_entry=DCDateOfEntry(command.date_of_entry),
-            targets=targets,
-            emotions=emotions,
-            medicaments=medicaments,
-            skills=skills,
+            targets_ids=targets,
+            emotions_ids=emotions,
+            medicaments_ids=medicaments,
+            skills_ids=skills,
+            targets=[],
+            skills=[],
+            emotions=[],
+            medicaments=[],
         )
         diary_card.record_event(
             DiaryCardCreatedEvent(
@@ -75,15 +85,14 @@ class DiaryCard(AggregateRoot):
         if command.date_of_entry:
             self.date_of_entry = DCDateOfEntry(command.date_of_entry)
         if command.targets:
-            targets = command.targets
-            self.targets = targets
+            self.targets_ids = command.targets
         if command.emotions:
             emotions = command.emotions
-            self.emotions = emotions
+            self.emotions_ids = emotions
         if command.medicaments:
             medicaments = command.medicaments
-            self.medicaments = medicaments
+            self.medicaments_ids = medicaments
         if command.skills:
             skills = command.skills
-            self.skills = skills
+            self.skills_ids = skills
         return self

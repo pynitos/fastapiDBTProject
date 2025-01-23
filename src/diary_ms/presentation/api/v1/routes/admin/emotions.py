@@ -12,7 +12,7 @@ from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.presentation.api.deps import (
-    MediatorDep,
+    SenderDep,
     UpdateDiaryCardDep,
 )
 from src.diary_ms.presentation.api.v1.routes.admin.schemas.emotion import (
@@ -34,7 +34,7 @@ router = APIRouter(
 
 @router.get("/", response_model=list[EmotionAdminDTO])
 async def admin_get_emotions(
-    mediator: MediatorDep,
+    mediator: SenderDep,
     limit: int = 10,
     offset: int = 0,
 ) -> list[EmotionAdminDTO]:
@@ -69,7 +69,7 @@ async def admin_get_emotions(
 @router.post("/", status_code=201, response_model=None)
 async def admin_create_emotion(
     schema: CreateEmotionAdminReq,
-    mediator: MediatorDep,
+    mediator: SenderDep,
 ) -> None:
     command = CreateEmotionAdminCommand(name=schema.name, description=schema.description)
     await mediator.send_command(command)

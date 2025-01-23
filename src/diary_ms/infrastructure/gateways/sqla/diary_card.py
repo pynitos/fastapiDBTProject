@@ -19,24 +19,29 @@ from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
     DiaryCardDTOForUpdateReader,
-    DiaryCardDTOReader,
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
 )
+from src.diary_ms.domain.common.exceptions.infra import InfraError
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.entities.target_behavior import Target
+from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
+    emotions_table,
+    medicaments_table,
+    skills_table,
+    targets_table,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class DiaryCardGateway(
     DiaryCardReader,
-    DiaryCardDTOReader,
     DiaryCardDTOForUpdateReader,
     DiaryCardSaver,
     DiaryCardUpdater,
@@ -50,22 +55,28 @@ class DiaryCardGateway(
         self._session = session
         self._db_model = db_model
 
-    async def _set_entity_fields(self, entity: DiaryCard) -> None:
-        if entity.targets:
-            entity.targets = (await self._session.scalars(select(Target).where(Target.id.in_(entity.targets)))).all()
-        if entity.emotions:
+    async def _set_entity_relationships(self, entity: DiaryCard) -> None:
+        if entity.targets_ids:
+            entity.targets = (
+                await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.targets_ids)))
+            ).all()
+        if entity.emotions_ids:
             entity.emotions = (
-                await self._session.scalars(select(Emotion).where(Emotion.id.in_(entity.emotions)))
+                await self._session.scalars(select(emotions_table).where(emotions_table.c.id.in_(entity.emotions_ids)))
             ).all()
-        if entity.medicaments:
+        if entity.medicaments_ids:
             entity.medicaments = (
-                await self._session.scalars(select(Medicament).where(Medicament.id.in_(entity.medicaments)))
+                await self._session.scalars(
+                    select(Medicament).where(medicaments_table.c.id.in_(entity.medicaments_ids))
+                )
             ).all()
-        if entity.skills:
-            entity.skills = (await self._session.scalars(select(Skill).where(Skill.id.in_(entity.skills)))).all()
+        if entity.skills_ids:
+            entity.skills = (
+                await self._session.scalars(select(Skill).where(skills_table.c.id.in_(entity.skills_ids)))
+            ).all()
 
     async def create(self, entity: DiaryCard) -> None:
-        await self._set_entity_fields(entity)
+        await self._set_entity_relationships(entity)
         self._session.add(entity)
 
     async def get_all(self, offset: int = 0, limit: int = 10) -> list[OwnDiaryCardDTO]:
@@ -76,22 +87,11 @@ class DiaryCardGateway(
 
     async def _get_by_id(self, pk: UUID | None) -> DiaryCard | None:
         if not pk:
-            return None
+            raise InfraError("Diary card id not provided", 400)
         return await self._session.get(self._db_model, pk)
 
     async def get_by_id(self, id: DiaryCardId) -> DiaryCard | None:
-        entity: DiaryCard | None = await self._get_by_id(pk=id.value)
-        if not entity:
-            return None
-        return self._mapper.db_to_dm(entity)
-
-    async def get_dto_by_id(self, id: DiaryCardId) -> OwnDiaryCardDTO | None:
-        entity: DiaryCard | None = await self._get_by_id(pk=id.value)
-        if not entity:
-            return None
-        else:
-            dto: OwnDiaryCardDTO = self._mapper.db_to_dto(entity)
-            return dto
+        return await self._get_by_id(pk=id.value)
 
     async def get_dto_for_update(self, dm: DiaryCard) -> DiaryCardForUpdateDTO:
         targets, emotions, medicaments, skills = await self._get_attrs_by_entity(dm)
@@ -215,30 +215,8 @@ class DiaryCardGateway(
         return dto
 
     async def update(self, entity: DiaryCard) -> None:
-        pk: UUID | None = entity.id.value
-        db_entity: DiaryCard | None = await self._get_by_id(pk)
-        if not db_entity:
-            raise DiaryCardNotFoundError
-
-        targets, emotions, medicaments, skills = await self._get_attrs_by_entity(entity)
-
-        if entity.mood:
-            db_entity.mood = entity.mood.value
-            logger.debug(f"Update mood with value: {entity.mood.value}")
-        if entity.description:
-            db_entity.description = entity.description.value
-        if entity.date_of_entry:
-            db_entity.date_of_entry = entity.date_of_entry.value
-        if entity.targets:
-            db_entity.targets = list(targets)
-        if entity.emotions:
-            db_entity.emotions = list(emotions)
-        if entity.medicaments:
-            db_entity.medicaments = list(medicaments)
-        if entity.skills:
-            db_entity.skills = list(skills)
-
-        self._session.add(db_entity)
+        await self._set_entity_relationships(entity)
+        self._session.add(entity)
 
     async def delete(self, id: DiaryCardId) -> None:
         entity: DiaryCard | None = await self._get_by_id(id.value)
