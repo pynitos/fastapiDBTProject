@@ -11,7 +11,7 @@ from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 logger = logging.getLogger()
 
 
-class UpdateDiaryCard(CommandHandler[UpdateEmotionAdminCommand, None]):
+class UpdateEmotionAdminHandler(CommandHandler[UpdateEmotionAdminCommand, None]):
     def __init__(
         self,
         db_gateway: EmotionAdminUpdater,

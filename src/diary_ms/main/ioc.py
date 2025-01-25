@@ -10,6 +10,8 @@ from src.diary_ms.application.admin.emotion.dto.mapper.emotion import EmotionAdm
 from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion import (
     CreateEmotionAdminHandler,
 )
+from src.diary_ms.application.admin.emotion.interactors.commands.delete import DeleteEmotionAdminHandler
+from src.diary_ms.application.admin.emotion.interactors.commands.update import UpdateEmotionAdminHandler
 from src.diary_ms.application.admin.emotion.interactors.queries.get_emotion import GetEmotionAdminHandler
 from src.diary_ms.application.admin.emotion.interactors.queries.get_emotions import (
     GetEmotionsAdminHandler,
@@ -58,6 +60,8 @@ from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
+from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
+from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
@@ -146,6 +150,8 @@ class InteractorProvider(Provider):
         UpdateDiaryCard,
         DeleteDiaryCard,
         CreateEmotionAdminHandler,
+        UpdateEmotionAdminHandler,
+        DeleteEmotionAdminHandler,
     )
 
     query_handlers = provide_all(
@@ -176,6 +182,8 @@ class InteractorProvider(Provider):
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
         # Emotions
         registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
+        registry.register_command_handler(UpdateEmotionAdminCommand, UpdateEmotionAdminHandler)
+        registry.register_command_handler(DeleteEmotionAdminCommand, DeleteEmotionAdminHandler)
 
         registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminHandler)
         registry.register_query_handler(GetEmotionAdminDTO, GetEmotionAdminHandler)
