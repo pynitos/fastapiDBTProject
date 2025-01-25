@@ -9,6 +9,7 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminReader,
     EmotionAdminSaver,
 )
+from src.diary_ms.application.common.exceptions.base import GatewayError
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 
@@ -32,9 +33,16 @@ class EmotionAdminGateway(EmotionAdminSaver, EmotionAdminReader):  # noqa: F821
         return result_list
 
     async def get_by_id(self, id: EmotionId) -> Emotion | None:
-        return await self._get_by_id(pk=id.value)
-
-    async def _get_by_id(self, pk: UUID | None) -> Emotion | None:
+        pk: UUID | None = EmotionId.value
         if not pk:
-            return None
+            raise GatewayError("Emotion id not provided!", 400)
         return await self._session.get(self._db_model, pk)
+
+    async def update(self, entity: Emotion) -> None:
+        self._session.add(entity)
+
+    async def delete(self, id: EmotionId) -> None:
+        entity: Emotion | None = await self.get_by_id(id)
+        if not entity:
+            raise GatewayError("Emotion for delete not found!", 404)
+        await self._session.delete(entity)
