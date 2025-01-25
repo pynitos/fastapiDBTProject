@@ -33,7 +33,7 @@ class EmotionAdminGateway(EmotionAdminSaver, EmotionAdminReader):  # noqa: F821
         return result_list
 
     async def get_by_id(self, id: EmotionId) -> Emotion | None:
-        pk: UUID | None = EmotionId.value
+        pk: UUID | None = id.value
         if not pk:
             raise GatewayError("Emotion id not provided!", 400)
         return await self._session.get(self._db_model, pk)

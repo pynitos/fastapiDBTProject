@@ -3,6 +3,7 @@ from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
 from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
+from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
 from src.diary_ms.domain.model.value_objects.emotion.description import (
     EmotionDescription,
 )
@@ -23,3 +24,10 @@ class Emotion(BaseEntity):
             description=EmotionDescription(command.description),
         )
         return emotion
+
+    def update(self, command: UpdateEmotionAdminCommand) -> Self:
+        if command.name:
+            self.name = EmotionName(command.name)
+        if command.description:
+            self.description = EmotionDescription(command.description)
+        return self
