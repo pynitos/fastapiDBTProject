@@ -23,5 +23,6 @@ api_v1.include_router(
 
 api_v1.include_router(
     emotions.router,
+    prefix='/emotions',
     tags=[Tags.EMOTIONS],
 )

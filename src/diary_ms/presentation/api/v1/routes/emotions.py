@@ -18,7 +18,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=list[EmotionDTO])
-async def admin_get_emotions(
+async def get_emotions(
     sender: SenderDep,
     limit: int = 10,
     offset: int = 0,
