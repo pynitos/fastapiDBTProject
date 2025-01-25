@@ -25,8 +25,10 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
+from src.diary_ms.application.diary_card.dto.emotion import GetEmotionsDTO
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import GetDiaryCardForUpdateDTO
 from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
+from src.diary_ms.application.diary_card.dto.mappers.emotion import EmotionDTOMapper
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
@@ -42,6 +44,7 @@ from src.diary_ms.application.diary_card.interactors.events.diary_card_created i
 from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_update import (
     GetDiaryCardForUpdate,
 )
+from src.diary_ms.application.diary_card.interactors.queries.get_emotions import GetEmotions
 from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
 )
@@ -54,6 +57,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
+    EmotionReader,
 )
 from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
@@ -71,6 +75,7 @@ from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
+from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.main.config import Settings
 
 
@@ -125,6 +130,15 @@ class AdaptersProvider(Provider):
         return DiaryCardGateway(db_model=DiaryCard, session=session)
 
     @provide
+    def get_emotion_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        EmotionGateway,
+        EmotionReader,
+    ]:
+        return EmotionGateway(db_model=Emotion, session=session)
+
+    @provide
     def get_emotion_admin_gateway(
         self, session: AsyncSession
     ) -> AnyOf[
@@ -141,6 +155,7 @@ class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
     mappers = provide_all(
+        EmotionDTOMapper,
         EmotionAdminDTOMapper,
         WithParents[DiaryCardDTOMapperImpl],
     )
@@ -158,6 +173,7 @@ class InteractorProvider(Provider):
         GetOwnDiaryCards,
         GetOwnDiaryCard,
         GetDiaryCardForUpdate,
+        GetEmotions,
         GetEmotionsAdminHandler,
         GetEmotionAdminHandler,
     )
@@ -170,6 +186,7 @@ class InteractorProvider(Provider):
     @provide(scope=Scope.APP)
     def init_registry(self) -> RegistryImpl:
         registry = RegistryImpl()
+
         # Diary cards
         registry.register_command_handler(CreateDiaryCardCommand, CreateDiaryCard)
         registry.register_command_handler(UpdateDiaryCardCommand, UpdateDiaryCard)
@@ -180,7 +197,10 @@ class InteractorProvider(Provider):
         registry.register_query_handler(GetDiaryCardForUpdateDTO, GetDiaryCardForUpdate)
 
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
+
         # Emotions
+        registry.register_query_handler(GetEmotionsDTO, GetEmotions)
+
         registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
         registry.register_command_handler(UpdateEmotionAdminCommand, UpdateEmotionAdminHandler)
         registry.register_command_handler(DeleteEmotionAdminCommand, DeleteEmotionAdminHandler)

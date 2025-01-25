@@ -2,7 +2,7 @@ from src.diary_ms.application.admin.emotion.dto.emotion import EmotionAdminDTO
 from src.diary_ms.domain.model.entities.emotion import Emotion
 
 
-class EmotionAdminDTOMapper:
+class EmotionDTOMapper:
     @staticmethod
     def dm_to_dto(dm: Emotion) -> EmotionAdminDTO:
         return EmotionAdminDTO(

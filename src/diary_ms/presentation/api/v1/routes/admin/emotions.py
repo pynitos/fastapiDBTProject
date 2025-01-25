@@ -14,7 +14,7 @@ from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmot
 from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
 from src.diary_ms.presentation.api.deps import SenderDep
-from src.diary_ms.presentation.api.v1.routes.admin.schemas.emotion import (
+from src.diary_ms.presentation.api.v1.routes.admin.schemas.emotions import (
     CreateEmotionAdminReq,
     UpdateEmotionAdminReq,
 )
