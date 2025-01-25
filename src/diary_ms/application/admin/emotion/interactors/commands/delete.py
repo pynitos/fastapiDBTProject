@@ -6,7 +6,7 @@ from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmot
 from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 
 
-class DeleteDiaryCard(CommandHandler[DeleteEmotionAdminCommand, None]):
+class DeleteEmotionAdminHandler(CommandHandler[DeleteEmotionAdminCommand, None]):
     def __init__(
         self,
         db_gateway: EmotionAdminDeleter,
