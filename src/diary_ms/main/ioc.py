@@ -5,11 +5,12 @@ from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, 
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
-from src.diary_ms.application.admin.emotion.dto.emotion import GetEmotionsAdminDTO
-from src.diary_ms.application.admin.emotion.dto.mapper.emotion import EmotionAdminMapper
+from src.diary_ms.application.admin.emotion.dto.emotion import GetEmotionAdminDTO, GetEmotionsAdminDTO
+from src.diary_ms.application.admin.emotion.dto.mapper.emotion import EmotionAdminDTOMapper
 from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion import (
     CreateEmotionAdminHandler,
 )
+from src.diary_ms.application.admin.emotion.interactors.queries.get_emotion import GetEmotionAdminHandler
 from src.diary_ms.application.admin.emotion.interactors.queries.get_emotions import (
     GetEmotionsAdminHandler,
 )
@@ -20,7 +21,7 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminUpdater,
 )
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
-from src.diary_ms.application.common.interfaces.uow import UOWProtocol
+from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import GetDiaryCardForUpdateDTO
 from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
@@ -55,8 +56,8 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
 from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
-from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
+from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
@@ -89,7 +90,7 @@ class AdaptersProvider(Provider):
     @provide(scope=Scope.REQUEST)
     async def get_session(
         self, session_maker: async_sessionmaker[AsyncSession]
-    ) -> AsyncIterable[AnyOf[AsyncSession, UOWProtocol]]:
+    ) -> AsyncIterable[AnyOf[AsyncSession, TransactionManager]]:
         async with session_maker() as session:
             yield session
 
@@ -136,7 +137,7 @@ class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
     mappers = provide_all(
-        EmotionAdminMapper,
+        EmotionAdminDTOMapper,
         WithParents[DiaryCardDTOMapperImpl],
     )
 
@@ -152,6 +153,7 @@ class InteractorProvider(Provider):
         GetOwnDiaryCard,
         GetDiaryCardForUpdate,
         GetEmotionsAdminHandler,
+        GetEmotionAdminHandler,
     )
 
     event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
@@ -171,9 +173,11 @@ class InteractorProvider(Provider):
         registry.register_query_handler(GetOwnDiaryCardsDTO, GetOwnDiaryCards)
         registry.register_query_handler(GetDiaryCardForUpdateDTO, GetDiaryCardForUpdate)
 
-        # Emotions Admin
-        registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
-        registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminHandler)
-
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
+        # Emotions
+        registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
+
+        registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminHandler)
+        registry.register_query_handler(GetEmotionAdminDTO, GetEmotionAdminHandler)
+
         return registry

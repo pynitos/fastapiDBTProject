@@ -1,6 +1,6 @@
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import UOWProtocol
+from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardDeleter
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
@@ -11,7 +11,7 @@ class DeleteDiaryCard(CommandHandler[DeleteDiaryCardCommand, None]):
         self,
         db_gateway: DiaryCardDeleter,
         id_provider: IdProvider,
-        uow: UOWProtocol,
+        uow: TransactionManager,
     ) -> None:
         self.db_gateway = db_gateway
         self.id_provider = id_provider

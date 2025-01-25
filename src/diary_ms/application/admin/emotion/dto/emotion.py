@@ -12,5 +12,10 @@ class EmotionAdminDTO:
 
 
 @dataclass
+class GetEmotionAdminDTO:
+    id: UUID
+
+
+@dataclass
 class GetEmotionsAdminDTO:
     pagination: Pagination

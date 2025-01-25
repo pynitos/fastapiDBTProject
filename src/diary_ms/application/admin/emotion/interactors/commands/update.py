@@ -1,0 +1,33 @@
+import logging
+
+from src.diary_ms.application.admin.emotion.interfaces.gateway import EmotionAdminUpdater
+from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
+from src.diary_ms.application.common.interfaces.uow import TransactionManager
+from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
+from src.diary_ms.domain.model.entities.emotion import Emotion
+from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
+
+logger = logging.getLogger()
+
+
+class UpdateDiaryCard(CommandHandler[UpdateEmotionAdminCommand, None]):
+    def __init__(
+        self,
+        db_gateway: EmotionAdminUpdater,
+        id_provider: AdminIdProvider,
+        transaction_manager: TransactionManager,
+    ) -> None:
+        self.db_gateway = db_gateway
+        self.id_provider = id_provider
+        self.transaction_manager = transaction_manager
+
+    async def __call__(self, command: UpdateEmotionAdminCommand) -> None:
+        self.id_provider.get_current_user_id()
+        emotion: Emotion | None = await self.db_gateway.get_by_id(EmotionId(command.id))
+        if emotion:
+            updated_emotion: Emotion = emotion.update(command=command)
+            await self.db_gateway.update(updated_emotion)
+            logger.debug(f"Emotion with id: {command.id} updated.")
+            await self.uow.commit()
+        return None

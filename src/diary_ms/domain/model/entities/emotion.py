@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.create_emotion import CreateEmotionAdminCommand
+from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.value_objects.emotion.description import (
     EmotionDescription,
 )
