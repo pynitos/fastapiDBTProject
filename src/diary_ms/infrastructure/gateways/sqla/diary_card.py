@@ -5,6 +5,7 @@ from uuid import UUID
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
+from src.diary_ms.application.common.exceptions.base import InfraError
 from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.dto.diary_card import (
     OwnDiaryCardDTO,
@@ -23,7 +24,6 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardSaver,
     DiaryCardUpdater,
 )
-from src.diary_ms.domain.common.exceptions.infra import InfraError
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.emotion import Emotion

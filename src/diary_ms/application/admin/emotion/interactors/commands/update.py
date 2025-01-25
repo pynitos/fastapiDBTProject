@@ -23,11 +23,11 @@ class UpdateEmotionAdminHandler(CommandHandler[UpdateEmotionAdminCommand, None])
         self.transaction_manager = transaction_manager
 
     async def __call__(self, command: UpdateEmotionAdminCommand) -> None:
-        self.id_provider.get_current_user_id()
+        self.id_provider.get_admin_user_id()
         emotion: Emotion | None = await self.db_gateway.get_by_id(EmotionId(command.id))
         if emotion:
             updated_emotion: Emotion = emotion.update(command=command)
             await self.db_gateway.update(updated_emotion)
             logger.debug(f"Emotion with id: {command.id} updated.")
-            await self.uow.commit()
+            await self.transaction_manager.commit()
         return None
