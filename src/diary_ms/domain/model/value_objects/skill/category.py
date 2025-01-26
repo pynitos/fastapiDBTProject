@@ -12,6 +12,6 @@ class WrongSkillCategoryValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class SkillCategory(ValueObject[str]):
+class SkillCategory(ValueObject[str | None]):
     def _validate(self) -> None:
         pass

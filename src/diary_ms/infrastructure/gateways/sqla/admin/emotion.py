@@ -4,7 +4,6 @@ from uuid import UUID
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.admin.emotion.dto.emotion import EmotionAdminDTO
 from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminDeleter,
     EmotionAdminReader,

@@ -22,6 +22,19 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminSaver,
     EmotionAdminUpdater,
 )
+from src.diary_ms.application.admin.skill.commands.create_skill import CreateSkillAdminHandler
+from src.diary_ms.application.admin.skill.commands.delete_skill import DeleteSkillAdminHandler
+from src.diary_ms.application.admin.skill.commands.update_skill import UpdateSkillAdminHandler
+from src.diary_ms.application.admin.skill.dto.mapper.skill import SkillAdminDTOMapper
+from src.diary_ms.application.admin.skill.dto.skill import GetSkillAdminDTO, GetSkillsAdminDTO
+from src.diary_ms.application.admin.skill.interfaces.gateway import (
+    SkillAdminDeleter,
+    SkillAdminReader,
+    SkillAdminSaver,
+    SkillAdminUpdater,
+)
+from src.diary_ms.application.admin.skill.queries.get_skill import GetSkillAdminHandler
+from src.diary_ms.application.admin.skill.queries.get_skills import GetSkillsAdminHandler
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
@@ -66,6 +79,9 @@ from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCard
 from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
+from src.diary_ms.domain.model.commands.skill.create_skill import CreateSkillAdminCommand
+from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
+from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
@@ -73,6 +89,7 @@ from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
+from src.diary_ms.infrastructure.gateways.sqla.admin.skill import SkillAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
@@ -150,14 +167,27 @@ class AdaptersProvider(Provider):
     ]:
         return EmotionAdminGateway(db_model=Emotion, session=session)
 
+    @provide
+    def get_skill_admin_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        SkillAdminGateway,
+        SkillAdminReader,
+        SkillAdminSaver,
+        SkillAdminUpdater,
+        SkillAdminDeleter,
+    ]:
+        return SkillAdminGateway(session=session)
+
 
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
     mappers = provide_all(
+        WithParents[DiaryCardDTOMapperImpl],
         EmotionDTOMapper,
         EmotionAdminDTOMapper,
-        WithParents[DiaryCardDTOMapperImpl],
+        SkillAdminDTOMapper,
     )
 
     command_handlers = provide_all(
@@ -167,6 +197,9 @@ class InteractorProvider(Provider):
         CreateEmotionAdminHandler,
         UpdateEmotionAdminHandler,
         DeleteEmotionAdminHandler,
+        CreateSkillAdminHandler,
+        UpdateSkillAdminHandler,
+        DeleteSkillAdminHandler,
     )
 
     query_handlers = provide_all(
@@ -176,6 +209,8 @@ class InteractorProvider(Provider):
         GetEmotions,
         GetEmotionsAdminHandler,
         GetEmotionAdminHandler,
+        GetSkillAdminHandler,
+        GetSkillsAdminHandler,
     )
 
     event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
@@ -207,5 +242,13 @@ class InteractorProvider(Provider):
 
         registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminHandler)
         registry.register_query_handler(GetEmotionAdminDTO, GetEmotionAdminHandler)
+
+        # Skills
+        registry.register_command_handler(CreateSkillAdminCommand, CreateSkillAdminHandler)
+        registry.register_command_handler(UpdateSkillAdminCommand, UpdateSkillAdminHandler)
+        registry.register_command_handler(DeleteSkillAdminCommand, DeleteSkillAdminHandler)
+
+        registry.register_query_handler(GetSkillsAdminDTO, GetSkillsAdminHandler)
+        registry.register_query_handler(GetSkillAdminDTO, GetSkillAdminHandler)
 
         return registry

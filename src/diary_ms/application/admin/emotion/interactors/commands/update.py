@@ -18,16 +18,16 @@ class UpdateEmotionAdminHandler(CommandHandler[UpdateEmotionAdminCommand, None])
         id_provider: AdminIdProvider,
         transaction_manager: TransactionManager,
     ) -> None:
-        self.db_gateway = db_gateway
-        self.id_provider = id_provider
+        self._db_gateway = db_gateway
+        self._id_provider = id_provider
         self.transaction_manager = transaction_manager
 
     async def __call__(self, command: UpdateEmotionAdminCommand) -> None:
-        self.id_provider.get_admin_user_id()
-        emotion: Emotion | None = await self.db_gateway.get_by_id(EmotionId(command.id))
+        self._id_provider.get_admin_user_id()
+        emotion: Emotion | None = await self._db_gateway.get_by_id(EmotionId(command.id))
         if emotion:
             updated_emotion: Emotion = emotion.update(command=command)
-            await self.db_gateway.update(updated_emotion)
+            await self._db_gateway.update(updated_emotion)
             logger.debug(f"Emotion with id: {command.id} updated.")
             await self.transaction_manager.commit()
         return None

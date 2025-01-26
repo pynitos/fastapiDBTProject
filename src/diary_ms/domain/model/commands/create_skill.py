@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from uuid import UUID
 
 from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -12,5 +12,5 @@ class CreateSkillCommand:
     name: str
     type: SkillType = SkillType.DBT
 
-    id: SkillId | None = None
+    id: UUID | None = None
     description: SkillDescription | None = None

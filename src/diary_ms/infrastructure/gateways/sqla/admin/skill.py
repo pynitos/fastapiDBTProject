@@ -4,7 +4,12 @@ from uuid import UUID
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.admin.skill.interfaces.gateway import SkillAdminDeleter, SkillAdminReader, SkillAdminSaver, SkillAdminUpdater
+from src.diary_ms.application.admin.skill.interfaces.gateway import (
+    SkillAdminDeleter,
+    SkillAdminReader,
+    SkillAdminSaver,
+    SkillAdminUpdater,
+)
 from src.diary_ms.application.common.exceptions.base import GatewayError
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
 from src.diary_ms.domain.model.entities.skill import Skill
@@ -12,11 +17,7 @@ from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 
 
 class SkillAdminGateway(SkillAdminSaver, SkillAdminReader, SkillAdminUpdater, SkillAdminDeleter):  # noqa: F821
-    def __init__(
-        self,
-        session: AsyncSession,
-        db_model: type[BaseEntity] = Skill
-    ) -> None:
+    def __init__(self, session: AsyncSession, db_model: type[BaseEntity] = Skill) -> None:
         self._session = session
         self._db_model = db_model
 

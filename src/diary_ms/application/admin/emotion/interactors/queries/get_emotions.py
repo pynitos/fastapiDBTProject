@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 
 class GetEmotionsAdminHandler(QueryHandler[GetEmotionsAdminDTO, list[EmotionAdminDTO]]):
     def __init__(self, db_gateway: EmotionAdminReader, id_provider: AdminIdProvider, mapper: EmotionAdminDTOMapper):
-        self.db_gateway = db_gateway
-        self.id_provider = id_provider
+        self._db_gateway = db_gateway
+        self._id_provider = id_provider
         self._mapper = mapper
 
     async def __call__(self, query: GetEmotionsAdminDTO) -> list[EmotionAdminDTO]:
-        self.id_provider.get_admin_user_id()
-        emotions: list[Emotion] = await self.db_gateway.get_all(
+        self._id_provider.get_admin_user_id()
+        emotions: list[Emotion] = await self._db_gateway.get_all(
             offset=query.pagination.offset, limit=query.pagination.limit
         )
         logger.debug(emotions)

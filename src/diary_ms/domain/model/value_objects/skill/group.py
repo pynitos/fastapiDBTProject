@@ -12,6 +12,6 @@ class WrongSkillGroupValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class SkillGroup(ValueObject[str]):
+class SkillGroup(ValueObject[str | None]):
     def _validate(self) -> None:
         pass
