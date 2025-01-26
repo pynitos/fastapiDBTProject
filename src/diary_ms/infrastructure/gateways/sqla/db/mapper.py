@@ -73,8 +73,6 @@ def init_mapper():
             "__group": skills_table.c.group,
             "name": composite(lambda value: SkillName(value), skills_table.c.name),
             "__name": skills_table.c.name,
-            "type": composite(lambda value: SkillType(value), skills_table.c.type),
-            "__type": skills_table.c.type,
             "description": composite(lambda value: SkillDescription(value), diary_card_skill_assotiation.c.description),
             "__description": diary_card_skill_assotiation.c.description,
         },

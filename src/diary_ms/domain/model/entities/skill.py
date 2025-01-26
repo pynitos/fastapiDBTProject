@@ -14,12 +14,12 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 @dataclass
 class Skill(BaseEntity):
-    id: SkillId = SkillId()
-    category: SkillCategory = SkillCategory()
-    group: SkillGroup = SkillGroup()
-    name: SkillName = SkillName()
+    id: SkillId = SkillId(None)
+    category: SkillCategory = SkillCategory(None)
+    group: SkillGroup = SkillGroup(None)
+    name: SkillName = SkillName(None)
     type: SkillType = SkillType.DBT
-    description: SkillDescription | None = None
+    description: SkillDescription = SkillDescription(None)
 
     @classmethod
     def create(cls, command: CreateSkillCommand) -> Self:
@@ -30,7 +30,7 @@ class Skill(BaseEntity):
             category=SkillCategory(command.category),
             group=SkillGroup(command.group),
             name=SkillName(command.name),
-            type=SkillType(command.type),
+            # type=command.type,
             description=SkillDescription(command.description),
         )
         return skill

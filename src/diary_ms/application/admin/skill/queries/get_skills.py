@@ -1,5 +1,6 @@
 import logging
 
+from src.diary_ms.application.admin.skill.dto.mapper.skill import SkillAdminDTOMapper
 from src.diary_ms.application.admin.skill.dto.skill import GetSkillsAdminDTO, SkillAdminDTO
 from src.diary_ms.application.admin.skill.interfaces.gateway import SkillAdminReader
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler

@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Self
 
 
 class SkillType(StrEnum):

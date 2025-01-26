@@ -27,5 +27,5 @@ class SkillsAdminFilters:
 
 @dataclass
 class GetSkillsAdminDTO:
-    pagination: Pagination = Pagination()
-    filters: SkillsAdminFilters = SkillsAdminFilters()
+    pagination: Pagination
+    filters: SkillsAdminFilters
