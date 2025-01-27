@@ -72,7 +72,7 @@ class DiaryCardGateway(
             ).all()
         if entity.skill_assotiations:
             for s in entity.skill_assotiations:
-                if not await self._session.get(skills_table, s.skill_id):
+                if not await self._session.get(Skill, s.skill_id.value):
                     raise GatewayError(f'Skill with id: {id} not found.', 404)
 
     async def create(self, entity: DiaryCard) -> None:
