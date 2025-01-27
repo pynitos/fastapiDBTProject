@@ -55,7 +55,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     category=x.category.value,
                     group=x.group.value,
                     name=x.name.value,
-                    type=x.value.type,
+                    type=x.type.value,
                     description=x.value.description,
                 )
                 for x in dm.skills
