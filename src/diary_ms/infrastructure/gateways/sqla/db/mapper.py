@@ -40,7 +40,7 @@ def init_mapper():
     diary_cards_query = join(diary_cards_table, diary_card_skill_assotiation)
     mapper_registry.map_imperatively(
         DiaryCard,
-        diary_cards_query,
+        diary_cards_table,
         properties={
             "id": composite(lambda value: DiaryCardId(value), diary_cards_table.c.id),
             "_id": diary_cards_table.c.id,
