@@ -14,9 +14,9 @@ from src.diary_ms.application.common.interfaces.handlers.query import (
 from src.diary_ms.domain.common.model.events.base import BaseEvent
 
 CT = TypeVar("CT", bound=Any)
-CR = Any
+CR = Any | None
 QT = TypeVar("QT", bound=Any)
-QR = Any
+QR = Any | None
 ET = TypeVar("ET", bound=BaseEvent)
 
 

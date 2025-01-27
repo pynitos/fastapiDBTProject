@@ -30,4 +30,3 @@ class UpdateEmotionAdminHandler(CommandHandler[UpdateEmotionAdminCommand, None])
             await self._db_gateway.update(updated_emotion)
             logger.debug(f"Emotion with id: {command.id} updated.")
             await self.transaction_manager.commit()
-        return None
