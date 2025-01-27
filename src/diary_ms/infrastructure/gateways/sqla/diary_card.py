@@ -5,7 +5,7 @@ from uuid import UUID
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.exceptions.base import InfraError
+from src.diary_ms.application.common.exceptions.base import GatewayError, InfraError
 from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.dto.diary_card import (
     OwnDiaryCardDTO,
@@ -71,14 +71,9 @@ class DiaryCardGateway(
                 )
             ).all()
         if entity.skill_assotiations:
-            skills_ids = [x.skill_id for x in entity.skill_assotiations]
-            (
-                await self._session.scalars(
-                    select(skills_table).where(skills_table.c.id.in_(
-                        skills_ids
-                        ))
-                )
-            ).all()
+            for s in entity.skill_assotiations:
+                if not await self._session.get(skills_table, s.skill_id):
+                    raise GatewayError(f'Skill with id: {id} not found.', 404)
 
     async def create(self, entity: DiaryCard) -> None:
         await self._set_entity_relationships(entity)
