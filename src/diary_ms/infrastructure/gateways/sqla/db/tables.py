@@ -25,10 +25,6 @@ diary_card_skill_assotiation = Table(
     Column("situation", String(100), default=None, nullable=True),
 )
 
-# class DiaryCardSkill(Base):
-# skill: Mapped["Skill"] = relationship(lazy="selectin")
-
-
 diary_card_target_assotiation = Table(
     "diary_card_target",
     metadata,

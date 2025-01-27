@@ -37,7 +37,6 @@ mapper_registry = registry(metadata=metadata)
 
 
 def init_mapper():
-    diary_cards_query = join(diary_cards_table, diary_card_skill_assotiation)
     mapper_registry.map_imperatively(
         DiaryCard,
         diary_cards_table,
