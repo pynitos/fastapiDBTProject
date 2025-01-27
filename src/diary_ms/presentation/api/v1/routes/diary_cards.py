@@ -70,6 +70,11 @@ async def create_diary_card(
     schema: CreateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
+    skills: list[CreateDiaryCardCommand.Skill] = [
+        CreateDiaryCardCommand.Skill(
+            id=s.id, situation=s.situation
+            ) for s in schema.skills
+            ]
     command = CreateDiaryCardCommand(
         mood=schema.mood,
         description=schema.description,
@@ -77,7 +82,7 @@ async def create_diary_card(
         targets=schema.targets,
         emotions=schema.emotions,
         medicaments=schema.medicaments,
-        skills=schema.skills,
+        skills=skills,
         type=schema.type,
     )
     result = await sender.send_command(command)

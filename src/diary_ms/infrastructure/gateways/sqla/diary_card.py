@@ -70,9 +70,14 @@ class DiaryCardGateway(
                     select(Medicament).where(medicaments_table.c.id.in_(entity.medicaments_ids))
                 )
             ).all()
-        if entity.skills_ids:
-            entity.skills = (
-                await self._session.scalars(select(Skill).where(skills_table.c.id.in_(entity.skills_ids)))
+        if entity.skill_assotiations:
+            skills_ids = [x.skill_id for x in entity.skill_assotiations]
+            (
+                await self._session.scalars(
+                    select(skills_table).where(skills_table.c.id.in_(
+                        skills_ids
+                        ))
+                )
             ).all()
 
     async def create(self, entity: DiaryCard) -> None:

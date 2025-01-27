@@ -9,6 +9,7 @@ from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
+from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
@@ -20,6 +21,8 @@ from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
 )
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from src.diary_ms.domain.model.value_objects.skill.id import SkillId
+from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -40,7 +43,7 @@ class DiaryCard(AggregateRoot):
     targets_ids: list[UUID] | None = None
     emotions_ids: list[UUID] | None = None
     medicaments_ids: list[UUID] | None = None
-    skills_ids: list[UUID] | None = None
+    skill_assotiations: list[UUID] | None = None
 
     @classmethod
     def create(cls, command: CreateDiaryCardCommand) -> Self:
@@ -51,7 +54,13 @@ class DiaryCard(AggregateRoot):
         targets = command.targets
         emotions = command.emotions
         medicaments = command.medicaments
-        skills = command.skills
+        skill_assotiations = [
+            DiaryCardSkillAssotiation(
+            diary_card_id=DiaryCardId(id),
+            skill_id=SkillId(s.id),
+            situation=SkillSituation(s.situation),
+        ) for s in command.skills
+        ]
         diary_card: Self = cls(
             id=DiaryCardId(command.id),
             user_id=UserId(command.user_id),
@@ -61,7 +70,7 @@ class DiaryCard(AggregateRoot):
             targets_ids=targets,
             emotions_ids=emotions,
             medicaments_ids=medicaments,
-            skills_ids=skills,
+            skill_assotiations=skill_assotiations,
             targets=[],
             skills=[],
             emotions=[],
@@ -94,5 +103,5 @@ class DiaryCard(AggregateRoot):
             self.medicaments_ids = medicaments
         if command.skills:
             skills = command.skills
-            self.skills_ids = skills
+            self.skill_assotiations = skills
         return self

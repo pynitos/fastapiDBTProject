@@ -7,6 +7,10 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 @dataclass
 class CreateDiaryCardCommand:
+    class Skill:
+        id: UUID
+        situation: str | None = None
+
     mood: int
     id: UUID | None = None
     user_id: UUID | None = None
@@ -16,6 +20,6 @@ class CreateDiaryCardCommand:
     targets: list[UUID] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
-    skills: list[UUID] | None = None
+    skills: list[Skill] | None = None
 
     type: SkillType = SkillType.DBT
