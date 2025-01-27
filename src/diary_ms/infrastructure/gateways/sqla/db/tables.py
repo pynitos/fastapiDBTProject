@@ -22,7 +22,7 @@ diary_card_skill_assotiation = Table(
     metadata,
     Column("diary_card_id", metadata, ForeignKey("diary_cards.id"), primary_key=True),
     Column("skill_id", metadata, ForeignKey("skills.id"), primary_key=True),
-    Column("description", String(100), default=None, nullable=True),
+    Column("situation", String(100), default=None, nullable=True),
 )
 
 # class DiaryCardSkill(Base):
@@ -122,6 +122,7 @@ skills_table = Table(
     Column("category", String(20)),
     Column("group", String(20)),
     Column("name", String(20)),
+    Column("description", String(200)),
     Column(
         "type",
         Enum(SkillType, name="skill_type", create_type=False),

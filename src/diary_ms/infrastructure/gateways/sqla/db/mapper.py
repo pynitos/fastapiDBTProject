@@ -20,7 +20,6 @@ from src.diary_ms.domain.model.value_objects.skill.description import SkillDescr
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
@@ -38,32 +37,30 @@ mapper_registry = registry(metadata=metadata)
 
 
 def init_mapper():
-    (
-        mapper_registry.map_imperatively(
-            DiaryCard,
-            diary_cards_table,
-            properties={
-                "id": composite(lambda value: DiaryCardId(value), diary_cards_table.c.id),
-                "_id": diary_cards_table.c.id,
-                "user_id": composite(lambda value: UserId(value), diary_cards_table.c.user_id),
-                "__user_id": diary_cards_table.c.user_id,
-                "mood": composite(lambda value: DCMood(value), diary_cards_table.c.mood),
-                "__mood": diary_cards_table.c.mood,
-                "description": composite(lambda value: DCDescription(value), diary_cards_table.c.description),
-                "__description": diary_cards_table.c.description,
-                "date_of_entry": composite(lambda value: DCDateOfEntry(value), diary_cards_table.c.date_of_entry),
-                "__date_of_entry": diary_cards_table.c.date_of_entry,
-                "emotions": relationship("Emotion", secondary="diary_card_emotion", lazy="selectin"),
-                "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
-                "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin"),
-            },
-        ),
+    diary_cards_query = join(skills_table, diary_card_skill_assotiation)
+    mapper_registry.map_imperatively(
+        DiaryCard,
+        diary_cards_query,
+        properties={
+            "id": composite(lambda value: DiaryCardId(value), diary_cards_table.c.id),
+            "_id": diary_cards_table.c.id,
+            "user_id": composite(lambda value: UserId(value), diary_cards_table.c.user_id),
+            "__user_id": diary_cards_table.c.user_id,
+            "mood": composite(lambda value: DCMood(value), diary_cards_table.c.mood),
+            "__mood": diary_cards_table.c.mood,
+            "description": composite(lambda value: DCDescription(value), diary_cards_table.c.description),
+            "__description": diary_cards_table.c.description,
+            "date_of_entry": composite(lambda value: DCDateOfEntry(value), diary_cards_table.c.date_of_entry),
+            "__date_of_entry": diary_cards_table.c.date_of_entry,
+            "emotions": relationship("Emotion", secondary="diary_card_emotion", lazy="selectin"),
+            "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
+            "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin"),
+        },
     )
 
-    skills_query = join(skills_table, diary_card_skill_assotiation)
     mapper_registry.map_imperatively(
         Skill,
-        skills_query,
+        skills_table,
         properties={
             "id": composite(lambda value: SkillId(value), skills_table.c.id),
             "__id": skills_table.c.id,
@@ -73,8 +70,8 @@ def init_mapper():
             "__group": skills_table.c.group,
             "name": composite(lambda value: SkillName(value), skills_table.c.name),
             "__name": skills_table.c.name,
-            "description": composite(lambda value: SkillDescription(value), diary_card_skill_assotiation.c.description),
-            "__description": diary_card_skill_assotiation.c.description,
+            "description": composite(lambda value: SkillDescription(value), skills_table.c.description),
+            "__description": skills_table.c.description,
         },
     )
     mapper_registry.map_imperatively(
