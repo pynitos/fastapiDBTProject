@@ -69,6 +69,7 @@ async def admin_update_skill(
     sender: SenderDep,
 ) -> None:
     command = UpdateSkillAdminCommand(
+        id=id,
         name=schema.name,
         category=schema.category,
         group=schema.group,
