@@ -53,12 +53,10 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
             else None,
             skills=[
                 SkillDTO(
-                    id=x.id.value,
                     category=x.category.value,
                     group=x.group.value,
                     name=x.name.value,
-                    type=x.type.value,
-                    description=x.description.value,
+                    situation=x.situation.value,
                 )
                 for x in dm.skills
             ]

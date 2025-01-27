@@ -56,10 +56,11 @@ class DiaryCard(AggregateRoot):
         medicaments = command.medicaments
         skill_assotiations = [
             DiaryCardSkillAssotiation(
-            diary_card_id=DiaryCardId(id),
-            skill_id=SkillId(s.id),
-            situation=SkillSituation(s.situation),
-        ) for s in command.skills
+                diary_card_id=DiaryCardId(id),
+                skill_id=SkillId(s.id),
+                situation=SkillSituation(s.situation),
+            )
+            for s in command.skills
         ]
         diary_card: Self = cls(
             id=DiaryCardId(command.id),

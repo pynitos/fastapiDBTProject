@@ -1,4 +1,3 @@
-from sqlalchemy import join
 from sqlalchemy.orm import composite, registry, relationship
 
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard

@@ -4,7 +4,12 @@ from uuid import UUID
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, HTTPException
 
-from src.diary_ms.application.admin.skill.dto.skill import GetSkillAdminDTO, GetSkillsAdminDTO, SkillAdminDTO, SkillsAdminFilters
+from src.diary_ms.application.admin.skill.dto.skill import (
+    GetSkillAdminDTO,
+    GetSkillsAdminDTO,
+    SkillAdminDTO,
+    SkillsAdminFilters,
+)
 from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.domain.model.commands.skill.create_skill import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
