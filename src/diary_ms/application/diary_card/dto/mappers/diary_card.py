@@ -1,10 +1,12 @@
-from src.diary_ms.application.diary_card.dto.diary_card import OwnDiaryCardDTO
+from src.diary_ms.application.diary_card.dto.diary_card import (
+    EmotionDTO,
+    MedicamentDTO,
+    OwnDiaryCardDTO,
+    SkillDTO,
+    TargetDTO,
+)
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.entities.target_behavior import Target
 
 
 class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
@@ -18,7 +20,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
             date_of_entry=dm.date_of_entry.value,
             type=dm.type.value,
             targets=[
-                Target(
+                TargetDTO(
                     id=x.id.value,
                     user_id=x.user_id.value,
                     urge=x.urge.value,
@@ -29,7 +31,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
             if dm.targets
             else None,
             emotions=[
-                Emotion(
+                EmotionDTO(
                     x.id.value,
                     x.name.value,
                     x.description.value,
@@ -39,7 +41,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
             if dm.emotions
             else None,
             medicaments=[
-                Medicament(
+                MedicamentDTO(
                     id=x.id.value,
                     user_id=x.user_id.value,
                     name=x.name.value,
@@ -50,13 +52,13 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
             if dm.medicaments
             else None,
             skills=[
-                Skill(
+                SkillDTO(
                     id=x.id.value,
                     category=x.category.value,
                     group=x.group.value,
                     name=x.name.value,
                     type=x.type.value,
-                    description=x.value.description,
+                    description=x.description.value,
                 )
                 for x in dm.skills
             ]

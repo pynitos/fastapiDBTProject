@@ -29,6 +29,7 @@ class SkillDTO:
     category: str
     group: str
     name: str
+    situation: str
 
 
 @dataclass
