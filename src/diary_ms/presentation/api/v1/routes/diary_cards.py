@@ -70,9 +70,9 @@ async def create_diary_card(
     schema: CreateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
-    skills: list[CreateDiaryCardCommand.Skill] = [
-        CreateDiaryCardCommand.Skill(id=s.id, situation=s.situation) for s in schema.skills
-    ]
+    skills: list[CreateDiaryCardCommand.Skill] | None = (
+        [CreateDiaryCardCommand.Skill(id=s.id, situation=s.situation) for s in schema.skills] if schema.skills else None
+    )
     command = CreateDiaryCardCommand(
         mood=schema.mood,
         description=schema.description,
@@ -83,8 +83,7 @@ async def create_diary_card(
         skills=skills,
         type=schema.type,
     )
-    result = await sender.send_command(command)
-    return result
+    await sender.send_command(command)
 
 
 @router.patch("/<id:UUID>", status_code=HTTPStatus.NO_CONTENT, response_model=None)
@@ -103,7 +102,7 @@ async def update_diary_card(
         medicaments=schema.medicaments,
         skills=schema.skills,
     )
-    return await sender.send_command(command)
+    await sender.send_command(command)
 
 
 @router.delete("/<id:UUID>", status_code=204, response_model=None)

@@ -184,7 +184,7 @@ class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
     mappers = provide_all(
-        WithParents[DiaryCardDTOMapperImpl],
+        WithParents[DiaryCardDTOMapperImpl],  # type: ignore
         EmotionDTOMapper,
         EmotionAdminDTOMapper,
         SkillAdminDTOMapper,
@@ -215,7 +215,7 @@ class InteractorProvider(Provider):
 
     event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
 
-    dispather = provide(WithParents[DispatcherImpl], scope=Scope.REQUEST)
+    dispather = provide(WithParents[DispatcherImpl], scope=Scope.REQUEST)  # type: ignore
     resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
 
     @provide(scope=Scope.APP)

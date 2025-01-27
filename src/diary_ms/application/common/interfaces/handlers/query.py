@@ -7,7 +7,7 @@ QT = TypeVar("QT", contravariant=True)
 QR = TypeVar("QR", covariant=True)
 
 
-class QueryHandler(Handler[QT, QR], Protocol[QT, QR]):
+class QueryHandler(Handler[QT, QR], Protocol):
     @abstractmethod
     async def __call__(self, query: QT) -> QR:
         raise NotImplementedError

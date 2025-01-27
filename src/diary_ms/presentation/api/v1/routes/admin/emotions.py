@@ -72,7 +72,7 @@ async def admin_update_emotion(
         name=schema.name,
         description=schema.description,
     )
-    return await sender.send_command(command)
+    await sender.send_command(command)
 
 
 @router.delete("/<id:UUID>", status_code=204, response_model=None)
