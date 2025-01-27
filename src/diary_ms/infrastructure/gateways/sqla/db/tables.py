@@ -22,7 +22,7 @@ diary_card_skill_assotiation = Table(
     metadata,
     Column("diary_card_id", metadata, ForeignKey("diary_cards.id"), primary_key=True),
     Column("skill_id", metadata, ForeignKey("skills.id"), primary_key=True),
-    Column("situation", String(100), default=None, nullable=True),
+    Column("situation", String(200), default=None, nullable=True),
 )
 
 diary_card_target_assotiation = Table(

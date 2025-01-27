@@ -11,7 +11,7 @@ from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetU
 
 @dataclass
 class Target(BaseEntity):
-    id: TargetId | None
+    id: TargetId
     user_id: UserId
     urge: TargetUrge
     action: TargetAction
@@ -19,8 +19,8 @@ class Target(BaseEntity):
     @classmethod
     def create(cls, command: CreateTargetCommand) -> Self:
         skill = cls(
-            id=command.id,
-            user_id=command.user_id,
+            id=TargetId(command.id),
+            user_id=UserId(command.user_id),
             urge=TargetUrge(command.urge),
             action=TargetAction(command.action),
         )

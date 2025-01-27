@@ -10,6 +10,7 @@ from src.diary_ms.domain.model.value_objects.skill.description import SkillDescr
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
+from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -21,6 +22,7 @@ class Skill(BaseEntity):
     name: SkillName = SkillName(None)
     type: SkillType = SkillType.DBT
     description: SkillDescription = SkillDescription(None)
+    situation: SkillSituation = SkillSituation(None)
 
     @classmethod
     def create(cls, command: CreateSkillCommand) -> Self:

@@ -3,6 +3,7 @@ from sqlalchemy.orm import composite, registry, relationship
 
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
@@ -20,6 +21,7 @@ from src.diary_ms.domain.model.value_objects.skill.description import SkillDescr
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
+from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
@@ -42,7 +44,7 @@ def init_mapper():
         diary_cards_table,
         properties={
             "id": composite(lambda value: DiaryCardId(value), diary_cards_table.c.id),
-            "_id": diary_cards_table.c.id,
+            "__id": diary_cards_table.c.id,
             "user_id": composite(lambda value: UserId(value), diary_cards_table.c.user_id),
             "__user_id": diary_cards_table.c.user_id,
             "mood": composite(lambda value: DCMood(value), diary_cards_table.c.mood),
@@ -53,7 +55,21 @@ def init_mapper():
             "__date_of_entry": diary_cards_table.c.date_of_entry,
             "emotions": relationship("Emotion", secondary="diary_card_emotion", lazy="selectin"),
             "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
-            "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin"),
+            "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin", viewonly=True),
+            "skill_assotiations": relationship("DiaryCardSkillAssotiation", lazy="selectin"),
+        },
+    )
+
+    mapper_registry.map_imperatively(
+        DiaryCardSkillAssotiation,
+        diary_card_skill_assotiation,
+        properties={
+            "diary_card_id": composite(lambda value: DiaryCardId(value), diary_card_skill_assotiation.c.diary_card_id),
+            "__diary_card_id": diary_card_skill_assotiation.c.diary_card_id,
+            "skill_id": composite(lambda value: SkillId(value), diary_card_skill_assotiation.c.skill_id),
+            "__skill_id": diary_card_skill_assotiation.c.skill_id,
+            "situation": composite(lambda value: SkillSituation(value), diary_card_skill_assotiation.c.situation),
+            "__situation": diary_card_skill_assotiation.c.situation,
         },
     )
 
