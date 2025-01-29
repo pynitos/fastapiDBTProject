@@ -12,7 +12,6 @@ from src.diary_ms.application.common.interfaces.handlers.command import (
     CommandHandler,
 )
 from src.diary_ms.application.common.interfaces.handlers.event import (
-    EventHandler,
     EventListener,
 )
 from src.diary_ms.application.common.interfaces.handlers.query import (
@@ -44,7 +43,9 @@ class RegistryImpl(Registry):
         self.query_handlers = {}
         self.event_listeners = []
 
-    def register_command_handler(self, command: type[Command], handler: type[CommandHandler[Command, DTO | None]]) -> None:
+    def register_command_handler(
+        self, command: type[Command], handler: type[CommandHandler[Command, DTO | None]]
+    ) -> None:
         self.command_handlers[command] = handler
 
     def register_query_handler(self, query: type[Query], handler: type[QueryHandler[Query, DTO | None]]) -> None:
