@@ -2,32 +2,33 @@ from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
+from src.diary_ms.application.common.dto.base import DTO
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class TargetForUpdDTO:
+class TargetForUpdDTO(DTO):
     id: UUID
     urge: str
     action: str
 
 
 @dataclass
-class EmotionForUpdDTO:
+class EmotionForUpdDTO(DTO):
     id: UUID
     name: str
     description: str | None
 
 
 @dataclass
-class MedicamentForUpdDTO:
+class MedicamentForUpdDTO(DTO):
     id: UUID
     name: str
     dosage: str
 
 
 @dataclass
-class SkillForUpdDTO:
+class SkillForUpdDTO(DTO):
     id: UUID
     category: str
     group: str
@@ -35,7 +36,7 @@ class SkillForUpdDTO:
 
 
 @dataclass
-class DiaryCardForUpdateDTO:
+class DiaryCardForUpdateDTO(DTO):
     id: UUID
     user_id: UUID
     mood: int
@@ -54,5 +55,5 @@ class DiaryCardForUpdateDTO:
 
 
 @dataclass
-class GetDiaryCardForUpdateDTO:
+class GetDiaryCardForUpdateDTO(DTO):
     id: UUID

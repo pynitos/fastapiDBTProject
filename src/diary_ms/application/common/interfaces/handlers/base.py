@@ -12,7 +12,5 @@ class Handler(Protocol[InputDTO, OutputDTO]):
         raise NotImplementedError
 
 
-HandlerType = type[Handler[InputDTO, OutputDTO]] | Handler[InputDTO, OutputDTO]
-
 InteractorT = TypeVar("InteractorT")
 InteractorFactory = Callable[[], InteractorT]

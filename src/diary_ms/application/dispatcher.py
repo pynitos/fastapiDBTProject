@@ -1,81 +1,85 @@
 from collections.abc import Iterable, Sequence
-from typing import Any, TypeVar
+from typing import Any
 
 from dishka import AsyncContainer
 
+from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.application.common.exceptions.base import HandlerNotFoundError
 from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher, Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.handlers.command import (
-    CommandHandlerType,
+    CommandHandler,
 )
 from src.diary_ms.application.common.interfaces.handlers.event import (
-    ER,
-    EventHandlerType,
+    EventHandler,
     EventListener,
 )
 from src.diary_ms.application.common.interfaces.handlers.query import (
-    QueryHandlerType,
+    QR,
+    QT,
+    QueryHandler,
 )
-from src.diary_ms.domain.common.model.events.base import BaseEvent
+from src.diary_ms.domain.common.model.commands.base import Command
+from src.diary_ms.domain.common.model.events.base import Event
 
-CT = TypeVar("CT", bound=Any)
-CR = Any
-QT = TypeVar("QT", bound=Any)
-QR = Any
-ET = TypeVar("ET", bound=BaseEvent)
+TDependency = Any
 
 
-class DishkaResolver[T](Resolver):
+class DishkaResolver(Resolver):
     def __init__(self, container: AsyncContainer) -> None:
         self._container = container
 
-    async def resolve(self, dependency_type: type[T]) -> T:
+    async def resolve(self, dependency_type: type[TDependency]) -> TDependency:
         return await self._container.get(dependency_type)
 
 
 class RegistryImpl(Registry):
+    command_handlers: dict[type[Command], type[CommandHandler[Command, DTO | None]]]
+    query_handlers: dict[type[Query], type[QueryHandler[Any, Any]]]
+    event_listeners: list[EventListener]
+
     def __init__(self) -> None:
-        self._command_handlers: dict[type[Any], CommandHandlerType[Any, Any]] = {}
-        self._query_handlers: dict[type[Any], QueryHandlerType[Any, Any]] = {}
-        self._event_listeners: list[EventListener[Any, Any]] = []
+        self.command_handlers = {}
+        self.query_handlers = {}
+        self.event_listeners = []
 
-    def register_command_handler(self, command: type[CT], handler: CommandHandlerType[Any, Any]) -> None:
-        self._command_handlers[command] = handler
+    def register_command_handler(self, command: type[Command], handler: type[CommandHandler[Command, DTO | None]]) -> None:
+        self.command_handlers[command] = handler
 
-    def register_query_handler(self, query: type[QT], handler: QueryHandlerType[Any, Any]) -> None:
-        self._query_handlers[query] = handler
+    def register_query_handler(self, query: type[Query], handler: type[QueryHandler[Query, DTO | None]]) -> None:
+        self.query_handlers[query] = handler
 
-    def register_event_handler(self, event: type[ET], handler: EventHandlerType[ET, Any]) -> None:
-        listener = EventListener[Any, Any](event, handler)
-        self._event_listeners.append(listener)
+    def register_event_handler(self, event: type[Event], handler: type[QueryHandler[QT, QR]]) -> None:
+        listener = EventListener(event, handler)
+        self.event_listeners.append(listener)
 
 
 class DispatcherImpl(Dispatcher):
-    def __init__(self, resolver: Resolver, registry: RegistryImpl) -> None:
+    def __init__(self, resolver: Resolver, registry: Registry) -> None:
         self._resolver = resolver
         self._registry = registry
 
-    async def send_command(self, command: Any) -> CR:
-        handler: CommandHandlerType[Any, Any] | None = self._registry._command_handlers.get(type(command))
-        if not handler:
+    async def send_command(self, command: Command) -> DTO | None:
+        handler_: type[CommandHandler[Command, DTO | None]] | None = self._registry.command_handlers.get(type(command))
+        if not handler_:
             raise HandlerNotFoundError()
-        handler = await self._resolver.resolve(handler)
+        handler: CommandHandler[Command, DTO | None] = await self._resolver.resolve(handler_)
         return await handler(command)
 
-    async def send_query(self, query: Any) -> QR:
-        handler: QueryHandlerType[Any, Any] | None = self._registry._query_handlers.get(type(query))
-        if not handler:
+    async def send_query(self, query: Query) -> DTO | None:
+        handler_: type[QueryHandler[Query, DTO | None]] | None = self._registry.query_handlers.get(type(query))
+        if not handler_:
             raise HandlerNotFoundError()
-        handler = await self._resolver.resolve(handler)
+        handler: QueryHandler[Query, DTO | None] = await self._resolver.resolve(handler_)
         return await handler(query)
 
-    async def publish(self, events: BaseEvent | Sequence[BaseEvent]) -> Iterable[ER]:
+    async def publish(self, events: Event | Sequence[Event]) -> Iterable[DTO]:
         if not isinstance(events, Sequence):
             events = [events]
-        result = []
+        result: list[Any] = []
         for event in events:
-            for listener in self._registry._event_listeners:
+            for listener in self._registry.event_listeners:
                 if listener.is_listen(event):
                     handler = await self._resolver.resolve(listener.handler)
                     result.extend([await handler(event)])

@@ -1,7 +1,7 @@
 from abc import abstractmethod
-from typing import Protocol, TypeVar
+from typing import Any, Protocol
 
-TDependency = TypeVar("TDependency")
+TDependency = Any
 
 
 class Resolver(Protocol):

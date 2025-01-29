@@ -3,11 +3,11 @@ from datetime import date
 from typing import ClassVar
 from uuid import UUID
 
-from src.diary_ms.domain.common.model.events.base import BaseEvent
+from src.diary_ms.domain.common.model.events.base import Event
 
 
 @dataclass(frozen=True)
-class DiaryCardCreatedEvent(BaseEvent):
+class DiaryCardCreatedEvent(Event):
     event_title: ClassVar[str] = "New Diary Card Received"
 
     diary_card_id: UUID

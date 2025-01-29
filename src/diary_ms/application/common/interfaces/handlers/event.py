@@ -1,11 +1,12 @@
 from abc import abstractmethod
-from typing import Generic, Protocol, TypeVar
+from typing import Protocol, TypeVar
 
+from src.diary_ms.application.common.dto.base import DTO
 from src.diary_ms.application.common.interfaces.handlers.base import Handler
-from src.diary_ms.domain.common.model.events.base import BaseEvent
+from src.diary_ms.domain.common.model.events.base import Event
 
-ET = TypeVar("ET", bound=BaseEvent, contravariant=True)
-ER = TypeVar("ER", covariant=True)
+ET = TypeVar("ET", bound=Event, contravariant=True)
+ER = TypeVar("ER", bound=DTO | None, covariant=True)
 
 
 class EventHandler(Handler[ET, ER], Protocol[ET, ER]):
@@ -14,21 +15,18 @@ class EventHandler(Handler[ET, ER], Protocol[ET, ER]):
         raise NotImplementedError
 
 
-EventHandlerType = EventHandler[ET, ER] | type[EventHandler[ET, ER]]
-
-
-class EventListener(Generic[ET, ER]):
-    def __init__(self, event: type[ET], handler: EventHandlerType[ET, ER]):
+class EventListener:
+    def __init__(self, event: type[Event], handler: type[EventHandler[Event, DTO | None]]):
         self._event = event
         self._handler = handler
 
-    def is_listen(self, event: BaseEvent) -> bool:
+    def is_listen(self, event: Event) -> bool:
         return isinstance(event, self._event)
 
     @property
-    def event(self) -> type[ET]:
+    def event(self) -> type[Event]:
         return self._event
 
     @property
-    def handler(self) -> EventHandlerType[ET, ER]:
+    def handler(self) -> type[EventHandler[Event, DTO | None]]:
         return self._handler

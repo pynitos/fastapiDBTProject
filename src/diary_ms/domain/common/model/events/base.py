@@ -5,7 +5,7 @@ from uuid import UUID, uuid4
 
 
 @dataclass(frozen=True)
-class BaseEvent(Protocol):
+class Event(Protocol):
     event_title: ClassVar[str] = ""
 
     event_id: UUID = field(init=False, kw_only=True, default_factory=uuid4)

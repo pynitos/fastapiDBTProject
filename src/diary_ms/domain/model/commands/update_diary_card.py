@@ -2,9 +2,11 @@ from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
+from src.diary_ms.domain.common.model.commands.base import Command
+
 
 @dataclass
-class UpdateDiaryCardCommand:
+class UpdateDiaryCardCommand(Command):
     id: UUID
     mood: int | None = None
     description: str | None = None

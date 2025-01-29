@@ -1,8 +1,5 @@
-from dataclasses import dataclass
-
-from src.diary_ms.domain.common.types.id import TypeId
+from abc import ABC
 
 
-@dataclass
-class BaseDTO:
-    id: TypeId
+class DTO(ABC):  # noqa: B024
+    pass
