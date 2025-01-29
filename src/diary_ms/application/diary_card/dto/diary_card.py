@@ -4,6 +4,7 @@ from uuid import UUID
 
 from src.diary_ms.application.common.dto.base import DTO
 from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -48,10 +49,10 @@ class OwnDiaryCardDTO(DTO):
 
 
 @dataclass
-class GetOwnDiaryCardsDTO(DTO):
+class GetOwnDiaryCardsDTO(Query):
     pagination: Pagination
 
 
 @dataclass
-class GetOwnDiaryCardDTO(DTO):
+class GetOwnDiaryCardDTO(Query):
     id: UUID

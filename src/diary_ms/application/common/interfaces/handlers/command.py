@@ -9,7 +9,7 @@ CT = TypeVar("CT", bound=Command, contravariant=True)
 CR = TypeVar("CR", bound=DTO | None, covariant=True)
 
 
-class CommandHandler(Handler[CT, CR], Protocol[CT, CR]):
+class CommandHandler(Handler[CT, CR], Protocol):
     @abstractmethod
     async def __call__(self, command: CT) -> CR:
         raise NotImplementedError

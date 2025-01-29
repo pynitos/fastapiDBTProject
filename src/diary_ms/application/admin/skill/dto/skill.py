@@ -28,6 +28,6 @@ class SkillsAdminFilters:
 
 
 @dataclass
-class GetSkillsAdminDTO(DTO):
+class GetSkillsAdminDTO(Query):
     pagination: Pagination
     filters: SkillsAdminFilters

@@ -3,6 +3,7 @@ from uuid import UUID
 
 from src.diary_ms.application.common.dto.base import DTO
 from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.common.dto.query import Query
 
 
 @dataclass
@@ -13,10 +14,10 @@ class EmotionAdminDTO(DTO):
 
 
 @dataclass
-class GetEmotionAdminDTO(DTO):
+class GetEmotionAdminDTO(Query):
     id: UUID
 
 
 @dataclass
-class GetEmotionsAdminDTO(DTO):
+class GetEmotionsAdminDTO(Query):
     pagination: Pagination

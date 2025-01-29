@@ -3,6 +3,7 @@ from typing import Any, Protocol
 
 from src.diary_ms.application.common.dto.base import DTO
 from src.diary_ms.application.common.dto.query import Query
+from src.diary_ms.application.common.interfaces.handlers.base import Handler
 from src.diary_ms.application.common.interfaces.handlers.command import (
     CR,
     CT,
@@ -24,8 +25,8 @@ from src.diary_ms.domain.common.model.events.base import Event
 
 
 class Registry(Protocol):
-    command_handlers: dict[type[Command], type[CommandHandler[Command, DTO | None]]]
-    query_handlers: dict[type[Query], type[QueryHandler[Query, DTO | None]]]
+    command_handlers: dict[type[Command], type[CommandHandler[Any, Any]]]
+    query_handlers: dict[type[Query], type[QueryHandler[Any, Any]]]
     event_listeners: list[EventListener]
 
     def register_command_handler(self, command: type[CT], handler: type[CommandHandler[CT, CR]]) -> None:
@@ -42,7 +43,7 @@ class Sender(Protocol):
     async def send_command(self, command: Command) -> DTO | None:
         raise NotImplementedError
 
-    async def send_query(self, query: Any) -> DTO | None:
+    async def send_query(self, query: Query) -> DTO | None:
         raise NotImplementedError
 
 

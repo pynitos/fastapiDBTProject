@@ -1,5 +1,5 @@
 from collections.abc import Iterable, Sequence
-from typing import Any
+from typing import Any, TypeVar
 
 from dishka import AsyncContainer
 
@@ -12,6 +12,7 @@ from src.diary_ms.application.common.interfaces.handlers.command import (
     CommandHandler,
 )
 from src.diary_ms.application.common.interfaces.handlers.event import (
+    EventHandler,
     EventListener,
 )
 from src.diary_ms.application.common.interfaces.handlers.query import (
@@ -22,7 +23,7 @@ from src.diary_ms.application.common.interfaces.handlers.query import (
 from src.diary_ms.domain.common.model.commands.base import Command
 from src.diary_ms.domain.common.model.events.base import Event
 
-TDependency = Any
+TDependency = TypeVar("TDependency")
 
 
 class DishkaResolver(Resolver):
@@ -34,7 +35,7 @@ class DishkaResolver(Resolver):
 
 
 class RegistryImpl(Registry):
-    command_handlers: dict[type[Command], type[CommandHandler[Command, DTO | None]]]
+    command_handlers: dict[type[Command], type[CommandHandler[Any, Any]]]
     query_handlers: dict[type[Query], type[QueryHandler[Any, Any]]]
     event_listeners: list[EventListener]
 
@@ -44,14 +45,14 @@ class RegistryImpl(Registry):
         self.event_listeners = []
 
     def register_command_handler(
-        self, command: type[Command], handler: type[CommandHandler[Command, DTO | None]]
+        self, command: type[Command], handler: type[CommandHandler[Any, Any]]
     ) -> None:
         self.command_handlers[command] = handler
 
-    def register_query_handler(self, query: type[Query], handler: type[QueryHandler[Query, DTO | None]]) -> None:
+    def register_query_handler(self, query: type[Query], handler: type[QueryHandler[Any, Any]]) -> None:
         self.query_handlers[query] = handler
 
-    def register_event_handler(self, event: type[Event], handler: type[QueryHandler[QT, QR]]) -> None:
+    def register_event_handler(self, event: type[Event], handler: type[EventHandler[Any, Any]]) -> None:
         listener = EventListener(event, handler)
         self.event_listeners.append(listener)
 
@@ -69,7 +70,7 @@ class DispatcherImpl(Dispatcher):
         return await handler(command)
 
     async def send_query(self, query: Query) -> DTO | None:
-        handler_: type[QueryHandler[Query, DTO | None]] | None = self._registry.query_handlers.get(type(query))
+        handler_: type[QueryHandler[Any, Any]] | None = self._registry.query_handlers.get(type(query))
         if not handler_:
             raise HandlerNotFoundError()
         handler: QueryHandler[Query, DTO | None] = await self._resolver.resolve(handler_)

@@ -3,6 +3,7 @@ from datetime import date
 from uuid import UUID
 
 from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -55,5 +56,5 @@ class DiaryCardForUpdateDTO(DTO):
 
 
 @dataclass
-class GetDiaryCardForUpdateDTO(DTO):
+class GetDiaryCardForUpdateDTO(Query):
     id: UUID
