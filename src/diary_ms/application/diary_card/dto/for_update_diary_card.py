@@ -31,8 +31,8 @@ class MedicamentForUpdDTO(DTO):
 @dataclass
 class SkillForUpdDTO(DTO):
     id: UUID
-    category: str
-    group: str
+    category: str | None
+    group: str | None
     name: str
 
 

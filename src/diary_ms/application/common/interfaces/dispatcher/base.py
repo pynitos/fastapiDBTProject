@@ -2,8 +2,7 @@ from collections.abc import Iterable, Sequence
 from typing import Any, Protocol
 
 from src.diary_ms.application.common.dto.base import DTO
-from src.diary_ms.application.common.dto.query import Query
-from src.diary_ms.application.common.interfaces.handlers.base import Handler
+from src.diary_ms.application.common.dto.query import QRes, Query
 from src.diary_ms.application.common.interfaces.handlers.command import (
     CR,
     CT,
@@ -20,13 +19,13 @@ from src.diary_ms.application.common.interfaces.handlers.query import (
     QT,
     QueryHandler,
 )
-from src.diary_ms.domain.common.model.commands.base import Command
+from src.diary_ms.domain.common.model.commands.commands import Command, CRes
 from src.diary_ms.domain.common.model.events.base import Event
 
 
 class Registry(Protocol):
-    command_handlers: dict[type[Command], type[CommandHandler[Any, Any]]]
-    query_handlers: dict[type[Query], type[QueryHandler[Any, Any]]]
+    command_handlers: dict[type[Command[Any]], type[CommandHandler[Command[Any], Any]]]
+    query_handlers: dict[type[Query[Any]], type[QueryHandler[Query[Any], Any]]]
     event_listeners: list[EventListener]
 
     def register_command_handler(self, command: type[CT], handler: type[CommandHandler[CT, CR]]) -> None:
@@ -40,10 +39,10 @@ class Registry(Protocol):
 
 
 class Sender(Protocol):
-    async def send_command(self, command: Command) -> DTO | None:
+    async def send_command(self, command: Command[CRes]) -> CRes:
         raise NotImplementedError
 
-    async def send_query(self, query: Query) -> DTO | None:
+    async def send_query(self, query: Query[QRes]) -> QRes:
         raise NotImplementedError
 
 

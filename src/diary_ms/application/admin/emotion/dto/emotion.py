@@ -14,10 +14,10 @@ class EmotionAdminDTO(DTO):
 
 
 @dataclass
-class GetEmotionAdminDTO(Query):
+class GetEmotionAdminDTO(Query[EmotionAdminDTO]):
     id: UUID
 
 
 @dataclass
-class GetEmotionsAdminDTO(Query):
+class GetEmotionsAdminDTO(Query[list[EmotionAdminDTO]]):
     pagination: Pagination

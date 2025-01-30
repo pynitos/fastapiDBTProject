@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.diary_ms.domain.common.model.commands.base import Command
+from src.diary_ms.domain.common.model.commands.commands import Command
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class UpdateSkillAdminCommand(Command):
+class UpdateSkillAdminCommand(Command[None]):
     id: UUID
     name: str | None = None
     category: str | None = None

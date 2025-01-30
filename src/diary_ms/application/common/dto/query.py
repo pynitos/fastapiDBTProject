@@ -1,7 +1,10 @@
-from abc import ABC
+import abc
+from typing import Generic, TypeVar
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.request import Request
+
+QRes = TypeVar("QRes")
 
 
-class Query(DTO, ABC):
+class Query(Request[QRes], abc.ABC, Generic[QRes]):
     pass

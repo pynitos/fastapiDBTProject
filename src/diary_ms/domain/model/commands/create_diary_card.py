@@ -2,12 +2,12 @@ from dataclasses import dataclass, field
 from datetime import date
 from uuid import UUID
 
-from src.diary_ms.domain.common.model.commands.base import Command
+from src.diary_ms.domain.common.model.commands.commands import Command
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class CreateDiaryCardCommand(Command):
+class CreateDiaryCardCommand(Command[None]):
     @dataclass
     class Skill:
         id: UUID

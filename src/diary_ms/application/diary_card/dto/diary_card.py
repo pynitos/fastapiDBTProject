@@ -49,10 +49,10 @@ class OwnDiaryCardDTO(DTO):
 
 
 @dataclass
-class GetOwnDiaryCardsDTO(Query):
+class GetOwnDiaryCardsDTO(Query[list[OwnDiaryCardDTO]]):
     pagination: Pagination
 
 
 @dataclass
-class GetOwnDiaryCardDTO(Query):
+class GetOwnDiaryCardDTO(Query[OwnDiaryCardDTO]):
     id: UUID

@@ -48,7 +48,7 @@ async def get_own_diary_card_by_id(
     id: UUID,
     sender: SenderDep,
 ) -> OwnDiaryCardDTO:
-    diary_card: OwnDiaryCardDTO | None = await sender.send_query(GetOwnDiaryCardDTO(id))
+    diary_card: OwnDiaryCardDTO = await sender.send_query(GetOwnDiaryCardDTO(id))
     if not diary_card:
         raise HTTPException(404, f"Diary card with id: {id} not found.")
     return diary_card

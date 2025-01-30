@@ -153,65 +153,65 @@ class DiaryCardGateway(
             else None,
             medicaments=[
                 MedicamentForUpdDTO(
-                    id=m.id,
-                    name=m.name,
-                    dosage=m.dosage,
+                    id=m.id.value,
+                    name=m.name.value,
+                    dosage=m.dosage.value,
                 )
                 for m in dm.medicaments
-                if dm.medicaments
+                if m.id.value
             ]
             if dm.medicaments
             else None,
             skills=[
                 SkillForUpdDTO(
-                    id=s.id,
-                    category=s.category,
-                    group=s.group,
-                    name=s.name,
+                    id=s.id.value,
+                    category=s.category.value,
+                    group=s.group.value,
+                    name=s.name.value,
                 )
-                for s in dm.skills
+                for s in dm.skills if s.id.value
             ]
             if dm.skills
             else None,
             # For choice:
             all_targets=[
                 TargetForUpdDTO(
-                    id=t.id,
-                    urge=t.urge,
-                    action=t.action,
+                    id=t.id.value,
+                    urge=t.urge.value,
+                    action=t.action.value,
                 )
-                for t in all_targets
+                for t in all_targets if t.id.value
             ]
             if all_targets
             else None,
             all_emotions=[
                 EmotionForUpdDTO(
-                    id=e.id,
-                    name=e.name,
-                    description=e.description,
+                    id=e.id.value,
+                    name=e.name.value,
+                    description=e.description.value,
                 )
-                for e in all_emotions
+                for e in all_emotions if e.id.value
             ]
             if all_emotions
             else None,
             all_medicaments=[
                 MedicamentForUpdDTO(
-                    id=m.id,
-                    name=m.name,
-                    dosage=m.dosage,
+                    id=m.id.value,
+                    name=m.name.value,
+                    dosage=m.dosage.value,
                 )
-                for m in all_medicaments
+                for m in all_medicaments if m.id.value
             ]
             if all_medicaments
             else None,
             all_skills=[
                 SkillForUpdDTO(
-                    id=s.id,
-                    category=s.category,
-                    group=s.group,
-                    name=s.name,
+                    id=s.id.value,
+                    category=s.category.value,
+                    group=s.group.value,
+                    name=s.name.value,
                 )
-                for s in all_skills
+                for s in all_skills if s.id.value
             ]
             if all_skills
             else None,

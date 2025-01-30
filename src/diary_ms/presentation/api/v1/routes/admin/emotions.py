@@ -46,7 +46,7 @@ async def admin_get_emotion_by_id(
     id: UUID,
     sender: SenderDep,
 ) -> EmotionAdminDTO:
-    emotion: EmotionAdminDTO | None = await sender.send_query(GetEmotionAdminDTO(id))
+    emotion: EmotionAdminDTO = await sender.send_query(GetEmotionAdminDTO(id))
     if not emotion:
         raise HTTPException(404, f"Emotion with id: {id} not found.")
     return emotion

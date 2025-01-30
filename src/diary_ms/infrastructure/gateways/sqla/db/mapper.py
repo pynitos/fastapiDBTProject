@@ -37,7 +37,7 @@ from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
 mapper_registry = registry(metadata=metadata)
 
 
-def init_mapper():
+def init_mapper() -> None:
     mapper_registry.map_imperatively(
         DiaryCard,
         diary_cards_table,

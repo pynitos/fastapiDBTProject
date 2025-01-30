@@ -16,11 +16,9 @@ from src.diary_ms.application.common.interfaces.handlers.event import (
     EventListener,
 )
 from src.diary_ms.application.common.interfaces.handlers.query import (
-    QR,
-    QT,
     QueryHandler,
 )
-from src.diary_ms.domain.common.model.commands.base import Command
+from src.diary_ms.domain.common.model.commands.commands import Command
 from src.diary_ms.domain.common.model.events.base import Event
 
 TDependency = TypeVar("TDependency")
@@ -35,8 +33,8 @@ class DishkaResolver(Resolver):
 
 
 class RegistryImpl(Registry):
-    command_handlers: dict[type[Command], type[CommandHandler[Any, Any]]]
-    query_handlers: dict[type[Query], type[QueryHandler[Any, Any]]]
+    command_handlers: dict[type[Command[Any]], type[CommandHandler[Any, Any]]]
+    query_handlers: dict[type[Query[DTO]], type[QueryHandler[Query[DTO], DTO]]]
     event_listeners: list[EventListener]
 
     def __init__(self) -> None:
@@ -44,12 +42,10 @@ class RegistryImpl(Registry):
         self.query_handlers = {}
         self.event_listeners = []
 
-    def register_command_handler(
-        self, command: type[Command], handler: type[CommandHandler[Any, Any]]
-    ) -> None:
+    def register_command_handler(self, command: type[Command[Any]], handler: type[CommandHandler[Any, Any]]) -> None:
         self.command_handlers[command] = handler
 
-    def register_query_handler(self, query: type[Query], handler: type[QueryHandler[Any, Any]]) -> None:
+    def register_query_handler(self, query: type[Query[Any]], handler: type[QueryHandler[Any, Any]]) -> None:
         self.query_handlers[query] = handler
 
     def register_event_handler(self, event: type[Event], handler: type[EventHandler[Any, Any]]) -> None:
@@ -62,18 +58,18 @@ class DispatcherImpl(Dispatcher):
         self._resolver = resolver
         self._registry = registry
 
-    async def send_command(self, command: Command) -> DTO | None:
-        handler_: type[CommandHandler[Command, DTO | None]] | None = self._registry.command_handlers.get(type(command))
+    async def send_command(self, command: Command[Any]) -> Any:
+        handler_: type[CommandHandler[Command[Any], Any]] | None = self._registry.command_handlers.get(type(command))
         if not handler_:
             raise HandlerNotFoundError()
-        handler: CommandHandler[Command, DTO | None] = await self._resolver.resolve(handler_)
+        handler: CommandHandler[Command[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(command)
 
-    async def send_query(self, query: Query) -> DTO | None:
+    async def send_query(self, query: Query[Any]) -> Any:
         handler_: type[QueryHandler[Any, Any]] | None = self._registry.query_handlers.get(type(query))
         if not handler_:
             raise HandlerNotFoundError()
-        handler: QueryHandler[Query, DTO | None] = await self._resolver.resolve(handler_)
+        handler: QueryHandler[Query[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(query)
 
     async def publish(self, events: Event | Sequence[Event]) -> Iterable[DTO]:
