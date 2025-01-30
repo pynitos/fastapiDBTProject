@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.diary_ms.application.admin.emotion.dto.emotion import EmotionAdminDTO
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 

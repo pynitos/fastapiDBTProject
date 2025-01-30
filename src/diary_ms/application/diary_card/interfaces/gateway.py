@@ -2,7 +2,6 @@ from abc import abstractmethod
 from collections.abc import Sequence
 from typing import Protocol
 
-from src.diary_ms.application.diary_card.dto.diary_card import OwnDiaryCardDTO
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
 )

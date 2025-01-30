@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.diary_ms.application.admin.skill.dto.skill import SkillAdminDTO
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 

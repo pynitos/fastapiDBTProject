@@ -7,9 +7,6 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.common.exceptions.base import GatewayError, InfraError
 from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
-from src.diary_ms.application.diary_card.dto.diary_card import (
-    OwnDiaryCardDTO,
-)
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
     EmotionForUpdDTO,
@@ -57,19 +54,27 @@ class DiaryCardGateway(
 
     async def _set_entity_relationships(self, entity: DiaryCard) -> None:
         if entity.targets_ids:
-            entity.targets = list((
-                await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.targets_ids)))
-            ).all())
+            entity.targets = list(
+                (
+                    await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.targets_ids)))
+                ).all()
+            )
         if entity.emotions_ids:
-            entity.emotions = list((
-                await self._session.scalars(select(emotions_table).where(emotions_table.c.id.in_(entity.emotions_ids)))
-            ).all())
+            entity.emotions = list(
+                (
+                    await self._session.scalars(
+                        select(emotions_table).where(emotions_table.c.id.in_(entity.emotions_ids))
+                    )
+                ).all()
+            )
         if entity.medicaments_ids:
-            entity.medicaments = list((
-                await self._session.scalars(
-                    select(Medicament).where(medicaments_table.c.id.in_(entity.medicaments_ids))
-                )
-            ).all())
+            entity.medicaments = list(
+                (
+                    await self._session.scalars(
+                        select(Medicament).where(medicaments_table.c.id.in_(entity.medicaments_ids))
+                    )
+                ).all()
+            )
         if entity.skill_assotiations:
             for s in entity.skill_assotiations:
                 if not await self._session.get(Skill, s.skill_id.value):
@@ -100,7 +105,7 @@ class DiaryCardGateway(
         all_targets: Sequence[Target] | None = (
             (
                 await self._session.scalars(
-                    select(Target).where(Target.user_id.in_((t.id for t in dm.targets if not isinstance(t, UUID)))) # type: ignore
+                    select(Target).where(Target.user_id.in_((t.id for t in dm.targets if not isinstance(t, UUID))))  # type: ignore
                 )
             ).all()
             if dm.targets
@@ -111,7 +116,7 @@ class DiaryCardGateway(
             (
                 await self._session.scalars(
                     select(Medicament).where(
-                        Medicament.user_id.in_((m.id for m in dm.medicaments if not isinstance(m, UUID))) # type: ignore
+                        Medicament.user_id.in_((m.id for m in dm.medicaments if not isinstance(m, UUID)))  # type: ignore
                     )
                 )
             ).all()
@@ -136,7 +141,8 @@ class DiaryCardGateway(
                     urge=t.urge.value,
                     action=t.action.value,
                 )
-                for t in dm.targets if t.id.value
+                for t in dm.targets
+                if t.id.value
             ]
             if dm.targets
             else None,
@@ -146,7 +152,8 @@ class DiaryCardGateway(
                     name=e.name.value,
                     description=e.description.value,
                 )
-                for e in dm.emotions if e.id.value
+                for e in dm.emotions
+                if e.id.value
             ]
             if dm.emotions
             else None,
@@ -168,7 +175,8 @@ class DiaryCardGateway(
                     group=s.group.value,
                     name=s.name.value,
                 )
-                for s in dm.skills if s.id.value
+                for s in dm.skills
+                if s.id.value
             ]
             if dm.skills
             else None,
@@ -179,7 +187,8 @@ class DiaryCardGateway(
                     urge=t.urge.value,
                     action=t.action.value,
                 )
-                for t in all_targets if t.id.value
+                for t in all_targets
+                if t.id.value
             ]
             if all_targets
             else None,
@@ -189,7 +198,8 @@ class DiaryCardGateway(
                     name=e.name.value,
                     description=e.description.value,
                 )
-                for e in all_emotions if e.id.value
+                for e in all_emotions
+                if e.id.value
             ]
             if all_emotions
             else None,
@@ -199,7 +209,8 @@ class DiaryCardGateway(
                     name=m.name.value,
                     dosage=m.dosage.value,
                 )
-                for m in all_medicaments if m.id.value
+                for m in all_medicaments
+                if m.id.value
             ]
             if all_medicaments
             else None,
@@ -210,7 +221,8 @@ class DiaryCardGateway(
                     group=s.group.value,
                     name=s.name.value,
                 )
-                for s in all_skills if s.id.value
+                for s in all_skills
+                if s.id.value
             ]
             if all_skills
             else None,

@@ -1,4 +1,3 @@
-from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy import ScalarResult, Select, select
