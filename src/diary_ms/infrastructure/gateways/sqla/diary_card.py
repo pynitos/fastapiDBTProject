@@ -57,19 +57,19 @@ class DiaryCardGateway(
 
     async def _set_entity_relationships(self, entity: DiaryCard) -> None:
         if entity.targets_ids:
-            entity.targets = (
+            entity.targets = list((
                 await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.targets_ids)))
-            ).all()
+            ).all())
         if entity.emotions_ids:
-            entity.emotions = (
+            entity.emotions = list((
                 await self._session.scalars(select(emotions_table).where(emotions_table.c.id.in_(entity.emotions_ids)))
-            ).all()
+            ).all())
         if entity.medicaments_ids:
-            entity.medicaments = (
+            entity.medicaments = list((
                 await self._session.scalars(
                     select(Medicament).where(medicaments_table.c.id.in_(entity.medicaments_ids))
                 )
-            ).all()
+            ).all())
         if entity.skill_assotiations:
             for s in entity.skill_assotiations:
                 if not await self._session.get(Skill, s.skill_id.value):
@@ -79,10 +79,10 @@ class DiaryCardGateway(
         await self._set_entity_relationships(entity)
         self._session.add(entity)
 
-    async def get_all(self, offset: int = 0, limit: int = 10) -> list[OwnDiaryCardDTO]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[DiaryCard]:
         stmt: Select[tuple[DiaryCard]] = select(self._db_model).offset(offset).limit(limit)
         result: ScalarResult[DiaryCard] = await self._session.scalars(stmt)
-        result_list: Sequence[DiaryCard] = result.all()
+        result_list: list[DiaryCard] = list(result.all())
         return result_list
 
     async def _get_by_id(self, pk: UUID | None) -> DiaryCard | None:
@@ -96,11 +96,11 @@ class DiaryCardGateway(
     async def get_dto_for_update(self, id: DiaryCardId) -> DiaryCardForUpdateDTO:
         dm: DiaryCard | None = await self._get_by_id(id.value)
         if not dm:
-            return None
+            raise DiaryCardNotFoundError
         all_targets: Sequence[Target] | None = (
             (
                 await self._session.scalars(
-                    select(Target).where(Target.user_id.in_((t.id for t in dm.targets if not isinstance(t, UUID))))
+                    select(Target).where(Target.user_id.in_((t.id for t in dm.targets if not isinstance(t, UUID)))) # type: ignore
                 )
             ).all()
             if dm.targets
@@ -111,7 +111,7 @@ class DiaryCardGateway(
             (
                 await self._session.scalars(
                     select(Medicament).where(
-                        Medicament.user_id.in_((m.id for m in dm.medicaments if not isinstance(m, UUID)))
+                        Medicament.user_id.in_((m.id for m in dm.medicaments if not isinstance(m, UUID))) # type: ignore
                     )
                 )
             ).all()
@@ -132,22 +132,21 @@ class DiaryCardGateway(
             type_=dm.type,
             targets=[
                 TargetForUpdDTO(
-                    id=t.id,
-                    urge=t.urge,
-                    action=t.action,
+                    id=t.id.value,
+                    urge=t.urge.value,
+                    action=t.action.value,
                 )
-                for t in dm.targets
+                for t in dm.targets if t.id.value
             ]
             if dm.targets
             else None,
             emotions=[
                 EmotionForUpdDTO(
-                    id=e.id,
-                    name=e.name,
-                    description=e.description,
+                    id=e.id.value,
+                    name=e.name.value,
+                    description=e.description.value,
                 )
-                for e in dm.emotions
-                if dm.emotions
+                for e in dm.emotions if e.id.value
             ]
             if dm.emotions
             else None,

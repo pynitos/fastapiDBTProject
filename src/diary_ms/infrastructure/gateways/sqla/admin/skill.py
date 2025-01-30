@@ -23,10 +23,10 @@ class SkillAdminGateway(SkillAdminSaver, SkillAdminReader, SkillAdminUpdater, Sk
     async def create(self, entity: Skill) -> None:
         self._session.add(entity)
 
-    async def get_all(self, offset: int = 0, limit: int = 10) -> Sequence[Skill]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[Skill]:
         stmt: Select[tuple[Skill]] = select(self._db_model).offset(offset).limit(limit)
         result: ScalarResult[Skill] = await self._session.scalars(stmt)
-        result_list: Sequence[Skill] = result.all()
+        result_list: list[Skill] = list(result.all())
         return result_list
 
     async def get_by_id(self, id: SkillId) -> Skill | None:

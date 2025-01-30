@@ -18,14 +18,8 @@ class EmotionAdminReader(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all(self, offset: int = 0, limit: int = 10) -> list[EmotionAdminDTO]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[Emotion]:
         raise NotImplementedError
-
-
-# class EmotionDTOReader(Protocol):
-#     @abstractmethod
-#     async def get_dto_by_id(self, id: EmotionId) -> OwnEmotionDTO | None:
-#         raise NotImplementedError
 
 
 class EmotionAdminUpdater(Protocol):

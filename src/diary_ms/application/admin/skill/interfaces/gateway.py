@@ -18,7 +18,7 @@ class SkillAdminReader(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all(self, offset: int = 0, limit: int = 10) -> list[SkillAdminDTO]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[Skill]:
         raise NotImplementedError
 
 

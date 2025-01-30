@@ -43,7 +43,7 @@ class DiaryCard(AggregateRoot):
     targets_ids: list[UUID] | None = None
     emotions_ids: list[UUID] | None = None
     medicaments_ids: list[UUID] | None = None
-    skill_assotiations: list[UUID] | None = None
+    skill_assotiations: list[DiaryCardSkillAssotiation] | None = None
 
     @classmethod
     def create(cls, command: CreateDiaryCardCommand) -> Self:
