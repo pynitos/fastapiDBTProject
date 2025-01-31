@@ -49,7 +49,7 @@ class DiaryCard(AggregateRoot):
         if not command.user_id:
             raise UserIdNotProvidedError
         id: UUID = uuid4()
-        command.id = uuid4()
+        command.id = id
         targets = command.targets
         emotions = command.emotions
         medicaments = command.medicaments

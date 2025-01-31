@@ -7,4 +7,4 @@ from src.diary_ms.domain.common.types.id import TypeId
 @dataclass(frozen=True)
 class DiaryCardId(ValueObject[TypeId | None]):
     def __composite_values__(self) -> tuple[str]:
-        return (str(self.value),)
+        return (str(self.value), )
