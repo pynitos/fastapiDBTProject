@@ -35,7 +35,6 @@ class DiaryCard(AggregateRoot):
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
     targets: list[Target] | None = None
     emotions: list[Emotion] | None = None
-    emotions_ids: list[UUID] | None = None
     medicaments: list[Medicament] | None = None
     skills: list[Skill] | None = None
     type: SkillType = SkillType.DBT
@@ -54,14 +53,18 @@ class DiaryCard(AggregateRoot):
         targets = command.targets
         emotions = command.emotions
         medicaments = command.medicaments
-        skill_assotiations = [
-            DiaryCardSkillAssotiation(
-                diary_card_id=DiaryCardId(id),
-                skill_id=SkillId(s.id),
-                situation=SkillSituation(s.situation),
-            )
-            for s in command.skills
-        ]
+        skill_assotiations = (
+            [
+                DiaryCardSkillAssotiation(
+                    diary_card_id=DiaryCardId(id),
+                    skill_id=SkillId(s.id),
+                    situation=SkillSituation(s.situation),
+                )
+                for s in command.skills
+            ]
+            if command.skills
+            else None
+        )
         diary_card: Self = cls(
             id=DiaryCardId(command.id),
             user_id=UserId(command.user_id),
@@ -103,6 +106,9 @@ class DiaryCard(AggregateRoot):
             medicaments = command.medicaments
             self.medicaments_ids = medicaments
         if command.skills:
-            skills = command.skills
+            skills = [
+                DiaryCardSkillAssotiation(diary_card_id=self.id, skill_id=SkillId(s.id), situation=SkillSituation(None))
+                for s in command.skills
+            ]
             self.skill_assotiations = skills
         return self

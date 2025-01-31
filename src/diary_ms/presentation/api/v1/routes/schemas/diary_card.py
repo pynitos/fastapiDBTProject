@@ -22,7 +22,7 @@ class DiaryCardReq(BaseModel):
     skills: list[Skill] | None = None
 
 
-class CreateDiaryCardSkillReq(BaseModel):
+class DiaryCardSkillReq(BaseModel):
     id: UUID
     situation: str | None = None
 
@@ -36,7 +36,7 @@ class CreateDiaryCardReq(BaseModel):
     targets: list[UUID] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
-    skills: list[CreateDiaryCardSkillReq] | None = None
+    skills: list[DiaryCardSkillReq] | None = None
 
 
 class UpdateDiaryCardReq(BaseModel):
@@ -47,4 +47,4 @@ class UpdateDiaryCardReq(BaseModel):
     targets: list[UUID] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
-    skills: list[UUID] | None = None
+    skills: list[DiaryCardSkillReq] | None = None

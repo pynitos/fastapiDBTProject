@@ -1,4 +1,3 @@
-from collections.abc import Sequence
 
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -16,8 +15,8 @@ class EmotionGateway(EmotionReader):
         self._session = session
         self._db_model = db_model
 
-    async def get_all(self, offset: int = 0, limit: int = 10) -> Sequence[Emotion]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[Emotion]:
         stmt: Select[tuple[Emotion]] = select(self._db_model).offset(offset).limit(limit)
         result: ScalarResult[Emotion] = await self._session.scalars(stmt)
-        result_list: Sequence[Emotion] = result.all()
+        result_list: list[Emotion] = list(result.all())
         return result_list

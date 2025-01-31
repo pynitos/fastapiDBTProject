@@ -6,19 +6,22 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
     TargetDTO,
 )
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
+from src.diary_ms.domain.common.exceptions.base import AppError
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 
 
 class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
     @staticmethod
     def dm_to_dto(dm: DiaryCard) -> OwnDiaryCardDTO:
+        if not dm.id.value:
+            raise AppError("Diary Card Id Not Provided!")
         return OwnDiaryCardDTO(
             id=dm.id.value,
-            user_id=dm.id.value,
+            user_id=dm.user_id.value,
             mood=dm.mood.value,
             description=dm.description.value,
             date_of_entry=dm.date_of_entry.value,
-            type=dm.type.value,
+            type=dm.type,
             targets=[
                 TargetDTO(
                     id=x.id.value,
@@ -27,6 +30,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     action=x.action.value,
                 )
                 for x in dm.targets
+                if x.id.value
             ]
             if dm.targets
             else None,
@@ -37,6 +41,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     x.description.value,
                 )
                 for x in dm.emotions
+                if x.id.value
             ]
             if dm.emotions
             else None,
@@ -48,6 +53,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     dosage=x.dosage.value,
                 )
                 for x in dm.medicaments
+                if x.id.value
             ]
             if dm.medicaments
             else None,

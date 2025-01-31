@@ -7,6 +7,11 @@ from src.diary_ms.domain.common.model.commands.commands import Command
 
 @dataclass
 class UpdateDiaryCardCommand(Command[None]):
+    @dataclass
+    class Skill:
+        id: UUID
+        situation: str | None = None
+
     id: UUID
     mood: int | None = None
     description: str | None = None
@@ -14,4 +19,4 @@ class UpdateDiaryCardCommand(Command[None]):
     targets: list[UUID] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
-    skills: list[UUID] | None = None
+    skills: list[Skill] | None = None

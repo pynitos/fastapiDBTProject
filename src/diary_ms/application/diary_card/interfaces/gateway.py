@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from collections.abc import Sequence
 from typing import Protocol
 
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
@@ -54,5 +53,5 @@ class DiaryCardDeleter(Protocol):
 
 class EmotionReader(Protocol):
     @abstractmethod
-    async def get_all(self, offset: int = 0, limit: int = 10) -> Sequence[Emotion]:
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[Emotion]:
         raise NotImplementedError

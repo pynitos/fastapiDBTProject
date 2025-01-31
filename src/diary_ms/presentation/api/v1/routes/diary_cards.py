@@ -92,6 +92,7 @@ async def update_diary_card(
     schema: UpdateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
+    skills = [UpdateDiaryCardCommand.Skill(s.id, s.situation) for s in schema.skills] if schema.skills else None
     command = UpdateDiaryCardCommand(
         id=id,
         mood=schema.mood,
@@ -100,7 +101,7 @@ async def update_diary_card(
         targets=schema.targets,
         emotions=schema.emotions,
         medicaments=schema.medicaments,
-        skills=schema.skills,
+        skills=skills,
     )
     await sender.send_command(command)
 

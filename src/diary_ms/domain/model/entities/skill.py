@@ -3,7 +3,7 @@ from typing import Self
 from uuid import uuid4
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.create_skill import CreateSkillCommand
+from src.diary_ms.domain.model.commands.skill.create_skill import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
 from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
 from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
@@ -16,16 +16,16 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 @dataclass
 class Skill(BaseEntity):
+    name: SkillName
     id: SkillId = SkillId(None)
     category: SkillCategory = SkillCategory(None)
     group: SkillGroup = SkillGroup(None)
-    name: SkillName = SkillName(None)
     type: SkillType = SkillType.DBT
     description: SkillDescription = SkillDescription(None)
     situation: SkillSituation = SkillSituation(None)
 
     @classmethod
-    def create(cls, command: CreateSkillCommand) -> Self:
+    def create(cls, command: CreateSkillAdminCommand) -> Self:
         if not command.id:
             command.id = uuid4()
         skill = cls(
@@ -42,11 +42,11 @@ class Skill(BaseEntity):
         if command.category:
             self.category = SkillCategory(command.category)
         if command.group:
-            self.group = SkillCategory(command.group)
+            self.group = SkillGroup(command.group)
         if command.name:
             self.name = SkillName(command.name)
-        if command.category:
-            self.type = SkillType(command.type)
+        if command.type:
+            self.type = command.type
         if command.description:
             self.description = SkillDescription(command.description)
         return self

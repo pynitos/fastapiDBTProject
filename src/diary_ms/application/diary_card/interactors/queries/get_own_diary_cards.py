@@ -6,6 +6,7 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
 )
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
+from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 
 
 class GetOwnDiaryCards(QueryHandler[GetOwnDiaryCardsDTO, list[OwnDiaryCardDTO]]):
@@ -20,7 +21,7 @@ class GetOwnDiaryCards(QueryHandler[GetOwnDiaryCardsDTO, list[OwnDiaryCardDTO]])
         self._mapper = mapper
 
     async def __call__(self, query: GetOwnDiaryCardsDTO) -> list[OwnDiaryCardDTO]:
-        diary_cards: list[OwnDiaryCardDTO] = await self._db_gateway.get_all(
+        diary_cards: list[DiaryCard] = await self._db_gateway.get_all(
             offset=query.pagination.offset, limit=query.pagination.limit
         )
         dtos: list[OwnDiaryCardDTO] = self._mapper.dm_list_to_dto_list(diary_cards)

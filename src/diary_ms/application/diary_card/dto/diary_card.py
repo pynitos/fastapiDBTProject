@@ -10,26 +10,31 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 @dataclass
 class TargetDTO(DTO):
+    id: UUID
+    user_id: UUID
     urge: str
     action: str
 
 
 @dataclass
 class EmotionDTO(DTO):
+    id: UUID
     name: str
     description: str | None
 
 
 @dataclass
 class MedicamentDTO(DTO):
+    id: UUID
+    user_id: UUID
     name: str
     dosage: str
 
 
 @dataclass
 class SkillDTO(DTO):
-    category: str
-    group: str
+    category: str | None
+    group: str | None
     name: str
     situation: str | None
 
