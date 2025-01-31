@@ -20,5 +20,5 @@ class ValueObject[V](BaseValueObject, ABC):
     def to_raw(self) -> V:
         return self.value
 
-    def __composite_values__(self) -> tuple[V | Any]:
+    def __composite_values__(self) -> tuple[Any]:
         return (self.value,)

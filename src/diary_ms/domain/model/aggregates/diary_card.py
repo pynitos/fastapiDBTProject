@@ -30,7 +30,7 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 class DiaryCard(AggregateRoot):
     user_id: UserId
     mood: DCMood
-    id: DiaryCardId = DiaryCardId(value=None)
+    id: DiaryCardId = DiaryCardId(None)
     description: DCDescription = DCDescription(value=None)
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
     targets: list[Target] | None = None
