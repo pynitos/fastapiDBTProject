@@ -35,6 +35,7 @@ from src.diary_ms.application.admin.skill.interfaces.gateway import (
 )
 from src.diary_ms.application.admin.skill.queries.get_skill import GetSkillAdminHandler
 from src.diary_ms.application.admin.skill.queries.get_skills import GetSkillsAdminHandler
+from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
@@ -219,7 +220,7 @@ class InteractorProvider(Provider):
     resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
 
     @provide(scope=Scope.APP)
-    def init_registry(self) -> RegistryImpl:
+    def init_registry(self) -> AnyOf[Registry, RegistryImpl]:
         registry = RegistryImpl()
 
         # Diary cards
