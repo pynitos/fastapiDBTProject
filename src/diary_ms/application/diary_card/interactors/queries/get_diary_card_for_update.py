@@ -1,4 +1,3 @@
-
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (

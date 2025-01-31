@@ -14,5 +14,5 @@ class EmotionDTO(DTO):
 
 
 @dataclass
-class GetEmotionsDTO(Query):
+class GetEmotionsDTO(Query[list[EmotionDTO]]):
     pagination: Pagination

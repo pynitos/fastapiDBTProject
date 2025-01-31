@@ -18,7 +18,7 @@ class SkillAdminDTO(DTO):
 
 
 @dataclass
-class GetSkillAdminDTO(Query):
+class GetSkillAdminDTO(Query[SkillAdminDTO | None]):
     id: UUID
 
 
@@ -28,6 +28,6 @@ class SkillsAdminFilters:
 
 
 @dataclass
-class GetSkillsAdminDTO(Query):
+class GetSkillsAdminDTO(Query[list[SkillAdminDTO]]):
     pagination: Pagination
     filters: SkillsAdminFilters
