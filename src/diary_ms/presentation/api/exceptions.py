@@ -45,8 +45,7 @@ async def app_error_handler(request: Request, err: AppError, status_code: int) -
         request=request,
         err=err,
         err_data=ErrorData(title=err.detail, data=err),
-        status=err.status_code,
-        status_code=status_code,
+        status_code=err.status_code,
     )
 
 
@@ -63,11 +62,10 @@ async def handle_error(
     request: Request,  # noqa: ARG001
     err: Exception,
     err_data: ErrorData[Any],
-    status: int,
     status_code: int,
 ) -> ORJSONResponse:
     logger.error("Handle error", exc_info=err, extra={"error": err})
     return ORJSONResponse(
-        ErrorResponse(error=err_data, status=status),
+        ErrorResponse(error=err_data, status=status_code),
         status_code=status_code,
     )

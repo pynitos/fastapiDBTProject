@@ -12,6 +12,7 @@ from src.diary_ms.presentation.api import v1
 from src.diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
 )
+from src.diary_ms.presentation.api.exceptions import setup_exception_handlers
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +36,7 @@ def create_fastapi_app() -> FastAPI:
         redoc_url=f"{settings.API_PREFIX}/redoc",
         lifespan=lifespan,
     )
-
+    setup_exception_handlers(app)
     app.mount(f"{settings.API_PREFIX}/v1", v1.api)
 
     @app.get(f"{settings.API_PREFIX}/v1/openapi.json", name="1.0", tags=["Versions"])
@@ -50,7 +51,7 @@ def create_fastapi_app() -> FastAPI:
         name="Admin 1.0",
         tags=["Documentations"],
     )
-    def noop() -> None: ...
+    def noop() -> None: ... # type: ignore
 
     return app
 
