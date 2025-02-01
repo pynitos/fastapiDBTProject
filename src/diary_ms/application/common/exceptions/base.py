@@ -14,7 +14,8 @@ class GatewayError(InfraError):
 
 
 class ItemNotFoundError(GatewayError):
-    pass
+    _detail: str = "Item Not Found."
+    _status_code: int = 404
 
 
 class MediatorError(ApplicationError):
