@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from dishka import make_async_container
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorProvider
@@ -35,6 +36,7 @@ def create_fastapi_app() -> FastAPI:
         docs_url=f"{settings.API_PREFIX}/docs",
         redoc_url=f"{settings.API_PREFIX}/redoc",
         lifespan=lifespan,
+        default_response_class=ORJSONResponse,
     )
     setup_exception_handlers(app)
     app.mount(f"{settings.API_PREFIX}/v1", v1.api)
@@ -51,7 +53,7 @@ def create_fastapi_app() -> FastAPI:
         name="Admin 1.0",
         tags=["Documentations"],
     )
-    def noop() -> None: ... # type: ignore
+    def noop() -> None: ...  # type: ignore
 
     return app
 

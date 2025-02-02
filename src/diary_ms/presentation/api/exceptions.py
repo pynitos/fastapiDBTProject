@@ -1,16 +1,14 @@
 import logging
 from collections.abc import Awaitable, Callable
 from functools import partial
-from typing import Any
 
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from starlette import status
 from starlette.requests import Request
 
-from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
-from src.diary_ms.domain.common.exceptions.base import AppError, DomainValueError
-from src.diary_ms.presentation.api.responses.base import ErrorData, ErrorResponse
+from src.diary_ms.domain.common.exceptions.base import AppError
+from src.diary_ms.presentation.api.responses.base import ErrorData
 
 # from src.application.user.exceptions import UserIdAlreadyExistsError, UserIdNotExistError, UsernameNotExistError
 # from src.domain.common.exceptions import AppError
@@ -25,9 +23,9 @@ logger = logging.getLogger(__name__)
 
 
 def setup_exception_handlers(app: FastAPI) -> None:
-    app.add_exception_handler(AppError, error_handler(AppError.get_status_code()))
-    app.add_exception_handler(DiaryCardNotFoundError, error_handler(DiaryCardNotFoundError.get_status_code()))
-    app.add_exception_handler(DomainValueError, error_handler(DomainValueError.get_status_code()))
+    # app.add_exception_handler(AppError, error_handler(AppError.get_status_code()))
+    # app.add_exception_handler(DiaryCardNotFoundError, error_handler(DiaryCardNotFoundError.get_status_code()))
+    # app.add_exception_handler(DomainValueError, error_handler(DomainValueError.get_status_code()))
     # app.add_exception_handler(WrongUsernameValueError, error_handler(status.HTTP_400_BAD_REQUEST))
     # app.add_exception_handler(WrongNameValueError, error_handler(status.HTTP_400_BAD_REQUEST))
     # app.add_exception_handler(UserIdAlreadyExistsError, error_handler(status.HTTP_409_CONFLICT))
@@ -44,8 +42,9 @@ async def app_error_handler(request: Request, err: AppError, status_code: int) -
     return await handle_error(
         request=request,
         err=err,
-        err_data=ErrorData(title=err.detail, data=err),
-        status_code=err.status_code,
+        err_data=ErrorData(detail=err.detail, data=err),
+        status=err.status_code,
+        status_code=status_code,
     )
 
 
@@ -53,7 +52,7 @@ async def unknown_exception_handler(request: Request, err: Exception) -> ORJSONR
     logger.error("Handle error", exc_info=err, extra={"error": err})
     logger.exception("Unknown error occurred", exc_info=err, extra={"error": err})
     return ORJSONResponse(
-        ErrorResponse(error=ErrorData(data=err)),
+        "Unknown error occurred.",
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     )
 
@@ -61,11 +60,12 @@ async def unknown_exception_handler(request: Request, err: Exception) -> ORJSONR
 async def handle_error(
     request: Request,  # noqa: ARG001
     err: Exception,
-    err_data: ErrorData[Any],
+    err_data: ErrorData[Exception],
+    status: int,
     status_code: int,
 ) -> ORJSONResponse:
-    logger.error("Handle error", exc_info=err, extra={"error": err})
+    logger.error("Handle error", exc_info=err, extra={"error": err, "title": err_data.title})
     return ORJSONResponse(
-        ErrorResponse(error=err_data, status=status_code),
+        {"messsage": err_data.detail},
         status_code=status_code,
     )

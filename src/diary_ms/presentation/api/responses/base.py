@@ -18,7 +18,7 @@ class OkResponse(Response, Generic[TResult]):
 
 @dataclass(frozen=True)
 class ErrorData(Generic[TError]):
-    title: str = "Unknown error occurred"
+    detail: str = "Unknown error occurred"
     data: TError | None = None
 
 
