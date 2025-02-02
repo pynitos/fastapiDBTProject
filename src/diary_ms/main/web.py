@@ -13,7 +13,7 @@ from src.diary_ms.presentation.api import v1
 from src.diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
 )
-from src.diary_ms.presentation.api.exceptions import setup_exception_handlers
+from src.diary_ms.presentation.api.exceptions import include_exception_handlers
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ def create_fastapi_app() -> FastAPI:
         lifespan=lifespan,
         default_response_class=ORJSONResponse,
     )
-    setup_exception_handlers(app)
+    include_exception_handlers(app)
     app.mount(f"{settings.API_PREFIX}/v1", v1.api)
 
     @app.get(f"{settings.API_PREFIX}/v1/openapi.json", name="1.0", tags=["Versions"])
