@@ -95,7 +95,6 @@ from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_mak
 from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.main.config import Settings
-from src.diary_ms.presentation.error_message import ErrorMessage
 
 
 class AdaptersProvider(Provider):
@@ -185,7 +184,6 @@ class AdaptersProvider(Provider):
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
 
-    error_massage = provide(ErrorMessage, scope=Scope.APP)
     mappers = provide_all(
         WithParents[DiaryCardDTOMapperImpl],  # type: ignore
         EmotionDTOMapper,
