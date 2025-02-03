@@ -20,30 +20,30 @@ metadata = MetaData()
 diary_card_skill_assotiation = Table(
     "diary_card_skill",
     metadata,
-    Column("diary_card_id", metadata, ForeignKey("diary_cards.id"), primary_key=True),
-    Column("skill_id", metadata, ForeignKey("skills.id"), primary_key=True),
+    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),  # type: ignore
+    Column("skill_id", ForeignKey("skills.id"), primary_key=True),  # type: ignore
     Column("situation", String(200), default=None, nullable=True),
 )
 
 diary_card_target_assotiation = Table(
     "diary_card_target",
     metadata,
-    Column("diary_card_id", metadata, ForeignKey("diary_cards.id"), primary_key=True),
-    Column("target_id", metadata, ForeignKey("targets.id"), primary_key=True),
+    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),  # type: ignore
+    Column("target_id", ForeignKey("targets.id"), primary_key=True),  # type: ignore
 )
 
 diary_card_emotion_assotiation = Table(
     "diary_card_emotion",
     metadata,
-    Column("diary_card_id", metadata, ForeignKey("diary_cards.id"), primary_key=True),
-    Column("emotion_id", metadata, ForeignKey("emotions.id"), primary_key=True),
+    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),  # type: ignore
+    Column("emotion_id", ForeignKey("emotions.id"), primary_key=True),  # type: ignore
 )
 
 diary_card_medicament_assotiation = Table(
     "diary_card_medicament",
     metadata,
-    Column("diary_card_id", metadata, ForeignKey("diary_cards.id"), primary_key=True),
-    Column("medicament_id", metadata, ForeignKey("medicaments.id"), primary_key=True),
+    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),  # type: ignore
+    Column("medicament_id", ForeignKey("medicaments.id"), primary_key=True),  # type: ignore
 )
 
 diary_cards_table = Table(

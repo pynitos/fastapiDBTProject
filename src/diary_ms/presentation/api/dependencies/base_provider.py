@@ -1,7 +1,7 @@
 import logging
 
 from dishka import AnyOf, Provider, Scope, provide
-from fastapi import HTTPException, Request
+from fastapi import Request
 
 from src.diary_ms.application.common.interfaces.id_provider import (
     AdminIdProvider,

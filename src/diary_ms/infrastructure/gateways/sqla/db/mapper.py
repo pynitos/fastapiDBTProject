@@ -86,6 +86,9 @@ def init_mapper() -> None:
             "__name": skills_table.c.name,
             "description": composite(lambda value: SkillDescription(value), skills_table.c.description),
             "__description": skills_table.c.description,
+            "diary_card_assotiations": relationship(
+                "DiaryCardSkillAssotiation", cascade="all, delete-orphan", lazy="selectin"
+            ),
         },
     )
     mapper_registry.map_imperatively(
