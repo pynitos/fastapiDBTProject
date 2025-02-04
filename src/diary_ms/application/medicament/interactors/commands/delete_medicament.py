@@ -1,23 +1,25 @@
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardDeleter
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
+from src.diary_ms.application.medicament.interfaces.gateway import MedicamentDeleter
+from src.diary_ms.domain.model.commands.medicament.delete_medicament import DeleteMedicamentCommand
+from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 
 
-class DeleteDiaryCard(CommandHandler[DeleteDiaryCardCommand, None]):
+class DeleteMedicament(CommandHandler[DeleteMedicamentCommand, None]):
     def __init__(
         self,
-        db_gateway: DiaryCardDeleter,
+        db_gateway: MedicamentDeleter,
         id_provider: IdProvider,
-        uow: TransactionManager,
+        transaction_manager: TransactionManager,
     ) -> None:
-        self.db_gateway = db_gateway
-        self.id_provider = id_provider
-        self.uow = uow
+        self._db_gateway = db_gateway
+        self._id_provider = id_provider
+        self._transaction_manager = transaction_manager
 
-    async def __call__(self, command: DeleteDiaryCardCommand) -> None:
-        # user_id: UserId = self.id_provider.get_current_user_id()
-        await self.db_gateway.delete(DiaryCardId(command.id))
-        await self.uow.commit()
+    async def __call__(self, command: DeleteMedicamentCommand) -> None:
+        user_id: UserId = self._id_provider.get_current_user_id()
+        medicament_id: MedicamentId = MedicamentId(command.id)
+        await self._db_gateway.delete(medicament_id, user_id)
+        await self._transaction_manager.commit()

@@ -11,13 +11,13 @@ class DeleteDiaryCard(CommandHandler[DeleteDiaryCardCommand, None]):
         self,
         db_gateway: DiaryCardDeleter,
         id_provider: IdProvider,
-        uow: TransactionManager,
+        transaction_manager: TransactionManager,
     ) -> None:
-        self.db_gateway = db_gateway
-        self.id_provider = id_provider
-        self.uow = uow
+        self._db_gateway = db_gateway
+        self._id_provider = id_provider
+        self._transaction_manager = transaction_manager
 
     async def __call__(self, command: DeleteDiaryCardCommand) -> None:
-        # user_id: UserId = self.id_provider.get_current_user_id()
-        await self.db_gateway.delete(DiaryCardId(command.id))
-        await self.uow.commit()
+        self._id_provider.get_current_user_id()
+        await self._db_gateway.delete(DiaryCardId(command.id))
+        await self._transaction_manager.commit()

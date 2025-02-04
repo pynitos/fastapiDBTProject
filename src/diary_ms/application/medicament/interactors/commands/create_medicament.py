@@ -5,7 +5,7 @@ from src.diary_ms.application.common.interfaces.handlers.command import CommandH
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.medicament.interfaces.gateway import MedicamentSaver
-from src.diary_ms.domain.model.commands.create_medicament import CreateMedicamentCommand
+from src.diary_ms.domain.model.commands.medicament.create_medicament import CreateMedicamentCommand
 from src.diary_ms.domain.model.entities.medicament import Medicament
 
 

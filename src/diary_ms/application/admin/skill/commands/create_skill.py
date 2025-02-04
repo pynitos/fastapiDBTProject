@@ -2,7 +2,7 @@ from src.diary_ms.application.admin.skill.interfaces.gateway import SkillAdminSa
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.domain.model.commands.skill.create_skill import CreateSkillAdminCommand
+from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
 from src.diary_ms.domain.model.entities.skill import Skill
 
 

@@ -1,18 +1,24 @@
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, OwnDiaryCardDTO
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
-from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
+from src.diary_ms.application.medicament.dto.medicament import GetOwnMedicamentDTO, OwnMedicamentDTO
+from src.diary_ms.application.medicament.exceptions.medicament import MedicamentNotFoundError
+from src.diary_ms.application.medicament.interfaces.gateway import MedicamentReader
+from src.diary_ms.domain.model.entities.medicament import Medicament
+from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 
 
-class GetOwnDiaryCard(QueryHandler[GetOwnDiaryCardDTO, OwnDiaryCardDTO | None]):
-    def __init__(self, db_gateway: DiaryCardReader, id_provider: IdProvider, mapper: DiaryCardDTOMapper):
+class GetOwnMedicament(QueryHandler[GetOwnMedicamentDTO, OwnMedicamentDTO]):
+    def __init__(self, db_gateway: MedicamentReader, id_provider: IdProvider):
         self._db_gateway = db_gateway
         self._id_provider = id_provider
-        self._mapper = mapper
+        self._mapper: type[MedicamentDTOMapper] = MedicamentDTOMapper
 
-    async def __call__(self, query: GetOwnDiaryCardDTO) -> OwnDiaryCardDTO | None:
-        diary_card: DiaryCard | None = await self._db_gateway.get_by_id(DiaryCardId(query.id))
-        return self._mapper.dm_to_dto(diary_card) if diary_card else None
+    async def __call__(self, query: GetOwnMedicamentDTO) -> OwnMedicamentDTO:
+        user_id: UserId = self._id_provider.get_current_user_id()
+        med_id: MedicamentId = MedicamentId(query.id)
+        med: Medicament | None = await self._db_gateway.get_by_id(med_id, user_id)
+        if not med:
+            raise MedicamentNotFoundError(med_id)
+        return self._mapper.dm_to_dto(med)

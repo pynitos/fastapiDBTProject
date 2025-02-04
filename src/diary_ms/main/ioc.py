@@ -74,13 +74,23 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     EmotionReader,
 )
 from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
+from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
+from src.diary_ms.application.medicament.dto.medicament import GetOwnMedicamentDTO, GetOwnMedicamentsDTO
+from src.diary_ms.application.medicament.interactors.commands.create_medicament import CreateMedicament
+from src.diary_ms.application.medicament.interactors.commands.delete_medicament import DeleteMedicament
+from src.diary_ms.application.medicament.interactors.commands.update_medicament import UpdateMedicament
+from src.diary_ms.application.medicament.interactors.queries.get_own_medicament_by_id import GetOwnMedicament
+from src.diary_ms.application.medicament.interactors.queries.get_own_medicaments import GetOwnMedicaments
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
-from src.diary_ms.domain.model.commands.skill.create_skill import CreateSkillAdminCommand
+from src.diary_ms.domain.model.commands.medicament.create_medicament import CreateMedicamentCommand
+from src.diary_ms.domain.model.commands.medicament.delete_medicament import DeleteMedicamentCommand
+from src.diary_ms.domain.model.commands.medicament.update_medicament import UpdateMedicamentCommand
+from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
@@ -187,6 +197,7 @@ class InteractorProvider(Provider):
     mappers = provide_all(
         WithParents[DiaryCardDTOMapperImpl],  # type: ignore
         EmotionDTOMapper,
+        MedicamentDTOMapper,
         EmotionAdminDTOMapper,
         SkillAdminDTOMapper,
     )
@@ -195,6 +206,9 @@ class InteractorProvider(Provider):
         CreateDiaryCard,
         UpdateDiaryCard,
         DeleteDiaryCard,
+        CreateMedicament,
+        UpdateMedicament,
+        DeleteMedicament,
         CreateEmotionAdminHandler,
         UpdateEmotionAdminHandler,
         DeleteEmotionAdminHandler,
@@ -207,6 +221,8 @@ class InteractorProvider(Provider):
         GetOwnDiaryCards,
         GetOwnDiaryCard,
         GetDiaryCardForUpdate,
+        GetOwnMedicament,
+        GetOwnMedicaments,
         GetEmotions,
         GetEmotionsAdminHandler,
         GetEmotionAdminHandler,
@@ -236,11 +252,9 @@ class InteractorProvider(Provider):
 
         # Emotions
         registry.register_query_handler(GetEmotionsDTO, GetEmotions)
-
         registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
         registry.register_command_handler(UpdateEmotionAdminCommand, UpdateEmotionAdminHandler)
         registry.register_command_handler(DeleteEmotionAdminCommand, DeleteEmotionAdminHandler)
-
         registry.register_query_handler(GetEmotionsAdminDTO, GetEmotionsAdminHandler)
         registry.register_query_handler(GetEmotionAdminDTO, GetEmotionAdminHandler)
 
@@ -248,8 +262,14 @@ class InteractorProvider(Provider):
         registry.register_command_handler(CreateSkillAdminCommand, CreateSkillAdminHandler)
         registry.register_command_handler(UpdateSkillAdminCommand, UpdateSkillAdminHandler)
         registry.register_command_handler(DeleteSkillAdminCommand, DeleteSkillAdminHandler)
-
         registry.register_query_handler(GetSkillsAdminDTO, GetSkillsAdminHandler)
         registry.register_query_handler(GetSkillAdminDTO, GetSkillAdminHandler)
+
+        # Medicaments
+        registry.register_command_handler(CreateMedicamentCommand, CreateMedicament)
+        registry.register_command_handler(UpdateMedicamentCommand, UpdateMedicament)
+        registry.register_command_handler(DeleteMedicamentCommand, DeleteMedicament)
+        registry.register_query_handler(GetOwnMedicamentDTO, GetOwnMedicament)
+        registry.register_query_handler(GetOwnMedicamentsDTO, GetOwnMedicaments)
 
         return registry

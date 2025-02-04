@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.create_medicament import CreateMedicamentCommand
+from src.diary_ms.domain.model.commands.medicament.create_medicament import CreateMedicamentCommand
+from src.diary_ms.domain.model.commands.medicament.update_medicament import UpdateMedicamentCommand
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.medicament.dosage import MedicamentDosage
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
@@ -25,3 +26,10 @@ class Medicament(BaseEntity):
             dosage=MedicamentDosage(command.dosage),
         )
         return medicament
+
+    def update(self, command: UpdateMedicamentCommand) -> Self:
+        if command.name:
+            self.name = MedicamentName(command.name)
+        if command.dosage:
+            self.dosage = MedicamentDosage(command.dosage)
+        return self

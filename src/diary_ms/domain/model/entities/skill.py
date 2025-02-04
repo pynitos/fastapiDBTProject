@@ -3,7 +3,7 @@ from typing import Self
 from uuid import uuid4
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.skill.create_skill import CreateSkillAdminCommand
+from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
 from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
 from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription

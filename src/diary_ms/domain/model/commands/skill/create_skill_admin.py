@@ -2,16 +2,14 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from src.diary_ms.domain.common.model.commands.commands import Command
-from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class CreateSkillCommand(Command[None]):
-    category: str
-    group: str
+class CreateSkillAdminCommand(Command[None]):
     name: str
-    type: SkillType = SkillType.DBT
-
     id: UUID | None = None
-    description: SkillDescription | None = None
+    category: str | None = None
+    group: str | None = None
+    type: SkillType = SkillType.DBT
+    description: str | None = None

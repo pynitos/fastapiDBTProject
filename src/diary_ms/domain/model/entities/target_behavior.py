@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.create_target import CreateTargetCommand
+from src.diary_ms.domain.model.commands.target_behavior.create_target import CreateTargetCommand
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId

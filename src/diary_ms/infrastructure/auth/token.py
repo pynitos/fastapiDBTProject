@@ -11,6 +11,7 @@ from src.diary_ms.application.common.interfaces.id_provider import (
     IdProvider,
 )
 from src.diary_ms.domain.common.exceptions.access import AuthenticationError
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 logger = logging.getLogger(__name__)
 
@@ -87,13 +88,10 @@ class TokenIdProvider(IdProvider, AdminIdProvider):
         self.token_processor = token_processor
         self.token = token
 
-    def get_current_user_id(self) -> uuid.UUID:
-        return self.token_processor.authorize_user(self.token)
+    def get_current_user_id(self) -> UserId:
+        id: uuid.UUID = self.token_processor.authorize_user(self.token)
+        return UserId(id)
 
-    def get_admin_user_id(self) -> uuid.UUID:
-        return self.token_processor.authorize_admin(self.token)
-
-
-class FakeIdProvider(IdProvider):
-    def get_current_user_id(self) -> uuid.UUID:
-        return uuid.uuid4()
+    def get_admin_user_id(self) -> UserId:
+        id: uuid.UUID = self.token_processor.authorize_admin(self.token)
+        return UserId(id)

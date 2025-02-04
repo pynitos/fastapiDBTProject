@@ -1,28 +1,28 @@
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.diary_card.dto.diary_card import (
-    GetOwnDiaryCardsDTO,
-    OwnDiaryCardDTO,
-)
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
-from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
+from src.diary_ms.application.medicament.dto.medicament import GetOwnMedicamentsDTO, OwnMedicamentDTO
+from src.diary_ms.application.medicament.interfaces.gateway import MedicamentReader
+from src.diary_ms.domain.model.entities.medicament import Medicament
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 
-class GetOwnDiaryCards(QueryHandler[GetOwnDiaryCardsDTO, list[OwnDiaryCardDTO]]):
+class GetOwnMedicaments(QueryHandler[GetOwnMedicamentsDTO, list[OwnMedicamentDTO]]):
     def __init__(
         self,
-        db_gateway: DiaryCardReader,
+        db_gateway: MedicamentReader,
         id_provider: IdProvider,
-        mapper: DiaryCardDTOMapper,
-    ):
-        self._db_gateway = db_gateway
-        self._id_provider = id_provider
-        self._mapper = mapper
+    ) -> None:
+        self._db_gateway: MedicamentReader = db_gateway
+        self._id_provider: IdProvider = id_provider
+        self._mapper: type[MedicamentDTOMapper] = MedicamentDTOMapper
 
-    async def __call__(self, query: GetOwnDiaryCardsDTO) -> list[OwnDiaryCardDTO]:
-        diary_cards: list[DiaryCard] = await self._db_gateway.get_all(
-            offset=query.pagination.offset, limit=query.pagination.limit
+    async def __call__(self, query: GetOwnMedicamentsDTO) -> list[OwnMedicamentDTO]:
+        user_id: UserId = self._id_provider.get_current_user_id()
+        meds: list[Medicament] = await self._db_gateway.get_all(
+            user_id=user_id,
+            offset=query.pagination.offset,
+            limit=query.pagination.limit,
         )
-        dtos: list[OwnDiaryCardDTO] = self._mapper.dm_list_to_dto_list(diary_cards)
+        dtos: list[OwnMedicamentDTO] = self._mapper.dm_list_to_dto_list(meds)
         return dtos
