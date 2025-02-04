@@ -7,3 +7,12 @@ class Tags(StrEnum):
     MEDICAMENTS = "medicaments"
     TARGETS = "targets"
     SKILLS = "skills"
+
+
+class Prefix(StrEnum):
+    ADMIN = "/admin"
+    DIARY_CARDS = ""
+    EMOTIONS = "/emotions"
+    MEDICAMENTS = "/medicaments"
+    TARGETS = "/targets"
+    SKILLS = "/skills"
