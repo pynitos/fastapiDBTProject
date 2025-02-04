@@ -6,7 +6,6 @@ from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.common.exceptions.base import GatewayError, InfraError
-from src.diary_ms.application.common.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
     EmotionForUpdDTO,
@@ -14,6 +13,7 @@ from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     SkillForUpdDTO,
     TargetForUpdDTO,
 )
+from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
     DiaryCardDTOForUpdateReader,

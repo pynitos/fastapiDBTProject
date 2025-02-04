@@ -18,7 +18,15 @@ class ItemNotFoundError(GatewayError):
     _status_code: int = 404
 
 
+class ItemIdNotProvidedError(GatewayError):
+    _detail: str = "Item Id Not Provided."
+
+
 class MediatorError(ApplicationError):
+    pass
+
+
+class MappingError(ApplicationError):
     pass
 
 
