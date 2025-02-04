@@ -2,7 +2,7 @@ import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from dishka import make_async_container
+from dishka import AsyncContainer, make_async_container
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
@@ -15,7 +15,7 @@ from src.diary_ms.presentation.api.dependencies.base_provider import (
 )
 from src.diary_ms.presentation.api.exceptions import include_exception_handlers
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -24,10 +24,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     yield
     app.state.dishka_container.close()
     logger.debug("Close app lifespan.")
-
-
-def add_exteption_handlers(app: FastAPI) -> None:
-    pass
 
 
 def create_fastapi_app() -> FastAPI:
@@ -63,8 +59,8 @@ def create_app() -> FastAPI:
         level=logging.INFO,
         format="%(asctime)s  %(process)-7s %(module)-20s %(message)s",
     )
-    app = create_fastapi_app()
-    container = make_async_container(
+    app: FastAPI = create_fastapi_app()
+    container: AsyncContainer = make_async_container(
         AdaptersProvider(),
         InteractorProvider(),
         FastapiProvider(),
