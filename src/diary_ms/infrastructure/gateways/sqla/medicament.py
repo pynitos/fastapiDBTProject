@@ -17,6 +17,7 @@ from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNot
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+from .db.tables import medicaments_table
 
 
 class MedicamentGateway(MedicamentReader, MedicamentSaver, MedicamentUpdater, MedicamentDeleter):
@@ -33,7 +34,7 @@ class MedicamentGateway(MedicamentReader, MedicamentSaver, MedicamentUpdater, Me
         stmt: Select[tuple[Medicament]] = (
             select(self._db_model)
             .where(
-                self._db_model.user_id == user_id.value  # type: ignore
+                medicaments_table.c.user_id == user_id.value
             )
             .offset(offset)
             .limit(limit)
