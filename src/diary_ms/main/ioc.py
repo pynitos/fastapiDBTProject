@@ -81,6 +81,12 @@ from src.diary_ms.application.medicament.interactors.commands.delete_medicament 
 from src.diary_ms.application.medicament.interactors.commands.update_medicament import UpdateMedicament
 from src.diary_ms.application.medicament.interactors.queries.get_own_medicament_by_id import GetOwnMedicament
 from src.diary_ms.application.medicament.interactors.queries.get_own_medicaments import GetOwnMedicaments
+from src.diary_ms.application.medicament.interfaces.gateway import (
+    MedicamentDeleter,
+    MedicamentReader,
+    MedicamentSaver,
+    MedicamentUpdater,
+)
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
@@ -104,6 +110,7 @@ from src.diary_ms.infrastructure.gateways.sqla.admin.skill import SkillAdminGate
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
+from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
 from src.diary_ms.main.config import Settings
 
 
@@ -189,6 +196,18 @@ class AdaptersProvider(Provider):
         SkillAdminDeleter,
     ]:
         return SkillAdminGateway(session=session)
+
+    @provide
+    def get_medicament_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        MedicamentGateway,
+        MedicamentReader,
+        MedicamentSaver,
+        MedicamentUpdater,
+        MedicamentDeleter,
+    ]:
+        return MedicamentGateway(session=session)
 
 
 class InteractorProvider(Provider):
