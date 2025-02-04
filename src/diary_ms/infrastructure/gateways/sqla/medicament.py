@@ -33,7 +33,7 @@ class MedicamentGateway(MedicamentReader, MedicamentSaver, MedicamentUpdater, Me
         stmt: Select[tuple[Medicament]] = (
             select(self._db_model)
             .where(
-                self.db.model.user_id == user_id.value  # type: ignore
+                self.db_model.user_id == user_id.value  # type: ignore
             )
             .offset(offset)
             .limit(limit)
