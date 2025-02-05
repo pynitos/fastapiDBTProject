@@ -7,6 +7,7 @@ from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.medicament.interfaces.gateway import MedicamentSaver
 from src.diary_ms.domain.model.commands.medicament.create_medicament import CreateMedicamentCommand
 from src.diary_ms.domain.model.entities.medicament import Medicament
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 class CreateMedicament(CommandHandler[CreateMedicamentCommand, None]):
@@ -22,8 +23,8 @@ class CreateMedicament(CommandHandler[CreateMedicamentCommand, None]):
         self._transaction_manager = transaction_manager
 
     async def __call__(self, command: CreateMedicamentCommand) -> None:
-        user_id: UUID = self.id_provider.get_current_user_id()
-        command.user_id = user_id
+        user_id: UserId = self.id_provider.get_current_user_id()
+        command.user_id = user_id.value
         medicament: Medicament = Medicament.create(command)
         await self.db_gateway.create(medicament)
         await self._transaction_manager.commit()

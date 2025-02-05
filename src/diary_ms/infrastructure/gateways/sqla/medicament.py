@@ -44,14 +44,13 @@ class MedicamentGateway(MedicamentReader, MedicamentSaver, MedicamentUpdater, Me
         return result_list
 
     async def get_by_id(self, id: MedicamentId, user_id: UserId) -> Medicament | None:
-        pk: UUID | None = id.value
-        if not pk:
+        if not id.value:
             raise MedicamentIdNotProvidedError
         if not user_id.value:
             raise UserIdNotProvidedError
         stmt: Select[tuple[Medicament]] = select(self._db_model).where(
-            self._db_model.id == pk,  # type: ignore
-            self._db_model.user_id == user_id.value,  # type: ignore
+            self._db_model.id == id, # type: ignore
+            self._db_model.user_id == user_id,  # type: ignore
         )
         result: ScalarResult[Medicament] = await self._session.scalars(stmt)
         entity: Medicament | None = result.first()

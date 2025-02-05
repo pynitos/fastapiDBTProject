@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Self
 
+from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
 from src.diary_ms.domain.model.commands.medicament.create_medicament import CreateMedicamentCommand
 from src.diary_ms.domain.model.commands.medicament.update_medicament import UpdateMedicamentCommand
@@ -15,12 +16,13 @@ class Medicament(BaseEntity):
     user_id: UserId
     name: MedicamentName
     dosage: MedicamentDosage
-    id: MedicamentId
+    id: MedicamentId = MedicamentId(None)
 
     @classmethod
     def create(cls, command: CreateMedicamentCommand) -> Self:
+        if not command.user_id:
+            raise UserIdNotProvidedError
         medicament = cls(
-            id=MedicamentId(value=None),
             user_id=UserId(command.user_id),
             name=MedicamentName(command.name),
             dosage=MedicamentDosage(command.dosage),

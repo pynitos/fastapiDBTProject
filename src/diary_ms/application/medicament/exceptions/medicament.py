@@ -8,9 +8,9 @@ class MedicamentNotFoundError(ItemNotFoundError):
 
     def __init__(self, id: MedicamentId, status_code: int = 404):
         if id.value:
-            detail: str = f"Medicament with id: {id} not found!"
+            detail: str = f"Medicament with id: {str(id.value)} not found!"
             super().__init__(detail, status_code)
-        super().__init__()
+        super().__init__(status_code=status_code)
 
 
 class MedicamentIdNotProvidedError(GatewayError):
