@@ -3,6 +3,7 @@ from uuid import uuid4
 from sqlalchemy import (
     TIMESTAMP,
     UUID,
+    Boolean,
     Column,
     Enum,
     ForeignKey,
@@ -101,6 +102,7 @@ targets_table = Table(
     Column("user_id", UUID(as_uuid=True)),
     Column("urge", String(50)),
     Column("action", String(200)),
+    Column("is_default", Boolean, default=False),
 )
 
 skills_table = Table(

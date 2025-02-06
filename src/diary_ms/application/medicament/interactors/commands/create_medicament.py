@@ -1,4 +1,3 @@
-from uuid import UUID
 
 from src.diary_ms.application.common.interfaces.dispatcher.base import Publisher
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler

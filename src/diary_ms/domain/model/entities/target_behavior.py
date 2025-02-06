@@ -6,6 +6,7 @@ from src.diary_ms.domain.model.commands.target_behavior.create_target import Cre
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 
 
@@ -15,6 +16,7 @@ class Target(BaseEntity):
     user_id: UserId
     urge: TargetUrge
     action: TargetAction
+    is_default: TargetIsDefault = TargetIsDefault(False)
 
     @classmethod
     def create(cls, command: CreateTargetCommand) -> Self:

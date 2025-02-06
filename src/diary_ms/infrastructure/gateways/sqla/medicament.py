@@ -1,4 +1,3 @@
-from uuid import UUID
 
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -17,6 +16,7 @@ from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNot
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+
 from .db.tables import medicaments_table
 
 
@@ -32,12 +32,7 @@ class MedicamentGateway(MedicamentReader, MedicamentSaver, MedicamentUpdater, Me
         if not user_id.value:
             raise UserIdNotProvidedError
         stmt: Select[tuple[Medicament]] = (
-            select(self._db_model)
-            .where(
-                medicaments_table.c.user_id == user_id.value
-            )
-            .offset(offset)
-            .limit(limit)
+            select(self._db_model).where(medicaments_table.c.user_id == user_id.value).offset(offset).limit(limit)
         )
         result: ScalarResult[Medicament] = await self._session.scalars(stmt)
         result_list: list[Medicament] = list(result.all())
@@ -49,7 +44,7 @@ class MedicamentGateway(MedicamentReader, MedicamentSaver, MedicamentUpdater, Me
         if not user_id.value:
             raise UserIdNotProvidedError
         stmt: Select[tuple[Medicament]] = select(self._db_model).where(
-            self._db_model.id == id, # type: ignore
+            self._db_model.id == id,  # type: ignore
             self._db_model.user_id == user_id,  # type: ignore
         )
         result: ScalarResult[Medicament] = await self._session.scalars(stmt)
