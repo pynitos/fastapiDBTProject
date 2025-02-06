@@ -1,4 +1,3 @@
-
 from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider

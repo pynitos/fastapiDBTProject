@@ -5,8 +5,5 @@ from src.diary_ms.domain.common.model.commands.commands import Command
 
 
 @dataclass
-class CreateTargetCommand(Command[None]):
-    urge: str
-    action: str
-    user_id: UUID | None = None
-    id: UUID | None = None
+class DeleteTargetCommand(Command[None]):
+    id: UUID

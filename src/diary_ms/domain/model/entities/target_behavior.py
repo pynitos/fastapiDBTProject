@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from typing import Self
 
+from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
 from src.diary_ms.domain.model.commands.target_behavior.create_target import CreateTargetCommand
+from src.diary_ms.domain.model.commands.target_behavior.update_target import UpdateTargetCommand
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
@@ -20,10 +22,19 @@ class Target(BaseEntity):
 
     @classmethod
     def create(cls, command: CreateTargetCommand) -> Self:
-        skill = cls(
+        if not command.user_id:
+            raise UserIdNotProvidedError
+        t = cls(
             id=TargetId(command.id),
             user_id=UserId(command.user_id),
             urge=TargetUrge(command.urge),
             action=TargetAction(command.action),
         )
-        return skill
+        return t
+
+    def update(self, command: UpdateTargetCommand) -> Self:
+        if command.urge:
+            self.urge = TargetUrge(command.urge)
+        if command.action:
+            self.action = TargetAction(command.action)
+        return self

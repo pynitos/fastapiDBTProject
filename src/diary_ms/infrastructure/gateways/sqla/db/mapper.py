@@ -23,6 +23,7 @@ from src.diary_ms.domain.model.value_objects.skill.name import SkillName
 from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
     diary_card_skill_assotiation,
@@ -115,7 +116,7 @@ def init_mapper() -> None:
             "__urge": targets_table.c.urge,
             "action": composite(lambda value: TargetAction(value), targets_table.c.action),
             "__action": targets_table.c.action,
-            "is_default": composite(lambda value: TargetAction(value), targets_table.c.action),
+            "is_default": composite(lambda value: TargetIsDefault(value), targets_table.c.action),
             "__is_default": targets_table.c.action,
         },
     )
