@@ -29,7 +29,7 @@ router = APIRouter(
     route_class=DishkaRoute,
     responses={
         HTTPStatus.UNAUTHORIZED: {
-            HTTPStatus.UNAUTHORIZED.phrase: "No permission.",
+            HTTPStatus.UNAUTHORIZED.phrase: HTTPStatus.UNAUTHORIZED.description,
         }
     },
 )
