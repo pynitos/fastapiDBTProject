@@ -2,7 +2,7 @@ from http import HTTPStatus
 from uuid import UUID
 
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.application.target_behavior.dto.target_behavior import (
@@ -45,8 +45,6 @@ async def get_own_target_by_id(
     sender: SenderDep,
 ) -> OwnTargetDTO:
     target: OwnTargetDTO = await sender.send_query(GetOwnTargetDTO(id))
-    if not target:
-        raise HTTPException(404, f"Diary card with id: {id} not found.")
     return target
 
 
