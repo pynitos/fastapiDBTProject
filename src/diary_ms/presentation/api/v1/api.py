@@ -6,7 +6,7 @@ from src.diary_ms.presentation.api.exceptions import include_exception_handlers
 
 from ..deps import TokenDep
 from .admin import admin_api_v1
-from .controllers import diary_cards, emotions, medicaments
+from .controllers import diary_cards, emotions, medicaments, target_behavior
 
 api_v1 = FastAPI(
     title=settings.PROJECT_NAME,
@@ -33,4 +33,10 @@ api_v1.include_router(
     medicaments.router,
     prefix=Prefix.MEDICAMENTS,
     tags=[Tags.MEDICAMENTS],
+)
+
+api_v1.include_router(
+    target_behavior.router,
+    prefix=Prefix.TARGETS,
+    tags=[Tags.TARGETS],
 )
