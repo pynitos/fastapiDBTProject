@@ -6,7 +6,7 @@ from src.diary_ms.presentation.api.exceptions import include_exception_handlers
 
 from ..deps import TokenDep
 from .admin import admin_api_v1
-from .routes import diary_cards, emotions, medicaments
+from .controllers import diary_cards, emotions, medicaments
 
 api_v1 = FastAPI(
     title=settings.PROJECT_NAME,

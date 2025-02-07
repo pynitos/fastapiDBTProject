@@ -16,7 +16,7 @@ from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdm
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.presentation.api.deps import SenderDep
-from src.diary_ms.presentation.api.v1.routes.admin.schemas.skill import CreateSkillAdminReq, UpdateSkillAdminReq
+from src.diary_ms.presentation.api.v1.controllers.admin.schemas.skill import CreateSkillAdminReq, UpdateSkillAdminReq
 
 router = APIRouter(
     route_class=DishkaRoute,

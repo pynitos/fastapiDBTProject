@@ -18,7 +18,7 @@ from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCard
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.presentation.api.deps import SenderDep
-from src.diary_ms.presentation.api.v1.routes.schemas.diary_card import (
+from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
     CreateDiaryCardReq,
     UpdateDiaryCardReq,
 )
