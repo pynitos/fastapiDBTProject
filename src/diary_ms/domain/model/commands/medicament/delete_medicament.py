@@ -7,3 +7,8 @@ from src.diary_ms.domain.common.model.commands.commands import Command
 @dataclass
 class DeleteMedicamentCommand(Command[None]):
     id: UUID
+
+
+@dataclass
+class DeleteMedicamentAdminCommand(Command[None]):
+    id: UUID

@@ -1,10 +1,9 @@
 from src.diary_ms.application.admin.medicament.dto.medicament import MedicamentAdminDTO
-from src.diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
 from src.diary_ms.application.medicament.exceptions.medicament import MedicamentIdNotProvidedError
 from src.diary_ms.domain.model.entities.medicament import Medicament
 
 
-class MedicamentDTOMapper:
+class MedicamentAdminDTOMapper:
     @staticmethod
     def dm_to_dto(dm: Medicament) -> MedicamentAdminDTO:
         if not dm.id.value:

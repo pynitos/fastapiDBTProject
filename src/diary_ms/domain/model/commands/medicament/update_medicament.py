@@ -9,3 +9,10 @@ class UpdateMedicamentCommand(Command[None]):
     id: TypeId
     name: str | None
     dosage: str | None
+
+
+@dataclass
+class UpdateMedicamentAdminCommand(Command[None]):
+    id: TypeId
+    name: str | None
+    dosage: str | None
