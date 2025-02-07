@@ -34,7 +34,12 @@ from src.diary_ms.application.admin.medicament.interactors.commands.update_medic
 )
 from src.diary_ms.application.admin.medicament.interactors.queries.get_medicament_by_id import GetMedicamentAdminHandler
 from src.diary_ms.application.admin.medicament.interactors.queries.get_medicaments import GetMedicamentsAdminHandler
-from src.diary_ms.application.admin.medicament.interfaces.gateway import MedicamentAdminDeleter, MedicamentAdminReader, MedicamentAdminSaver, MedicamentAdminUpdater
+from src.diary_ms.application.admin.medicament.interfaces.gateway import (
+    MedicamentAdminDeleter,
+    MedicamentAdminReader,
+    MedicamentAdminSaver,
+    MedicamentAdminUpdater,
+)
 from src.diary_ms.application.admin.skill.commands.create_skill import CreateSkillAdminHandler
 from src.diary_ms.application.admin.skill.commands.delete_skill import DeleteSkillAdminHandler
 from src.diary_ms.application.admin.skill.commands.update_skill import UpdateSkillAdminHandler

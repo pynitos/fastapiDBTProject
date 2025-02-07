@@ -34,7 +34,8 @@ class MedicamentAdminGateway(
     async def get_by_id(self, id: MedicamentId) -> Medicament | None:
         if not id.value:
             raise MedicamentIdNotProvidedAdminError
-        entity: Medicament | None = await self._session.get(self._db_model, id)
+        pk: str = str(id.value)
+        entity: Medicament | None = await self._session.get(self._db_model, pk)
         return entity
 
     async def update(self, entity: Medicament) -> None:
