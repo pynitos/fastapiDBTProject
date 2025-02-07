@@ -1,4 +1,5 @@
 from collections.abc import Iterable, Sequence
+import logging
 from typing import Any, TypeVar
 
 from dishka import AsyncContainer
@@ -22,6 +23,8 @@ from src.diary_ms.domain.common.model.commands.commands import Command
 from src.diary_ms.domain.common.model.events.base import Event
 
 TDependency = TypeVar("TDependency")
+
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class DishkaResolver(Resolver):
@@ -61,6 +64,7 @@ class DispatcherImpl(Dispatcher):
     async def send_command(self, command: Command[Any]) -> Any:
         handler_: type[CommandHandler[Command[Any], Any]] | None = self._registry.command_handlers.get(type(command))
         if not handler_:
+            logger.error('Command handler not registered.')
             raise HandlerNotFoundError()
         handler: CommandHandler[Command[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(command)
@@ -68,6 +72,7 @@ class DispatcherImpl(Dispatcher):
     async def send_query(self, query: Query[Any]) -> Any:
         handler_: type[QueryHandler[Any, Any]] | None = self._registry.query_handlers.get(type(query))
         if not handler_:
+            logger.error('Query handler not registered.')
             raise HandlerNotFoundError()
         handler: QueryHandler[Query[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(query)

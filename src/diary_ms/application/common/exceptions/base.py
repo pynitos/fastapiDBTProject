@@ -31,4 +31,4 @@ class MappingError(ApplicationError):
 
 
 class HandlerNotFoundError(MediatorError):
-    _detail: str = "Command or query handler not registered."
+    pass

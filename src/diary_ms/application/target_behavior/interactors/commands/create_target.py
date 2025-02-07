@@ -16,14 +16,14 @@ class CreateTarget(CommandHandler[CreateTargetCommand, None]):
         transaction_manager: TransactionManager,
         publisher: Publisher,
     ) -> None:
-        self.db_gateway: TargetSaver = db_gateway
-        self.id_provider: IdProvider = id_provider
+        self._db_gateway: TargetSaver = db_gateway
+        self._id_provider: IdProvider = id_provider
         self._transaction_manager: TransactionManager = transaction_manager
         self._publisher: Publisher = publisher
 
     async def __call__(self, command: CreateTargetCommand) -> None:
-        user_id: UserId = self.id_provider.get_current_user_id()
+        user_id: UserId = self._id_provider.get_current_user_id()
         command.user_id = user_id.value
         medicament: Target = Target.create(command)
-        await self.db_gateway.create(medicament)
+        await self._db_gateway.create(medicament)
         await self._transaction_manager.commit()

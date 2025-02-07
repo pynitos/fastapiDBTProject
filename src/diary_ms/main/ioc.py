@@ -87,6 +87,13 @@ from src.diary_ms.application.medicament.interfaces.gateway import (
     MedicamentSaver,
     MedicamentUpdater,
 )
+from src.diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetDTO, GetOwnTargetsDTO
+from src.diary_ms.application.target_behavior.interactors.commands.create_target import CreateTarget
+from src.diary_ms.application.target_behavior.interactors.commands.delete_target import DeleteTarget
+from src.diary_ms.application.target_behavior.interactors.commands.update_target import UpdateTarget
+from src.diary_ms.application.target_behavior.interactors.queries.get_own_target_by_id import GetOwnTarget
+from src.diary_ms.application.target_behavior.interactors.queries.get_own_targets import GetOwnTargets
+from src.diary_ms.application.target_behavior.interfaces.gateway import TargetDeleter, TargetReader, TargetSaver, TargetUpdater
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
@@ -99,6 +106,9 @@ from src.diary_ms.domain.model.commands.medicament.update_medicament import Upda
 from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
+from src.diary_ms.domain.model.commands.target_behavior.create_target import CreateTargetCommand
+from src.diary_ms.domain.model.commands.target_behavior.delete_target import DeleteTargetCommand
+from src.diary_ms.domain.model.commands.target_behavior.update_target import UpdateTargetCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
@@ -111,6 +121,7 @@ from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_mak
 from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
+from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
 from src.diary_ms.main.config import Settings
 
 
@@ -208,6 +219,18 @@ class AdaptersProvider(Provider):
         MedicamentDeleter,
     ]:
         return MedicamentGateway(session=session)
+    
+    @provide
+    def get_target_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        TargetGateway,
+        TargetReader,
+        TargetSaver,
+        TargetUpdater,
+        TargetDeleter,
+    ]:
+        return TargetGateway(session=session)
 
 
 class InteractorProvider(Provider):
@@ -234,6 +257,9 @@ class InteractorProvider(Provider):
         CreateSkillAdminHandler,
         UpdateSkillAdminHandler,
         DeleteSkillAdminHandler,
+        CreateTarget,
+        UpdateTarget,
+        DeleteTarget,
     )
 
     query_handlers = provide_all(
@@ -247,6 +273,8 @@ class InteractorProvider(Provider):
         GetEmotionAdminHandler,
         GetSkillAdminHandler,
         GetSkillsAdminHandler,
+        GetOwnTargets,
+        GetOwnTarget,
     )
 
     event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
@@ -290,5 +318,12 @@ class InteractorProvider(Provider):
         registry.register_command_handler(DeleteMedicamentCommand, DeleteMedicament)
         registry.register_query_handler(GetOwnMedicamentDTO, GetOwnMedicament)
         registry.register_query_handler(GetOwnMedicamentsDTO, GetOwnMedicaments)
+
+        # Targets
+        registry.register_command_handler(CreateTargetCommand, CreateTarget)
+        registry.register_command_handler(UpdateTargetCommand, UpdateTarget)
+        registry.register_command_handler(DeleteTargetCommand, DeleteTarget)
+        registry.register_query_handler(GetOwnTargetDTO, GetOwnTarget)
+        registry.register_query_handler(GetOwnTargetsDTO, GetOwnTargets)
 
         return registry
