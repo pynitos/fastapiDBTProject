@@ -28,7 +28,7 @@ class UpdateMedicamentAdminHandler(CommandHandler[UpdateMedicamentAdminCommand, 
     async def __call__(self, command: UpdateMedicamentAdminCommand) -> None:
         self._id_provider.get_admin_user_id()
         medicament_id: MedicamentId = MedicamentId(command.id)
-        old_med: Medicament | None = await self._db_gateway.get_by_id(medicament_id, user_id)
+        old_med: Medicament | None = await self._db_gateway.get_by_id(medicament_id)
         if not old_med:
             raise MedicamentNotFoundError(medicament_id)
         new_med: Medicament = old_med.update(command=command)
