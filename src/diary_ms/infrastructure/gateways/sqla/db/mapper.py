@@ -116,8 +116,8 @@ def init_mapper() -> None:
             "__urge": targets_table.c.urge,
             "action": composite(lambda value: TargetAction(value), targets_table.c.action),
             "__action": targets_table.c.action,
-            "is_default": composite(lambda value: TargetIsDefault(value), targets_table.c.action),
-            "__is_default": targets_table.c.action,
+            "is_default": composite(lambda value: TargetIsDefault(value), targets_table.c.is_default),
+            "__is_default": targets_table.c.is_default,
         },
     )
     mapper_registry.map_imperatively(
