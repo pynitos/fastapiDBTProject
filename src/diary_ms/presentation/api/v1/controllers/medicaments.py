@@ -14,7 +14,10 @@ from src.diary_ms.domain.model.commands.medicament.create_medicament import Crea
 from src.diary_ms.domain.model.commands.medicament.delete_medicament import DeleteMedicamentCommand
 from src.diary_ms.domain.model.commands.medicament.update_medicament import UpdateMedicamentCommand
 from src.diary_ms.presentation.api.deps import SenderDep
-from src.diary_ms.presentation.api.v1.controllers.schemas.medicament import CreateOwnMedicamentReq, UpdateOwnMedicamentReq
+from src.diary_ms.presentation.api.v1.controllers.schemas.medicament import (
+    CreateOwnMedicamentReq,
+    UpdateOwnMedicamentReq,
+)
 
 router = APIRouter(
     route_class=DishkaRoute,

@@ -93,7 +93,12 @@ from src.diary_ms.application.target_behavior.interactors.commands.delete_target
 from src.diary_ms.application.target_behavior.interactors.commands.update_target import UpdateTarget
 from src.diary_ms.application.target_behavior.interactors.queries.get_own_target_by_id import GetOwnTarget
 from src.diary_ms.application.target_behavior.interactors.queries.get_own_targets import GetOwnTargets
-from src.diary_ms.application.target_behavior.interfaces.gateway import TargetDeleter, TargetReader, TargetSaver, TargetUpdater
+from src.diary_ms.application.target_behavior.interfaces.gateway import (
+    TargetDeleter,
+    TargetReader,
+    TargetSaver,
+    TargetUpdater,
+)
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
@@ -219,7 +224,7 @@ class AdaptersProvider(Provider):
         MedicamentDeleter,
     ]:
         return MedicamentGateway(session=session)
-    
+
     @provide
     def get_target_gateway(
         self, session: AsyncSession

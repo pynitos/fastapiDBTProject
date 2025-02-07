@@ -38,7 +38,7 @@ class TargetGateway(
             .where(
                 or_(
                     self._db_model.user_id == user_id,
-                    self.db_model.is_default is True,
+                    self._db_model.is_default is True,
                 )
             )
             .offset(offset)

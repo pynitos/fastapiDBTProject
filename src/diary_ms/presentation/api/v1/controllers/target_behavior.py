@@ -53,10 +53,7 @@ async def create_target(
     schema: CreateOwnTargetReq,
     sender: SenderDep,
 ) -> None:
-    command = CreateTargetCommand(
-        urge=schema.urge,
-        action=schema.action
-    )
+    command = CreateTargetCommand(urge=schema.urge, action=schema.action)
     await sender.send_command(command)
 
 

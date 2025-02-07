@@ -1,5 +1,5 @@
-from collections.abc import Iterable, Sequence
 import logging
+from collections.abc import Iterable, Sequence
 from typing import Any, TypeVar
 
 from dishka import AsyncContainer
@@ -64,7 +64,7 @@ class DispatcherImpl(Dispatcher):
     async def send_command(self, command: Command[Any]) -> Any:
         handler_: type[CommandHandler[Command[Any], Any]] | None = self._registry.command_handlers.get(type(command))
         if not handler_:
-            logger.error('Command handler not registered.')
+            logger.error("Command handler not registered.")
             raise HandlerNotFoundError()
         handler: CommandHandler[Command[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(command)
@@ -72,7 +72,7 @@ class DispatcherImpl(Dispatcher):
     async def send_query(self, query: Query[Any]) -> Any:
         handler_: type[QueryHandler[Any, Any]] | None = self._registry.query_handlers.get(type(query))
         if not handler_:
-            logger.error('Query handler not registered.')
+            logger.error("Query handler not registered.")
             raise HandlerNotFoundError()
         handler: QueryHandler[Query[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(query)
