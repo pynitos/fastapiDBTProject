@@ -22,6 +22,18 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import (
     EmotionAdminSaver,
     EmotionAdminUpdater,
 )
+from src.diary_ms.application.admin.medicament.dto.medicament import GetMedicamentAdminDTO, GetMedicamentsAdminDTO
+from src.diary_ms.application.admin.medicament.interactors.commands.create_medicament import (
+    CreateMedicamentAdminHandler,
+)
+from src.diary_ms.application.admin.medicament.interactors.commands.delete_medicament import (
+    DeleteMedicamentAdminHandler,
+)
+from src.diary_ms.application.admin.medicament.interactors.commands.update_medicament import (
+    UpdateMedicamentAdminHandler,
+)
+from src.diary_ms.application.admin.medicament.interactors.queries.get_medicament_by_id import GetMedicamentAdminHandler
+from src.diary_ms.application.admin.medicament.interactors.queries.get_medicaments import GetMedicamentsAdminHandler
 from src.diary_ms.application.admin.skill.commands.create_skill import CreateSkillAdminHandler
 from src.diary_ms.application.admin.skill.commands.delete_skill import DeleteSkillAdminHandler
 from src.diary_ms.application.admin.skill.commands.update_skill import UpdateSkillAdminHandler
@@ -105,9 +117,18 @@ from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCard
 from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
-from src.diary_ms.domain.model.commands.medicament.create_medicament import CreateMedicamentCommand
-from src.diary_ms.domain.model.commands.medicament.delete_medicament import DeleteMedicamentCommand
-from src.diary_ms.domain.model.commands.medicament.update_medicament import UpdateMedicamentCommand
+from src.diary_ms.domain.model.commands.medicament.create_medicament import (
+    CreateMedicamentAdminCommand,
+    CreateMedicamentCommand,
+)
+from src.diary_ms.domain.model.commands.medicament.delete_medicament import (
+    DeleteMedicamentAdminCommand,
+    DeleteMedicamentCommand,
+)
+from src.diary_ms.domain.model.commands.medicament.update_medicament import (
+    UpdateMedicamentAdminCommand,
+    UpdateMedicamentCommand,
+)
 from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
@@ -256,6 +277,9 @@ class InteractorProvider(Provider):
         CreateMedicament,
         UpdateMedicament,
         DeleteMedicament,
+        CreateMedicamentAdminHandler,
+        UpdateMedicamentAdminHandler,
+        DeleteMedicamentAdminHandler,
         CreateEmotionAdminHandler,
         UpdateEmotionAdminHandler,
         DeleteEmotionAdminHandler,
@@ -273,6 +297,8 @@ class InteractorProvider(Provider):
         GetDiaryCardForUpdate,
         GetOwnMedicament,
         GetOwnMedicaments,
+        GetMedicamentAdminHandler,
+        GetMedicamentsAdminHandler,
         GetEmotions,
         GetEmotionsAdminHandler,
         GetEmotionAdminHandler,
@@ -323,6 +349,12 @@ class InteractorProvider(Provider):
         registry.register_command_handler(DeleteMedicamentCommand, DeleteMedicament)
         registry.register_query_handler(GetOwnMedicamentDTO, GetOwnMedicament)
         registry.register_query_handler(GetOwnMedicamentsDTO, GetOwnMedicaments)
+
+        registry.register_command_handler(CreateMedicamentAdminCommand, CreateMedicamentAdminHandler)
+        registry.register_command_handler(UpdateMedicamentAdminCommand, UpdateMedicamentAdminHandler)
+        registry.register_command_handler(DeleteMedicamentAdminCommand, DeleteMedicamentAdminHandler)
+        registry.register_query_handler(GetMedicamentsAdminDTO, GetMedicamentsAdminHandler)
+        registry.register_query_handler(GetMedicamentAdminDTO, GetMedicamentAdminHandler)
 
         # Targets
         registry.register_command_handler(CreateTargetCommand, CreateTarget)
