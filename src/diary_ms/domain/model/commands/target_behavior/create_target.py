@@ -10,3 +10,11 @@ class CreateTargetCommand(Command[None]):
     action: str
     user_id: UUID | None = None
     id: UUID | None = None
+
+
+@dataclass
+class CreateTargetAdminCommand(Command[None]):
+    urge: str
+    action: str
+    user_id: UUID | None = None
+    id: UUID | None = None

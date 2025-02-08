@@ -10,3 +10,11 @@ class UpdateTargetCommand(Command[None]):
     action: str | None = None
     user_id: UUID | None = None
     id: UUID | None = None
+
+
+@dataclass
+class UpdateTargetAdminCommand(Command[None]):
+    urge: str | None = None
+    action: str | None = None
+    user_id: UUID | None = None
+    id: UUID | None = None
