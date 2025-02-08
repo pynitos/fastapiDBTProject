@@ -18,3 +18,4 @@ class CreateTargetAdminCommand(Command[None]):
     action: str
     user_id: UUID | None = None
     id: UUID | None = None
+    is_default: bool = False

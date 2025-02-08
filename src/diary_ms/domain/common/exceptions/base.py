@@ -2,7 +2,7 @@ class AppError(Exception):
     _detail: str = "Domain Error."
     _status_code: int = 500
 
-    def __init__(self, detail: str | None = None, status_code: int | None = 500):
+    def __init__(self, detail: str | None = None, status_code: int | None = None):
         if detail:
             self._detail = detail
         if status_code:

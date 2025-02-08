@@ -26,6 +26,7 @@ class CreateTargetAdminHandler(CommandHandler[CreateTargetAdminCommand, None]):
     async def __call__(self, command: CreateTargetAdminCommand) -> None:
         user_id: UserId = self._id_provider.get_admin_user_id()
         command.user_id = user_id.value
-        medicament: Target = Target.create(command)
+        command.is_default = True
+        medicament: Target = Target.admin_create(command)
         await self._db_gateway.create(medicament)
         await self._transaction_manager.commit()

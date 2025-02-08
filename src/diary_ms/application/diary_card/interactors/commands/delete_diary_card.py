@@ -4,6 +4,7 @@ from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardDeleter
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 class DeleteDiaryCard(CommandHandler[DeleteDiaryCardCommand, None]):
@@ -18,6 +19,7 @@ class DeleteDiaryCard(CommandHandler[DeleteDiaryCardCommand, None]):
         self._transaction_manager = transaction_manager
 
     async def __call__(self, command: DeleteDiaryCardCommand) -> None:
-        self._id_provider.get_current_user_id()
-        await self._db_gateway.delete(DiaryCardId(command.id))
+        user_id: UserId = self._id_provider.get_current_user_id()
+        id: DiaryCardId = DiaryCardId(command.id)
+        await self._db_gateway.delete(id, user_id)
         await self._transaction_manager.commit()

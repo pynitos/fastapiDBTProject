@@ -5,6 +5,10 @@ from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, 
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
+from src.diary_ms.application.admin.diary_card.dto.diary_card import GetDiaryCardAdminDTO, GetDiaryCardsAdminDTO
+from src.diary_ms.application.admin.diary_card.interactors.commands.delete_diary_card import DeleteDiaryCardAdminHandler
+from src.diary_ms.application.admin.diary_card.interactors.queries.get_diary_cards import GetDiaryCardsAdminHandler
+from src.diary_ms.application.admin.diary_card.interfaces.gateway import DiaryCardAdminDeleter, DiaryCardAdminReader
 from src.diary_ms.application.admin.emotion.dto.emotion import GetEmotionAdminDTO, GetEmotionsAdminDTO
 from src.diary_ms.application.admin.emotion.dto.mapper.emotion import EmotionAdminDTOMapper
 from src.diary_ms.application.admin.emotion.interactors.commands.create_emotion import (
@@ -53,6 +57,18 @@ from src.diary_ms.application.admin.skill.interfaces.gateway import (
 )
 from src.diary_ms.application.admin.skill.queries.get_skill import GetSkillAdminHandler
 from src.diary_ms.application.admin.skill.queries.get_skills import GetSkillsAdminHandler
+from src.diary_ms.application.admin.target_behavior.dto.target_behavior import GetTargetAdminDTO, GetTargetsAdminDTO
+from src.diary_ms.application.admin.target_behavior.interactors.commands.create_target import CreateTargetAdminHandler
+from src.diary_ms.application.admin.target_behavior.interactors.commands.delete_target import DeleteTargetAdminHandler
+from src.diary_ms.application.admin.target_behavior.interactors.commands.update_target import UpdateTargetAdminHandler
+from src.diary_ms.application.admin.target_behavior.interactors.queries.get_target_by_id import GetTargetAdminHandler
+from src.diary_ms.application.admin.target_behavior.interactors.queries.get_targets import GetTargetsAdminHandler
+from src.diary_ms.application.admin.target_behavior.interfaces.gateway import (
+    TargetAdminDeleter,
+    TargetAdminReader,
+    TargetAdminSaver,
+    TargetAdminUpdater,
+)
 from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
@@ -119,7 +135,7 @@ from src.diary_ms.application.target_behavior.interfaces.gateway import (
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
-from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
+from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardAdminCommand, DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
 from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
@@ -138,18 +154,29 @@ from src.diary_ms.domain.model.commands.medicament.update_medicament import (
 from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
 from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
-from src.diary_ms.domain.model.commands.target_behavior.create_target import CreateTargetCommand
-from src.diary_ms.domain.model.commands.target_behavior.delete_target import DeleteTargetCommand
-from src.diary_ms.domain.model.commands.target_behavior.update_target import UpdateTargetCommand
+from src.diary_ms.domain.model.commands.target_behavior.create_target import (
+    CreateTargetAdminCommand,
+    CreateTargetCommand,
+)
+from src.diary_ms.domain.model.commands.target_behavior.delete_target import (
+    DeleteTargetAdminCommand,
+    DeleteTargetCommand,
+)
+from src.diary_ms.domain.model.commands.target_behavior.update_target import (
+    UpdateTargetAdminCommand,
+    UpdateTargetCommand,
+)
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
+from src.diary_ms.infrastructure.gateways.sqla.admin.diary_card import DiaryCardAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.medicament import MedicamentAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.skill import SkillAdminGateway
+from src.diary_ms.infrastructure.gateways.sqla.admin.target_behavior import TargetAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
 from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
 from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
@@ -207,6 +234,16 @@ class AdaptersProvider(Provider):
         DiaryCardDeleter,
     ]:
         return DiaryCardGateway(db_model=DiaryCard, session=session)
+
+    @provide
+    def get_diary_cards_admin_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        DiaryCardAdminGateway,
+        DiaryCardAdminReader,
+        DiaryCardAdminDeleter,
+    ]:
+        return DiaryCardAdminGateway(db_model=DiaryCard, session=session)
 
     @provide
     def get_emotion_gateway(
@@ -277,6 +314,18 @@ class AdaptersProvider(Provider):
     ]:
         return TargetGateway(session=session)
 
+    @provide
+    def get_target_admin_gateway(
+        self, session: AsyncSession
+    ) -> AnyOf[
+        TargetAdminGateway,
+        TargetAdminReader,
+        TargetAdminSaver,
+        TargetAdminUpdater,
+        TargetAdminDeleter,
+    ]:
+        return TargetAdminGateway(session=session)
+
 
 class InteractorProvider(Provider):
     scope = Scope.REQUEST
@@ -293,6 +342,7 @@ class InteractorProvider(Provider):
         CreateDiaryCard,
         UpdateDiaryCard,
         DeleteDiaryCard,
+        DeleteDiaryCardAdminHandler,
         CreateMedicament,
         UpdateMedicament,
         DeleteMedicament,
@@ -308,12 +358,17 @@ class InteractorProvider(Provider):
         CreateTarget,
         UpdateTarget,
         DeleteTarget,
+        CreateTargetAdminHandler,
+        UpdateTargetAdminHandler,
+        DeleteTargetAdminHandler,
     )
 
     query_handlers = provide_all(
         GetOwnDiaryCards,
         GetOwnDiaryCard,
         GetDiaryCardForUpdate,
+        GetDiaryCardsAdminHandler,
+        GetDiaryCardsAdminHandler,
         GetOwnMedicament,
         GetOwnMedicaments,
         GetMedicamentAdminHandler,
@@ -325,6 +380,8 @@ class InteractorProvider(Provider):
         GetSkillsAdminHandler,
         GetOwnTargets,
         GetOwnTarget,
+        GetTargetAdminHandler,
+        GetTargetsAdminHandler,
     )
 
     event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
@@ -340,12 +397,14 @@ class InteractorProvider(Provider):
         registry.register_command_handler(CreateDiaryCardCommand, CreateDiaryCard)
         registry.register_command_handler(UpdateDiaryCardCommand, UpdateDiaryCard)
         registry.register_command_handler(DeleteDiaryCardCommand, DeleteDiaryCard)
-
         registry.register_query_handler(GetOwnDiaryCardDTO, GetOwnDiaryCard)
         registry.register_query_handler(GetOwnDiaryCardsDTO, GetOwnDiaryCards)
         registry.register_query_handler(GetDiaryCardForUpdateDTO, GetDiaryCardForUpdate)
-
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
+
+        registry.register_command_handler(DeleteDiaryCardAdminCommand, DeleteDiaryCardAdminHandler)
+        registry.register_query_handler(GetDiaryCardAdminDTO, GetDiaryCardsAdminHandler)
+        registry.register_query_handler(GetDiaryCardsAdminDTO, GetDiaryCardsAdminHandler)
 
         # Emotions
         registry.register_query_handler(GetEmotionsDTO, GetEmotions)
@@ -381,5 +440,11 @@ class InteractorProvider(Provider):
         registry.register_command_handler(DeleteTargetCommand, DeleteTarget)
         registry.register_query_handler(GetOwnTargetDTO, GetOwnTarget)
         registry.register_query_handler(GetOwnTargetsDTO, GetOwnTargets)
+
+        registry.register_command_handler(CreateTargetAdminCommand, CreateTargetAdminHandler)
+        registry.register_command_handler(UpdateTargetAdminCommand, UpdateTargetAdminHandler)
+        registry.register_command_handler(DeleteTargetAdminCommand, DeleteTargetAdminHandler)
+        registry.register_query_handler(GetTargetAdminDTO, GetTargetAdminHandler)
+        registry.register_query_handler(GetTargetsAdminDTO, GetTargetsAdminHandler)
 
         return registry

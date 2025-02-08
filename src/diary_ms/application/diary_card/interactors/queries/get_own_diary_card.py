@@ -5,6 +5,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardRead
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 class GetOwnDiaryCard(QueryHandler[GetOwnDiaryCardDTO, OwnDiaryCardDTO | None]):
@@ -14,5 +15,6 @@ class GetOwnDiaryCard(QueryHandler[GetOwnDiaryCardDTO, OwnDiaryCardDTO | None]):
         self._mapper = mapper
 
     async def __call__(self, query: GetOwnDiaryCardDTO) -> OwnDiaryCardDTO | None:
-        diary_card: DiaryCard | None = await self._db_gateway.get_by_id(DiaryCardId(query.id))
+        uid: UserId = self._id_provider.get_current_user_id()
+        diary_card: DiaryCard | None = await self._db_gateway.get_by_id(DiaryCardId(query.id), uid)
         return self._mapper.dm_to_dto(diary_card) if diary_card else None

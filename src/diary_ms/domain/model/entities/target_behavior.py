@@ -27,7 +27,7 @@ class Target(BaseEntity):
     is_default: TargetIsDefault = TargetIsDefault(False)
 
     @classmethod
-    def create(cls, command: CreateTargetCommand | CreateTargetAdminCommand) -> Self:
+    def create(cls, command: CreateTargetCommand) -> Self:
         if not command.user_id:
             raise UserIdNotProvidedError
         t = cls(
@@ -35,6 +35,19 @@ class Target(BaseEntity):
             user_id=UserId(command.user_id),
             urge=TargetUrge(command.urge),
             action=TargetAction(command.action),
+        )
+        return t
+
+    @classmethod
+    def admin_create(cls, command: CreateTargetAdminCommand) -> Self:
+        if not command.user_id:
+            raise UserIdNotProvidedError
+        t = cls(
+            id=TargetId(command.id),
+            user_id=UserId(command.user_id),
+            urge=TargetUrge(command.urge),
+            action=TargetAction(command.action),
+            is_default=TargetIsDefault(command.is_default),
         )
         return t
 

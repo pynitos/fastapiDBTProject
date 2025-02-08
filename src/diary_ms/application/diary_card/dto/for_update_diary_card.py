@@ -56,5 +56,5 @@ class DiaryCardForUpdateDTO(DTO):
 
 
 @dataclass
-class GetDiaryCardForUpdateDTO(Query[DiaryCardForUpdateDTO | None]):
+class GetDiaryCardForUpdateDTO(Query[DiaryCardForUpdateDTO]):
     id: UUID

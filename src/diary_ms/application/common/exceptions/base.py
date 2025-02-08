@@ -32,3 +32,8 @@ class MappingError(ApplicationError):
 
 class HandlerNotFoundError(MediatorError):
     pass
+
+
+class AuthorizationError(ApplicationError):
+    _detail: str = "Not Authorized."
+    _status_code: int = 403

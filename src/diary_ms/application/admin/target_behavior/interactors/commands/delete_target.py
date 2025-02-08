@@ -1,3 +1,5 @@
+import logging
+
 from src.diary_ms.application.admin.target_behavior.interfaces.gateway import TargetAdminDeleter
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
@@ -6,6 +8,8 @@ from src.diary_ms.domain.model.commands.target_behavior.delete_target import (
     DeleteTargetAdminCommand,
 )
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+
+logger: logging.Logger = logging.getLogger()
 
 
 class DeleteTargetAdminHandler(CommandHandler[DeleteTargetAdminCommand, None]):
@@ -21,6 +25,7 @@ class DeleteTargetAdminHandler(CommandHandler[DeleteTargetAdminCommand, None]):
 
     async def __call__(self, command: DeleteTargetAdminCommand) -> None:
         self._id_provider.get_admin_user_id()
-        medicament_id: TargetId = TargetId(command.id)
-        await self._db_gateway.delete(medicament_id)
+        t_id: TargetId = TargetId(command.id)
+        await self._db_gateway.delete(t_id)
         await self._transaction_manager.commit()
+        logger.debug(f"Target with id {t_id.value} deleted from admin panel.")

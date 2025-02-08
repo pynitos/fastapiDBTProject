@@ -5,7 +5,8 @@ from uuid import UUID
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.exceptions.base import GatewayError
+from src.diary_ms.application.admin.diary_card.interfaces.gateway import DiaryCardAdminDeleter, DiaryCardAdminReader
+from src.diary_ms.application.common.exceptions.base import GatewayError, InfraError
 from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     DiaryCardForUpdateDTO,
     EmotionForUpdDTO,
@@ -14,21 +15,12 @@ from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
     TargetForUpdDTO,
 )
 from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
-from src.diary_ms.application.diary_card.interfaces.gateway import (
-    DiaryCardDeleter,
-    DiaryCardDTOForUpdateReader,
-    DiaryCardReader,
-    DiaryCardSaver,
-    DiaryCardUpdater,
-)
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
     emotions_table,
     medicaments_table,
@@ -39,12 +31,9 @@ from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
 logger = logging.getLogger(__name__)
 
 
-class DiaryCardGateway(
-    DiaryCardReader,
-    DiaryCardDTOForUpdateReader,
-    DiaryCardSaver,
-    DiaryCardUpdater,
-    DiaryCardDeleter,
+class DiaryCardAdminGateway(
+    DiaryCardAdminReader,
+    DiaryCardAdminDeleter,
 ):
     def __init__(
         self,
@@ -86,29 +75,22 @@ class DiaryCardGateway(
         await self._set_entity_relationships(entity)
         self._session.add(entity)
 
-    async def get_all(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[DiaryCard]:
-        stmt: Select[tuple[DiaryCard]] = (
-            select(self._db_model).where(self._db_model.user_id == user_id).offset(offset).limit(limit)
-        )
+    async def get_all(self, offset: int = 0, limit: int = 10) -> list[DiaryCard]:
+        stmt: Select[tuple[DiaryCard]] = select(self._db_model).offset(offset).limit(limit)
         result: ScalarResult[DiaryCard] = await self._session.scalars(stmt)
         result_list: list[DiaryCard] = list(result.all())
         return result_list
 
-    async def get_by_id(self, id: DiaryCardId, user_id: UserId) -> DiaryCard | None:
-        if not id.value:
-            raise GatewayError("Diary card id not provided", 400)
-        if not user_id.value:
-            raise UserIdNotProvidedError
-        stmt: Select[tuple[DiaryCard]] = select(self._db_model).where(
-            self._db_model.id == id,  # type: ignore
-            self._db_model.user_id == user_id,  # type: ignore
-        )
-        result: ScalarResult[DiaryCard] = await self._session.scalars(stmt)
-        entity: DiaryCard | None = result.first()
-        return entity
+    async def _get_by_id(self, pk: UUID | None) -> DiaryCard | None:
+        if not pk:
+            raise InfraError("Diary card id not provided", 400)
+        return await self._session.get(self._db_model, pk)
 
-    async def get_dto_for_update(self, id: DiaryCardId, user_id: UserId) -> DiaryCardForUpdateDTO:
-        dm: DiaryCard | None = await self.get_by_id(id, user_id)
+    async def get_by_id(self, id: DiaryCardId) -> DiaryCard | None:
+        return await self._get_by_id(pk=id.value)
+
+    async def get_dto_for_update(self, id: DiaryCardId) -> DiaryCardForUpdateDTO:
+        dm: DiaryCard | None = await self._get_by_id(id.value)
         if not dm:
             raise DiaryCardNotFoundError
         all_targets: Sequence[Target] | None = (
@@ -242,8 +224,8 @@ class DiaryCardGateway(
         await self._set_entity_relationships(entity)
         self._session.add(entity)
 
-    async def delete(self, id: DiaryCardId, user_id: UserId) -> None:
-        entity: DiaryCard | None = await self.get_by_id(id, user_id)
+    async def delete(self, id: DiaryCardId) -> None:
+        entity: DiaryCard | None = await self._get_by_id(id.value)
         if not entity:
             raise DiaryCardNotFoundError
         await self._session.delete(entity)
