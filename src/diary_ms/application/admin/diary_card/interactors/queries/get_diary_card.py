@@ -6,6 +6,7 @@ from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardN
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 class GetDiaryCardAdminHandler(QueryHandler[GetDiaryCardAdminDTO, DiaryCardAdminDTO]):
@@ -15,7 +16,9 @@ class GetDiaryCardAdminHandler(QueryHandler[GetDiaryCardAdminDTO, DiaryCardAdmin
         self._mapper = DiaryCardAdminDTOMapper
 
     async def __call__(self, query: GetDiaryCardAdminDTO) -> DiaryCardAdminDTO:
-        diary_card: DiaryCard | None = await self._db_gateway.get_by_id(DiaryCardId(query.id))
+        user_id: UserId = self._id_provider.get_current_user_id()
+        id: DiaryCardId = DiaryCardId(query.id)
+        diary_card: DiaryCard | None = await self._db_gateway.get_by_id(id, user_id)
         if not diary_card:
             raise DiaryCardNotFoundError
         return self._mapper.dm_to_dto(diary_card)
