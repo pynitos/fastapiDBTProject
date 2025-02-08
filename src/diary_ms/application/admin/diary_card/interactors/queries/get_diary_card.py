@@ -8,7 +8,7 @@ from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
 
-class GetDiaryCard(QueryHandler[GetDiaryCardAdminDTO, DiaryCardAdminDTO]):
+class GetDiaryCardAdminHandler(QueryHandler[GetDiaryCardAdminDTO, DiaryCardAdminDTO]):
     def __init__(self, db_gateway: DiaryCardReader, id_provider: IdProvider):
         self._db_gateway = db_gateway
         self._id_provider = id_provider

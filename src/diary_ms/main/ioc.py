@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 
 from src.diary_ms.application.admin.diary_card.dto.diary_card import GetDiaryCardAdminDTO, GetDiaryCardsAdminDTO
 from src.diary_ms.application.admin.diary_card.interactors.commands.delete_diary_card import DeleteDiaryCardAdminHandler
+from src.diary_ms.application.admin.diary_card.interactors.queries.get_diary_card import GetDiaryCardAdminHandler
 from src.diary_ms.application.admin.diary_card.interactors.queries.get_diary_cards import GetDiaryCardsAdminHandler
 from src.diary_ms.application.admin.diary_card.interfaces.gateway import DiaryCardAdminDeleter, DiaryCardAdminReader
 from src.diary_ms.application.admin.emotion.dto.emotion import GetEmotionAdminDTO, GetEmotionsAdminDTO
@@ -368,7 +369,7 @@ class InteractorProvider(Provider):
         GetOwnDiaryCard,
         GetDiaryCardForUpdate,
         GetDiaryCardsAdminHandler,
-        GetDiaryCardsAdminHandler,
+        GetDiaryCardAdminHandler,
         GetOwnMedicament,
         GetOwnMedicaments,
         GetMedicamentAdminHandler,
@@ -403,7 +404,7 @@ class InteractorProvider(Provider):
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
 
         registry.register_command_handler(DeleteDiaryCardAdminCommand, DeleteDiaryCardAdminHandler)
-        registry.register_query_handler(GetDiaryCardAdminDTO, GetDiaryCardsAdminHandler)
+        registry.register_query_handler(GetDiaryCardAdminDTO, GetDiaryCardAdminHandler)
         registry.register_query_handler(GetDiaryCardsAdminDTO, GetDiaryCardsAdminHandler)
 
         # Emotions
