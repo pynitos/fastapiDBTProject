@@ -38,7 +38,7 @@ class DiaryCardDTOForUpdateReader(Protocol):
 
 class DiaryCardUpdater(Protocol):
     @abstractmethod
-    async def get_by_id(self, id: DiaryCardId) -> DiaryCard | None:
+    async def get_by_id(self, id: DiaryCardId, user_id: UserId) -> DiaryCard | None:
         raise NotImplementedError
 
     @abstractmethod
