@@ -15,6 +15,7 @@ from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNot
 from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 
 
 class TargetGateway(
@@ -38,7 +39,7 @@ class TargetGateway(
             .where(
                 or_(
                     self._db_model.user_id == user_id,
-                    self._db_model.is_default is True,
+                    self._db_model.is_default == TargetIsDefault(True),
                 )
             )
             .offset(offset)

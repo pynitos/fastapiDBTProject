@@ -1,9 +1,6 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
-    DiaryCardForUpdateDTO,
-)
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
@@ -27,10 +24,6 @@ class DiaryCardAdminReader(Protocol):
 class DiaryCardDTOForUpdateAdminReader(Protocol):
     @abstractmethod
     async def get_by_id(self, id: DiaryCardId) -> DiaryCard | None:
-        raise NotImplementedError
-
-    @abstractmethod
-    async def get_dto_for_update(self, id: DiaryCardId) -> DiaryCardForUpdateDTO:
         raise NotImplementedError
 
 

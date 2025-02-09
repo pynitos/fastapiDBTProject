@@ -45,7 +45,7 @@ class GetDataForDiaryCard(QueryHandler[GetDataForDiaryCardQuery, DataForDiaryCar
     async def __call__(self, query: GetDataForDiaryCardQuery) -> DataForDiaryCardDTO:
         user_id: UserId = self._id_provider.get_current_user_id()
         emotions: list[Emotion] = await self._emotion_gateway.get_all(offset=0, limit=100)
-        skills: list[Skill] = await self._skill_gateway.get_all(offset=0, limit=100)
+        skills: list[Skill] = await self._skill_gateway.get_all(type=query.skill_type, offset=0, limit=100)
         targets: list[Target] = await self._target_gateway.get_all(user_id=user_id, offset=0, limit=100)
         meds: list[Medicament] = await self._medicament_gateway.get_all(user_id=user_id, offset=0, limit=100)
         emotions_dtos: list[EmotionDTO] = self._emotion_mapper.dm_list_to_dto_list(emotions)
