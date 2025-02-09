@@ -74,10 +74,7 @@ from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
-from src.diary_ms.application.diary_card.dto.emotion import GetEmotionsDTO
-from src.diary_ms.application.diary_card.dto.for_update_diary_card import GetDiaryCardForUpdateDTO
 from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
-from src.diary_ms.application.diary_card.dto.mappers.emotion import EmotionDTOMapper
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
@@ -90,10 +87,6 @@ from src.diary_ms.application.diary_card.interactors.commands.update_diary_card 
 from src.diary_ms.application.diary_card.interactors.events.diary_card_created import (
     DiaryCardCreatedEventHandler,
 )
-from src.diary_ms.application.diary_card.interactors.queries.get_diary_card_for_update import (
-    GetDiaryCardForUpdate,
-)
-from src.diary_ms.application.diary_card.interactors.queries.get_emotions import GetEmotions
 from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
 )
@@ -102,7 +95,6 @@ from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_cards
 )
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
-    DiaryCardDTOForUpdateReader,
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
@@ -229,7 +221,6 @@ class AdaptersProvider(Provider):
     ) -> AnyOf[
         DiaryCardGateway,
         DiaryCardReader,
-        DiaryCardDTOForUpdateReader,
         DiaryCardSaver,
         DiaryCardUpdater,
         DiaryCardDeleter,
@@ -333,7 +324,6 @@ class InteractorProvider(Provider):
 
     mappers = provide_all(
         WithParents[DiaryCardDTOMapperImpl],  # type: ignore
-        EmotionDTOMapper,
         MedicamentDTOMapper,
         EmotionAdminDTOMapper,
         SkillAdminDTOMapper,
@@ -367,14 +357,12 @@ class InteractorProvider(Provider):
     query_handlers = provide_all(
         GetOwnDiaryCards,
         GetOwnDiaryCard,
-        GetDiaryCardForUpdate,
         GetDiaryCardsAdminHandler,
         GetDiaryCardAdminHandler,
         GetOwnMedicament,
         GetOwnMedicaments,
         GetMedicamentAdminHandler,
         GetMedicamentsAdminHandler,
-        GetEmotions,
         GetEmotionsAdminHandler,
         GetEmotionAdminHandler,
         GetSkillAdminHandler,
@@ -400,7 +388,6 @@ class InteractorProvider(Provider):
         registry.register_command_handler(DeleteDiaryCardCommand, DeleteDiaryCard)
         registry.register_query_handler(GetOwnDiaryCardDTO, GetOwnDiaryCard)
         registry.register_query_handler(GetOwnDiaryCardsDTO, GetOwnDiaryCards)
-        registry.register_query_handler(GetDiaryCardForUpdateDTO, GetDiaryCardForUpdate)
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
 
         registry.register_command_handler(DeleteDiaryCardAdminCommand, DeleteDiaryCardAdminHandler)
@@ -408,7 +395,6 @@ class InteractorProvider(Provider):
         registry.register_query_handler(GetDiaryCardsAdminDTO, GetDiaryCardsAdminHandler)
 
         # Emotions
-        registry.register_query_handler(GetEmotionsDTO, GetEmotions)
         registry.register_command_handler(CreateEmotionAdminCommand, CreateEmotionAdminHandler)
         registry.register_command_handler(UpdateEmotionAdminCommand, UpdateEmotionAdminHandler)
         registry.register_command_handler(DeleteEmotionAdminCommand, DeleteEmotionAdminHandler)

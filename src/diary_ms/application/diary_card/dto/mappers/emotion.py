@@ -1,4 +1,4 @@
-from src.diary_ms.application.diary_card.dto.emotion import EmotionDTO
+from src.diary_ms.application.diary_card.dto.diary_card import EmotionDTO
 from src.diary_ms.domain.common.exceptions.base import AppError
 from src.diary_ms.domain.model.entities.emotion import Emotion
 

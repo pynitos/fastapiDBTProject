@@ -33,6 +33,7 @@ class MedicamentDTO(DTO):
 
 @dataclass
 class SkillDTO(DTO):
+    id: UUID
     category: str | None
     group: str | None
     name: str
