@@ -7,7 +7,6 @@ from src.diary_ms.application.common.exceptions.base import GatewayError
 from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
-    DiaryCardDTOForUpdateReader,
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
@@ -29,7 +28,6 @@ logger = logging.getLogger(__name__)
 
 class DiaryCardGateway(
     DiaryCardReader,
-    DiaryCardDTOForUpdateReader,
     DiaryCardSaver,
     DiaryCardUpdater,
     DiaryCardDeleter,

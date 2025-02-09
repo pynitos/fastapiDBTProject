@@ -5,18 +5,16 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, HTTPException
 
 from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
 from src.diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardDTO,
     GetOwnDiaryCardsDTO,
     OwnDiaryCardDTO,
 )
-from src.diary_ms.application.diary_card.dto.for_update_diary_card import (
-    DiaryCardForUpdateDTO,
-    GetDiaryCardForUpdateDTO,
-)
 from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
+from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
     CreateDiaryCardReq,
@@ -54,14 +52,11 @@ async def get_own_diary_card_by_id(
     return diary_card
 
 
-@router.get("/upd/<id:UUID>", response_model=DiaryCardForUpdateDTO)
-async def get_diary_card_for_update(
-    id: UUID,
-    sender: SenderDep,
-) -> DiaryCardForUpdateDTO:
-    diary_card: DiaryCardForUpdateDTO | None = await sender.send_query(GetDiaryCardForUpdateDTO(id))
-    if not diary_card:
-        raise HTTPException(404, f"Diary card with id: {id} not found.")
+@router.get("/data", response_model=DataForDiaryCardDTO)
+async def get_data_for_create_or_update_diary_card(
+    sender: SenderDep, skill_type: SkillType = SkillType.DBT
+) -> DataForDiaryCardDTO:
+    diary_card: DataForDiaryCardDTO = await sender.send_query(GetDataForDiaryCardQuery(skill_type))
     return diary_card
 
 

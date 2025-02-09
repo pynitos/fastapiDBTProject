@@ -29,8 +29,8 @@ diary_card_skill_assotiation = Table(
 diary_card_target_assotiation = Table(
     "diary_card_target",
     metadata,
-    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),  # type: ignore
-    Column("target_id", ForeignKey("targets.id"), primary_key=True),  # type: ignore
+    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),
+    Column("target_id", ForeignKey("targets.id"), primary_key=True),
 )
 
 diary_card_emotion_assotiation = Table(

@@ -49,7 +49,7 @@ def create_fastapi_app() -> FastAPI:
         name="Admin 1.0",
         tags=["Documentations"],
     )
-    def noop() -> None: ...  # type: ignore
+    def noop() -> None: ...
 
     return app
 
