@@ -54,6 +54,7 @@ def init_mapper() -> None:
             "date_of_entry": composite(lambda value: DCDateOfEntry(value), diary_cards_table.c.date_of_entry),
             "__date_of_entry": diary_cards_table.c.date_of_entry,
             "emotions": relationship("Emotion", secondary="diary_card_emotion", lazy="selectin"),
+            "targets": relationship("Target", secondary="diary_card_target", lazy="selectin"),
             "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
             "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin", viewonly=True),
             "skill_assotiations": relationship("DiaryCardSkillAssotiation", lazy="selectin"),
