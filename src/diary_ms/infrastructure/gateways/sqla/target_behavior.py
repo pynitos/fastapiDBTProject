@@ -38,8 +38,8 @@ class TargetGateway(
             select(self._db_model)
             .where(
                 or_(
-                    self._db_model.user_id == user_id,
-                    self._db_model.is_default == TargetIsDefault(True),
+                    self._db_model.user_id == user_id,  # type: ignore
+                    self._db_model.is_default == TargetIsDefault(True),  # type: ignore
                 )
             )
             .offset(offset)

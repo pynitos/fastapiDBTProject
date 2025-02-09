@@ -30,14 +30,13 @@ class GetDataForDiaryCard(QueryHandler[GetDataForDiaryCardQuery, DataForDiaryCar
         target_gateway: TargetReader,
         medicament_gateway: MedicamentReader,
         id_provider: IdProvider,
-        emotion_mapper: EmotionDTOMapper,
     ) -> None:
         self._emotion_gateway = emotion_gateway
         self._skill_gateway = skill_gateway
         self._target_gateway = target_gateway
         self._medicament_gateway = medicament_gateway
         self._id_provider = id_provider
-        self._emotion_mapper = emotion_mapper
+        self._emotion_mapper = EmotionDTOMapper
         self._skill_mapper = SkillDTOMapper
         self._target_mapper = TargetDTOMapper
         self._medicament_mapper = MedicamentDTOMapper

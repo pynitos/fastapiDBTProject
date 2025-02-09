@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Self
 from uuid import UUID, uuid4
 
@@ -33,16 +33,16 @@ class DiaryCard(AggregateRoot):
     id: DiaryCardId = DiaryCardId(None)
     description: DCDescription = DCDescription(value=None)
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
-    targets: list[Target] | None = None
-    emotions: list[Emotion] | None = None
-    medicaments: list[Medicament] | None = None
-    skills: list[Skill] | None = None
+    targets: list[Target] = field(default_factory=list)
+    emotions: list[Emotion] = field(default_factory=list)
+    medicaments: list[Medicament] = field(default_factory=list)
+    skills: list[Skill] = field(default_factory=list)
     type: SkillType = SkillType.DBT
 
     targets_ids: list[UUID] | None = None
     emotions_ids: list[UUID] | None = None
     medicaments_ids: list[UUID] | None = None
-    skill_assotiations: list[DiaryCardSkillAssotiation] | None = None
+    skill_assotiations: list[DiaryCardSkillAssotiation] = field(default_factory=list)
 
     @classmethod
     def create(cls, command: CreateDiaryCardCommand) -> Self:
@@ -63,7 +63,7 @@ class DiaryCard(AggregateRoot):
                 for s in command.skills
             ]
             if command.skills
-            else None
+            else []
         )
         diary_card: Self = cls(
             id=DiaryCardId(command.id),
@@ -75,10 +75,6 @@ class DiaryCard(AggregateRoot):
             emotions_ids=emotions,
             medicaments_ids=medicaments,
             skill_assotiations=skill_assotiations,
-            targets=[],
-            skills=[],
-            emotions=[],
-            medicaments=[],
         )
         diary_card.record_event(
             DiaryCardCreatedEvent(

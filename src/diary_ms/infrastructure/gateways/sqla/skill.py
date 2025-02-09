@@ -8,6 +8,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import SkillReader
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+from src.diary_ms.infrastructure.gateways.sqla.db import tables
 
 
 class SkillGateway(SkillReader):
@@ -17,7 +18,7 @@ class SkillGateway(SkillReader):
 
     async def get_all(self, type: SkillType, offset: int = 0, limit: int = 10) -> list[Skill]:
         stmt: Select[tuple[Skill]] = (
-            select(self._db_model).where(self._db_model.type == type).offset(offset).limit(limit)
+            select(self._db_model).where(tables.skills_table.c.type == type.value).offset(offset).limit(limit)
         )
         result: ScalarResult[Skill] = await self._session.scalars(stmt)
         result_list: list[Skill] = list(result.all())
