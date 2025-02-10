@@ -1,4 +1,4 @@
-from src.diary_ms.application.diary_card.dto.diary_card import SkillDTO
+from src.diary_ms.application.diary_card.dto.skill import SkillDTO
 from src.diary_ms.application.diary_card.exceptions.skill import SkillIdNotProvidedError
 from src.diary_ms.domain.model.entities.skill import Skill
 
@@ -13,7 +13,6 @@ class SkillDTOMapper:
             category=dm.category.value,
             group=dm.group.value,
             name=dm.name.value,
-            situation=dm.situation.value,
         )
 
     @classmethod

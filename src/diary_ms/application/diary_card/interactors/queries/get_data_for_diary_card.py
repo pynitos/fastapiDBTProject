@@ -3,9 +3,10 @@ import logging
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
-from src.diary_ms.application.diary_card.dto.diary_card import EmotionDTO, SkillDTO
+from src.diary_ms.application.diary_card.dto.diary_card import EmotionDTO
 from src.diary_ms.application.diary_card.dto.mappers.emotion import EmotionDTOMapper
 from src.diary_ms.application.diary_card.dto.mappers.skill import SkillDTOMapper
+from src.diary_ms.application.diary_card.dto.skill import SkillDTO
 from src.diary_ms.application.diary_card.interfaces.gateway import EmotionReader, SkillReader
 from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
 from src.diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
