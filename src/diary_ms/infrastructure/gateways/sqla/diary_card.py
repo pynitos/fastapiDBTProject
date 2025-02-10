@@ -14,8 +14,10 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
+from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.infrastructure.gateways.sqla.db import tables
 from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
@@ -44,17 +46,11 @@ class DiaryCardGateway(
     async def _set_entity_relationships(self, entity: DiaryCard) -> None:
         if entity.targets_ids:
             entity.targets = list(
-                (
-                    await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.targets_ids)))
-                ).all()
+                (await self._session.scalars(select(Target).where(targets_table.c.id.in_(entity.targets_ids)))).all()
             )
         if entity.emotions_ids:
             entity.emotions = list(
-                (
-                    await self._session.scalars(
-                        select(emotions_table).where(emotions_table.c.id.in_(entity.emotions_ids))
-                    )
-                ).all()
+                (await self._session.scalars(select(Emotion).where(emotions_table.c.id.in_(entity.emotions_ids)))).all()
             )
         if entity.medicaments_ids:
             entity.medicaments = list(
@@ -66,7 +62,8 @@ class DiaryCardGateway(
             )
         if entity.skill_assotiations:
             for s in entity.skill_assotiations:
-                if not await self._session.get(Skill, s.skill_id.value):
+                id: str = str(s.skill_id.value)
+                if not await self._session.get(Skill, id):
                     raise GatewayError(f"Skill with id: {id} not found.", 404)
 
     async def create(self, entity: DiaryCard) -> None:
