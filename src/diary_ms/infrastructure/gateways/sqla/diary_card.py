@@ -19,11 +19,11 @@ from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.infrastructure.gateways.sqla.db import tables
 from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
     emotions_table,
     medicaments_table,
     targets_table,
+    diary_cards_table
 )
 
 logger = logging.getLogger(__name__)
@@ -73,7 +73,8 @@ class DiaryCardGateway(
     async def get_all(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[DiaryCard]:
         stmt: Select[tuple[DiaryCard]] = (
             select(self._db_model)
-            .where(tables.diary_cards_table.c.user_id == user_id.value)
+            .where(diary_cards_table.c.user_id == user_id.value)
+            .order_by(diary_cards_table.c.created_at.desc())
             .offset(offset)
             .limit(limit)
         )
