@@ -1,8 +1,13 @@
 from dataclasses import dataclass, field
-from typing import Self
-from uuid import UUID
+from datetime import date
+from typing import Any, Self
+from uuid import UUID, uuid4
 
+from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.common.exceptions.base import DomainError
+from src.diary_ms.domain.common.exceptions.user_id_not_provided import (
+    UserIdNotProvidedError,
+)
 from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
@@ -17,6 +22,8 @@ from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
 )
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from src.diary_ms.domain.model.value_objects.skill.id import SkillId
+from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -50,8 +57,8 @@ class DiaryCard(AggregateRoot):
         emotions: list[UUID] | None = None,
         medicaments: list[UUID] | None = None,
         skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
-        skill_type: SkillType = SkillType.DBT,
-    ) -> Self:
+        skill_type: SkillType = SkillType.DBT
+        ) -> Self:
         if not id.value:
             raise DomainError
         diary_card: Self = cls(
@@ -85,8 +92,8 @@ class DiaryCard(AggregateRoot):
         emotions: list[UUID] | None = None,
         medicaments: list[UUID] | None = None,
         skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
-        skill_type: SkillType = SkillType.DBT,
-    ) -> Self:
+        skill_type: SkillType = SkillType.DBT
+        ) -> Self:
         if mood.value:
             self.mood = mood
         if description.value:
