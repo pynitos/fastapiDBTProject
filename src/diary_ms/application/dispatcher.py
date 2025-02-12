@@ -5,6 +5,7 @@ from typing import Any, TypeVar
 from dishka import AsyncContainer
 
 from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.command import Command
 from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.application.common.exceptions.base import HandlerNotFoundError
 from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher, Registry
@@ -19,7 +20,6 @@ from src.diary_ms.application.common.interfaces.handlers.event import (
 from src.diary_ms.application.common.interfaces.handlers.query import (
     QueryHandler,
 )
-from src.diary_ms.domain.common.model.commands.commands import Command
 from src.diary_ms.domain.common.model.events.base import Event
 
 TDependency = TypeVar("TDependency")

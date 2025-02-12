@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
-from src.diary_ms.domain.common.model.commands.commands import Command
+from src.diary_ms.application.common.dto.command import Command
 
 
 @dataclass

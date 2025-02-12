@@ -2,6 +2,7 @@ from collections.abc import Iterable, Sequence
 from typing import Any, Protocol
 
 from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.command import Command, CRes
 from src.diary_ms.application.common.dto.query import QRes, Query
 from src.diary_ms.application.common.interfaces.handlers.command import (
     CR,
@@ -19,7 +20,6 @@ from src.diary_ms.application.common.interfaces.handlers.query import (
     QT,
     QueryHandler,
 )
-from src.diary_ms.domain.common.model.commands.commands import Command, CRes
 from src.diary_ms.domain.common.model.events.base import Event
 
 

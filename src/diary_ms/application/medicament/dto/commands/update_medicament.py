@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.diary_ms.domain.common.model.commands.commands import Command
+from src.diary_ms.application.common.dto.command import Command
 from src.diary_ms.domain.common.types.id import TypeId
 
 

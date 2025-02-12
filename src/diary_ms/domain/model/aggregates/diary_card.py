@@ -1,14 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Self
-from uuid import UUID, uuid4
+from uuid import UUID
 
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import (
-    UserIdNotProvidedError,
-)
+from src.diary_ms.domain.common.exceptions.base import DomainError
 from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
-from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
@@ -21,8 +17,6 @@ from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
 )
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -45,40 +39,36 @@ class DiaryCard(AggregateRoot):
     skill_assotiations: list[DiaryCardSkillAssotiation] = field(default_factory=list)
 
     @classmethod
-    def create(cls, command: CreateDiaryCardCommand) -> Self:
-        if not command.user_id:
-            raise UserIdNotProvidedError
-        id: UUID = uuid4()
-        command.id = id
-        targets = command.targets
-        emotions = command.emotions
-        medicaments = command.medicaments
-        skill_assotiations = (
-            [
-                DiaryCardSkillAssotiation(
-                    diary_card_id=DiaryCardId(id),
-                    skill_id=SkillId(s.id),
-                    situation=SkillSituation(s.situation),
-                )
-                for s in command.skills
-            ]
-            if command.skills
-            else []
-        )
+    def create(
+        cls,
+        mood: DCMood,
+        id: DiaryCardId,
+        user_id: UserId,
+        description: DCDescription,
+        date_of_entry: DCDateOfEntry,
+        targets: list[UUID] | None = None,
+        emotions: list[UUID] | None = None,
+        medicaments: list[UUID] | None = None,
+        skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
+        skill_type: SkillType = SkillType.DBT,
+    ) -> Self:
+        if not id.value:
+            raise DomainError
         diary_card: Self = cls(
-            id=DiaryCardId(command.id),
-            user_id=UserId(command.user_id),
-            mood=DCMood(command.mood),
-            description=DCDescription(command.description),
-            date_of_entry=DCDateOfEntry(command.date_of_entry),
+            id=id,
+            user_id=user_id,
+            mood=mood,
+            description=description,
+            date_of_entry=date_of_entry,
             targets_ids=targets,
             emotions_ids=emotions,
             medicaments_ids=medicaments,
-            skill_assotiations=skill_assotiations,
+            skill_assotiations=skill_assotiations if skill_assotiations else [],
+            type=skill_type,
         )
         diary_card.record_event(
             DiaryCardCreatedEvent(
-                diary_card_id=id,
+                diary_card_id=id.value,
                 user_id=diary_card.user_id.value,
                 date_of_entry=diary_card.date_of_entry.value,
                 type=diary_card.type.value,
@@ -86,25 +76,32 @@ class DiaryCard(AggregateRoot):
         )
         return diary_card
 
-    def update(self, command: UpdateDiaryCardCommand) -> Self:
-        if command.mood:
-            self.mood = DCMood(command.mood)
-        if command.description:
-            self.description = DCDescription(command.description)
-        if command.date_of_entry:
-            self.date_of_entry = DCDateOfEntry(command.date_of_entry)
-        if command.targets:
-            self.targets_ids = command.targets
-        if command.emotions:
-            emotions = command.emotions
+    def update(
+        self,
+        mood: DCMood,
+        description: DCDescription,
+        date_of_entry: DCDateOfEntry,
+        targets: list[UUID] | None = None,
+        emotions: list[UUID] | None = None,
+        medicaments: list[UUID] | None = None,
+        skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
+        skill_type: SkillType = SkillType.DBT,
+    ) -> Self:
+        if mood.value:
+            self.mood = mood
+        if description.value:
+            self.description = description
+        if date_of_entry:
+            self.date_of_entry = date_of_entry
+        if targets:
+            self.targets_ids = targets
+        if emotions:
             self.emotions_ids = emotions
-        if command.medicaments:
-            medicaments = command.medicaments
+        if medicaments:
             self.medicaments_ids = medicaments
-        if command.skills:
-            skills = [
-                DiaryCardSkillAssotiation(diary_card_id=self.id, skill_id=SkillId(s.id), situation=SkillSituation(None))
-                for s in command.skills
-            ]
-            self.skill_assotiations = skills
+        if skill_assotiations:
+            self.skill_assotiations = skill_assotiations
+        if skill_type.value:
+            self.type = skill_type
+
         return self
