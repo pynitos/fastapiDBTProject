@@ -74,7 +74,7 @@ async def create_diary_card(
         emotions=schema.emotions,
         medicaments=schema.medicaments,
         skills=skills,
-        type=schema.type,
+        skills_type=schema.type,
     )
     await sender.send_command(command)
 
