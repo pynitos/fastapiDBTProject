@@ -21,30 +21,30 @@ metadata = MetaData()
 diary_card_skill_assotiation = Table(
     "diary_card_skill",
     metadata,
-    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),
-    Column("skill_id", ForeignKey("skills.id"), primary_key=True),
+    Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id",  ondelete='CASCADE'), primary_key=True),
+    Column("skill_id", UUID(as_uuid=True), ForeignKey("skills.id", ondelete='CASCADE'), primary_key=True),
     Column("situation", String(200), default=None, nullable=True),
 )
 
 diary_card_target_assotiation = Table(
     "diary_card_target",
     metadata,
-    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),
-    Column("target_id", ForeignKey("targets.id"), primary_key=True),
+    Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id", ondelete='CASCADE'), primary_key=True),
+    Column("target_id", UUID(as_uuid=True), ForeignKey("targets.id", ondelete='CASCADE'), primary_key=True),
 )
 
 diary_card_emotion_assotiation = Table(
     "diary_card_emotion",
     metadata,
-    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),
-    Column("emotion_id", ForeignKey("emotions.id"), primary_key=True),
+    Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id", ondelete='CASCADE'), primary_key=True),
+    Column("emotion_id", UUID(as_uuid=True), ForeignKey("emotions.id", ondelete='CASCADE'), primary_key=True),
 )
 
 diary_card_medicament_assotiation = Table(
     "diary_card_medicament",
     metadata,
-    Column("diary_card_id", ForeignKey("diary_cards.id"), primary_key=True),
-    Column("medicament_id", ForeignKey("medicaments.id"), primary_key=True),
+    Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id", ondelete='CASCADE'), primary_key=True),
+    Column("medicament_id", UUID(as_uuid=True), ForeignKey("medicaments.id", ondelete='CASCADE'), primary_key=True),
 )
 
 diary_cards_table = Table(
