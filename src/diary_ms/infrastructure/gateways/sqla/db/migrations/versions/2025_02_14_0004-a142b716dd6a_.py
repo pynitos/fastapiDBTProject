@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1f039503d799
+Revision ID: a142b716dd6a
 Revises: 
-Create Date: 2025-01-17 21:57:32.103554
+Create Date: 2025-02-14 00:04:36.564432
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '1f039503d799'
+revision: str = 'a142b716dd6a'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -28,6 +28,7 @@ def upgrade() -> None:
     sa.Column('mood', sa.Integer(), nullable=True),
     sa.Column('description', sa.String(length=1000), nullable=True),
     sa.Column('date_of_entry', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('type', sa.Enum('DBT', 'RO_DBT', name='skill_type'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('emotions',
@@ -54,6 +55,7 @@ def upgrade() -> None:
     sa.Column('category', sa.String(length=20), nullable=True),
     sa.Column('group', sa.String(length=20), nullable=True),
     sa.Column('name', sa.String(length=20), nullable=True),
+    sa.Column('description', sa.String(length=200), nullable=True),
     sa.Column('type', sa.Enum('DBT', 'RO_DBT', name='skill_type'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -64,39 +66,33 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('urge', sa.String(length=50), nullable=True),
     sa.Column('action', sa.String(length=200), nullable=True),
+    sa.Column('is_default', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('diary_card_emotion',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('diary_card_id', sa.UUID(), nullable=False),
-    sa.Column('emotion_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['emotion_id'], ['emotions.id'], ),
-    sa.PrimaryKeyConstraint('id', 'diary_card_id', 'emotion_id')
+    sa.Column('diary_card_id', sa.UUID(), nullable=True),
+    sa.Column('emotion_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['emotion_id'], ['emotions.id'], ondelete='CASCADE')
     )
     op.create_table('diary_card_medicament',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('diary_card_id', sa.UUID(), nullable=False),
-    sa.Column('medicament_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['medicament_id'], ['medicaments.id'], ),
-    sa.PrimaryKeyConstraint('id', 'diary_card_id', 'medicament_id')
+    sa.Column('diary_card_id', sa.UUID(), nullable=True),
+    sa.Column('medicament_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['medicament_id'], ['medicaments.id'], ondelete='CASCADE')
     )
     op.create_table('diary_card_skill',
-    sa.Column('diary_card_id', sa.UUID(), nullable=False),
-    sa.Column('skill_id', sa.UUID(), nullable=False),
-    sa.Column('description', sa.String(length=100), nullable=True),
-    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['skill_id'], ['skills.id'], ),
-    sa.PrimaryKeyConstraint('diary_card_id', 'skill_id')
+    sa.Column('diary_card_id', sa.UUID(), nullable=True),
+    sa.Column('skill_id', sa.UUID(), nullable=True),
+    sa.Column('situation', sa.String(length=200), nullable=True),
+    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['skill_id'], ['skills.id'], ondelete='CASCADE')
     )
     op.create_table('diary_card_target',
-    sa.Column('id', sa.UUID(), nullable=False),
-    sa.Column('diary_card_id', sa.UUID(), nullable=False),
-    sa.Column('target_id', sa.UUID(), nullable=False),
-    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ),
-    sa.ForeignKeyConstraint(['target_id'], ['targets.id'], ),
-    sa.PrimaryKeyConstraint('id', 'diary_card_id', 'target_id')
+    sa.Column('diary_card_id', sa.UUID(), nullable=True),
+    sa.Column('target_id', sa.UUID(), nullable=True),
+    sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['target_id'], ['targets.id'], ondelete='CASCADE')
     )
     # ### end Alembic commands ###
 
