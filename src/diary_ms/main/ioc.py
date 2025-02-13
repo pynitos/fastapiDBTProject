@@ -73,6 +73,18 @@ from src.diary_ms.application.admin.target_behavior.interfaces.gateway import (
 from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
+from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
+from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import (
+    DeleteDiaryCardAdminCommand,
+    DeleteDiaryCardCommand,
+)
+from src.diary_ms.application.diary_card.dto.commands.emotion.create_emotion import CreateEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.emotion.update_emotion import UpdateEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.create_skill_admin import CreateSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.delete_skill import DeleteSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.update_skill import UpdateSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import GetDataForDiaryCardQuery
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
 from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
@@ -104,6 +116,18 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     SkillReader,
 )
 from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
+from src.diary_ms.application.medicament.dto.commands.create_medicament import (
+    CreateMedicamentAdminCommand,
+    CreateMedicamentCommand,
+)
+from src.diary_ms.application.medicament.dto.commands.delete_medicament import (
+    DeleteMedicamentAdminCommand,
+    DeleteMedicamentCommand,
+)
+from src.diary_ms.application.medicament.dto.commands.update_medicament import (
+    UpdateMedicamentAdminCommand,
+    UpdateMedicamentCommand,
+)
 from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
 from src.diary_ms.application.medicament.dto.medicament import GetOwnMedicamentDTO, GetOwnMedicamentsDTO
 from src.diary_ms.application.medicament.interactors.commands.create_medicament import CreateMedicament
@@ -116,6 +140,18 @@ from src.diary_ms.application.medicament.interfaces.gateway import (
     MedicamentReader,
     MedicamentSaver,
     MedicamentUpdater,
+)
+from src.diary_ms.application.target_behavior.dto.commands.create_target import (
+    CreateTargetAdminCommand,
+    CreateTargetCommand,
+)
+from src.diary_ms.application.target_behavior.dto.commands.delete_target import (
+    DeleteTargetAdminCommand,
+    DeleteTargetCommand,
+)
+from src.diary_ms.application.target_behavior.dto.commands.update_target import (
+    UpdateTargetAdminCommand,
+    UpdateTargetCommand,
 )
 from src.diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetDTO, GetOwnTargetsDTO
 from src.diary_ms.application.target_behavior.interactors.commands.create_target import CreateTarget
@@ -130,39 +166,6 @@ from src.diary_ms.application.target_behavior.interfaces.gateway import (
     TargetUpdater,
 )
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.commands.create_diary_card import CreateDiaryCardCommand
-from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardAdminCommand, DeleteDiaryCardCommand
-from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
-from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
-from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
-from src.diary_ms.domain.model.commands.medicament.create_medicament import (
-    CreateMedicamentAdminCommand,
-    CreateMedicamentCommand,
-)
-from src.diary_ms.domain.model.commands.medicament.delete_medicament import (
-    DeleteMedicamentAdminCommand,
-    DeleteMedicamentCommand,
-)
-from src.diary_ms.domain.model.commands.medicament.update_medicament import (
-    UpdateMedicamentAdminCommand,
-    UpdateMedicamentCommand,
-)
-from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
-from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
-from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
-from src.diary_ms.domain.model.commands.target_behavior.create_target import (
-    CreateTargetAdminCommand,
-    CreateTargetCommand,
-)
-from src.diary_ms.domain.model.commands.target_behavior.delete_target import (
-    DeleteTargetAdminCommand,
-    DeleteTargetCommand,
-)
-from src.diary_ms.domain.model.commands.target_behavior.update_target import (
-    UpdateTargetAdminCommand,
-    UpdateTargetCommand,
-)
-from src.diary_ms.domain.model.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor

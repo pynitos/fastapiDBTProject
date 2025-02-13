@@ -10,15 +10,9 @@ from src.diary_ms.application.admin.medicament.dto.medicament import (
     MedicamentAdminDTO,
 )
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.domain.model.commands.medicament.create_medicament import (
-    CreateMedicamentAdminCommand,
-)
-from src.diary_ms.domain.model.commands.medicament.delete_medicament import (
-    DeleteMedicamentAdminCommand,
-)
-from src.diary_ms.domain.model.commands.medicament.update_medicament import (
-    UpdateMedicamentAdminCommand,
-)
+from src.diary_ms.application.medicament.dto.commands.create_medicament import CreateMedicamentAdminCommand
+from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentAdminCommand
+from src.diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentAdminCommand
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.admin.schemas.medicament import (
     CreateMedicamentAdminReq,

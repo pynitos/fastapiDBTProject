@@ -5,14 +5,14 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
 from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.target_behavior.dto.commands.create_target import CreateTargetCommand
+from src.diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetCommand
+from src.diary_ms.application.target_behavior.dto.commands.update_target import UpdateTargetCommand
 from src.diary_ms.application.target_behavior.dto.target_behavior import (
     GetOwnTargetDTO,
     GetOwnTargetsDTO,
     OwnTargetDTO,
 )
-from src.diary_ms.domain.model.commands.target_behavior.create_target import CreateTargetCommand
-from src.diary_ms.domain.model.commands.target_behavior.delete_target import DeleteTargetCommand
-from src.diary_ms.domain.model.commands.target_behavior.update_target import UpdateTargetCommand
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.target_behavior import (
     CreateOwnTargetReq,

@@ -2,9 +2,7 @@ from src.diary_ms.application.admin.medicament.interfaces.gateway import Medicam
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.domain.model.commands.medicament.delete_medicament import (
-    DeleteMedicamentAdminCommand,
-)
+from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentAdminCommand
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 
 

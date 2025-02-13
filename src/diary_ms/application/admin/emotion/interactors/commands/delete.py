@@ -2,7 +2,7 @@ from src.diary_ms.application.admin.emotion.interfaces.gateway import EmotionAdm
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
 from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
 
 

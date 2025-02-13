@@ -10,9 +10,9 @@ from src.diary_ms.application.admin.emotion.dto.emotion import (
     GetEmotionsAdminDTO,
 )
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
-from src.diary_ms.domain.model.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
-from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.emotion.create_emotion import CreateEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.emotion.delete_emotion import DeleteEmotionAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.emotion.update_emotion import UpdateEmotionAdminCommand
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.admin.schemas.emotion import (
     CreateEmotionAdminReq,

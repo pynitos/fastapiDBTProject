@@ -2,8 +2,6 @@ from dataclasses import dataclass
 from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.emotion.create_emotion import CreateEmotionAdminCommand
-from src.diary_ms.domain.model.commands.emotion.update_emotion import UpdateEmotionAdminCommand
 from src.diary_ms.domain.model.value_objects.emotion.description import (
     EmotionDescription,
 )
@@ -18,16 +16,20 @@ class Emotion(BaseEntity):
     description: EmotionDescription = EmotionDescription(value=None)
 
     @classmethod
-    def create(cls, command: CreateEmotionAdminCommand) -> Self:
+    def create(cls, name: EmotionName, description: EmotionDescription) -> Self:
         emotion = cls(
-            name=EmotionName(command.name),
-            description=EmotionDescription(command.description),
+            name=name,
+            description=description,
         )
         return emotion
 
-    def update(self, command: UpdateEmotionAdminCommand) -> Self:
-        if command.name:
-            self.name = EmotionName(command.name)
-        if command.description:
-            self.description = EmotionDescription(command.description)
+    def update(
+        self,
+        name: EmotionName | None = None,
+        description: EmotionDescription | None = None,
+    ) -> Self:
+        if name.value:
+            self.name = name
+        if description.value:
+            self.description = description
         return self

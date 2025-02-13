@@ -2,7 +2,7 @@ from src.diary_ms.application.admin.skill.interfaces.gateway import SkillAdminDe
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.delete_skill import DeleteSkillAdminCommand
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 
 

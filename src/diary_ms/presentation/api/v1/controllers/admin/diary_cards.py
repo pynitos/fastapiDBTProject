@@ -10,7 +10,7 @@ from src.diary_ms.application.admin.diary_card.dto.diary_card import (
     GetDiaryCardsAdminDTO,
 )
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardAdminCommand
 from src.diary_ms.presentation.api.deps import SenderDep
 
 router = APIRouter(

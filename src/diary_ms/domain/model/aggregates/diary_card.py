@@ -1,13 +1,8 @@
 from dataclasses import dataclass, field
-from datetime import date
-from typing import Any, Self
-from uuid import UUID, uuid4
+from typing import Self
+from uuid import UUID
 
-from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.domain.common.exceptions.base import DomainError
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import (
-    UserIdNotProvidedError,
-)
 from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
@@ -22,8 +17,6 @@ from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
 )
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -57,8 +50,8 @@ class DiaryCard(AggregateRoot):
         emotions: list[UUID] | None = None,
         medicaments: list[UUID] | None = None,
         skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
-        skill_type: SkillType = SkillType.DBT
-        ) -> Self:
+        skill_type: SkillType = SkillType.DBT,
+    ) -> Self:
         if not id.value:
             raise DomainError
         diary_card: Self = cls(
@@ -85,18 +78,18 @@ class DiaryCard(AggregateRoot):
 
     def update(
         self,
-        mood: DCMood,
-        description: DCDescription,
-        date_of_entry: DCDateOfEntry,
+        mood: DCMood | None = None,
+        description: DCDescription | None = None,
+        date_of_entry: DCDateOfEntry | None = None,
         targets: list[UUID] | None = None,
         emotions: list[UUID] | None = None,
         medicaments: list[UUID] | None = None,
         skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
-        skill_type: SkillType = SkillType.DBT
-        ) -> Self:
-        if mood.value:
+        skill_type: SkillType | None = SkillType.DBT,
+    ) -> Self:
+        if mood:
             self.mood = mood
-        if description.value:
+        if description:
             self.description = description
         if date_of_entry:
             self.date_of_entry = date_of_entry
@@ -108,7 +101,7 @@ class DiaryCard(AggregateRoot):
             self.medicaments_ids = medicaments
         if skill_assotiations:
             self.skill_assotiations = skill_assotiations
-        if skill_type.value:
+        if skill_type:
             self.type = skill_type
 
         return self

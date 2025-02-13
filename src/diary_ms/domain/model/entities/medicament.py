@@ -3,14 +3,6 @@ from typing import Self
 
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.commands.medicament.create_medicament import (
-    CreateMedicamentAdminCommand,
-    CreateMedicamentCommand,
-)
-from src.diary_ms.domain.model.commands.medicament.update_medicament import (
-    UpdateMedicamentAdminCommand,
-    UpdateMedicamentCommand,
-)
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.medicament.dosage import MedicamentDosage
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
@@ -25,30 +17,26 @@ class Medicament(BaseEntity):
     id: MedicamentId = MedicamentId(None)
 
     @classmethod
-    def create(cls, command: CreateMedicamentCommand) -> Self:
-        if not command.user_id:
+    def create(
+        cls,
+        id: MedicamentId,
+        user_id: UserId,
+        name: MedicamentName,
+        dosage: MedicamentDosage,
+    ) -> Self:
+        if not user_id.value:
             raise UserIdNotProvidedError
         medicament = cls(
-            user_id=UserId(command.user_id),
-            name=MedicamentName(command.name),
-            dosage=MedicamentDosage(command.dosage),
+            id=id,
+            user_id=user_id,
+            name=name,
+            dosage=dosage,
         )
         return medicament
 
-    @classmethod
-    def admin_create(cls, command: CreateMedicamentAdminCommand) -> Self:
-        if not command.user_id:
-            raise UserIdNotProvidedError
-        medicament = cls(
-            user_id=UserId(command.user_id),
-            name=MedicamentName(command.name),
-            dosage=MedicamentDosage(command.dosage),
-        )
-        return medicament
-
-    def update(self, command: UpdateMedicamentCommand | UpdateMedicamentAdminCommand) -> Self:
-        if command.name:
-            self.name = MedicamentName(command.name)
-        if command.dosage:
-            self.dosage = MedicamentDosage(command.dosage)
+    def update(self, name: MedicamentName | None = None, dosage: MedicamentDosage | None = None) -> Self:
+        if name:
+            self.name = name
+        if dosage:
+            self.dosage = dosage
         return self

@@ -2,8 +2,8 @@ from src.diary_ms.application.admin.diary_card.interfaces.gateway import DiaryCa
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
+from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardAdminCommand
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.commands.delete_diary_card import DeleteDiaryCardAdminCommand
 
 
 class DeleteDiaryCardAdminHandler(CommandHandler[DeleteDiaryCardAdminCommand, None]):

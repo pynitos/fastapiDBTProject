@@ -55,7 +55,7 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
             emotions=command.emotions,
             medicaments=command.medicaments,
             skill_assotiations=skill_assotiations,
-            skill_type=command.type,
+            skill_type=command.skills_type,
         )
         await self.db_gateway.create(diary_card)
         await self.mediator.publish(diary_card.pull_events())

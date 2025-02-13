@@ -4,9 +4,7 @@ from src.diary_ms.application.admin.target_behavior.interfaces.gateway import Ta
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.domain.model.commands.target_behavior.delete_target import (
-    DeleteTargetAdminCommand,
-)
+from src.diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetAdminCommand
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 logger: logging.Logger = logging.getLogger()

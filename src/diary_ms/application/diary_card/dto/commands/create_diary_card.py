@@ -24,4 +24,4 @@ class CreateDiaryCardCommand(Command[None]):
     medicaments: list[UUID] | None = None
     skills: list[Skill] | None = None
 
-    type: SkillType = SkillType.DBT
+    skills_type: SkillType = SkillType.DBT

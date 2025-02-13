@@ -3,12 +3,14 @@ import logging
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
+from src.diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentCommand
 from src.diary_ms.application.medicament.exceptions.medicament import MedicamentNotFoundError
 from src.diary_ms.application.medicament.interfaces.gateway import MedicamentUpdater
-from src.diary_ms.domain.model.commands.medicament.update_medicament import UpdateMedicamentCommand
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.value_objects.medicament.dosage import MedicamentDosage
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+from src.diary_ms.domain.model.value_objects.medicament.name import MedicamentName
 
 logger = logging.getLogger()
 
@@ -30,7 +32,10 @@ class UpdateMedicament(CommandHandler[UpdateMedicamentCommand, None]):
         old_med: Medicament | None = await self._db_gateway.get_by_id(medicament_id, user_id)
         if not old_med:
             raise MedicamentNotFoundError(medicament_id)
-        new_med: Medicament = old_med.update(command=command)
+        new_med: Medicament = old_med.update(
+            name=MedicamentName(command.name) if command.name else None,
+            dosage=MedicamentDosage(command.dosage) if command.dosage else None,
+        )
         await self._db_gateway.update(new_med)
         await self._transaction_manager.commit()
         logger.debug(f"Diary card with id: {command.id} updated.")

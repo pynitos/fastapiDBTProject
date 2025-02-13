@@ -10,15 +10,9 @@ from src.diary_ms.application.admin.target_behavior.dto.target_behavior import (
     TargetAdminDTO,
 )
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.domain.model.commands.target_behavior.create_target import (
-    CreateTargetAdminCommand,
-)
-from src.diary_ms.domain.model.commands.target_behavior.delete_target import (
-    DeleteTargetAdminCommand,
-)
-from src.diary_ms.domain.model.commands.target_behavior.update_target import (
-    UpdateTargetAdminCommand,
-)
+from src.diary_ms.application.target_behavior.dto.commands.create_target import CreateTargetAdminCommand
+from src.diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetAdminCommand
+from src.diary_ms.application.target_behavior.dto.commands.update_target import UpdateTargetAdminCommand
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.admin.schemas.target_behavior import (
     CreateTargetAdminReq,

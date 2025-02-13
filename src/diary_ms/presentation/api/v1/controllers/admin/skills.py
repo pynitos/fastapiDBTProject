@@ -11,9 +11,9 @@ from src.diary_ms.application.admin.skill.dto.skill import (
     SkillsAdminFilters,
 )
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.domain.model.commands.skill.create_skill_admin import CreateSkillAdminCommand
-from src.diary_ms.domain.model.commands.skill.delete_skill import DeleteSkillAdminCommand
-from src.diary_ms.domain.model.commands.skill.update_skill import UpdateSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.create_skill_admin import CreateSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.delete_skill import DeleteSkillAdminCommand
+from src.diary_ms.application.diary_card.dto.commands.skill.update_skill import UpdateSkillAdminCommand
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.admin.schemas.skill import CreateSkillAdminReq, UpdateSkillAdminReq
