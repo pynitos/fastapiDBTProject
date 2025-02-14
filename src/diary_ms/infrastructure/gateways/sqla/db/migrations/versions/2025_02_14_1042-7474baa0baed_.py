@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a142b716dd6a
+Revision ID: 7474baa0baed
 Revises: 
-Create Date: 2025-02-14 00:04:36.564432
+Create Date: 2025-02-14 10:42:49.742951
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a142b716dd6a'
+revision: str = '7474baa0baed'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -70,29 +70,37 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('diary_card_emotion',
+    sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('diary_card_id', sa.UUID(), nullable=True),
     sa.Column('emotion_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['emotion_id'], ['emotions.id'], ondelete='CASCADE')
+    sa.ForeignKeyConstraint(['emotion_id'], ['emotions.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('diary_card_medicament',
+    sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('diary_card_id', sa.UUID(), nullable=True),
     sa.Column('medicament_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['medicament_id'], ['medicaments.id'], ondelete='CASCADE')
+    sa.ForeignKeyConstraint(['medicament_id'], ['medicaments.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('diary_card_skill',
+    sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('diary_card_id', sa.UUID(), nullable=True),
     sa.Column('skill_id', sa.UUID(), nullable=True),
     sa.Column('situation', sa.String(length=200), nullable=True),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['skill_id'], ['skills.id'], ondelete='CASCADE')
+    sa.ForeignKeyConstraint(['skill_id'], ['skills.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('diary_card_target',
+    sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('diary_card_id', sa.UUID(), nullable=True),
     sa.Column('target_id', sa.UUID(), nullable=True),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['target_id'], ['targets.id'], ondelete='CASCADE')
+    sa.ForeignKeyConstraint(['target_id'], ['targets.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
