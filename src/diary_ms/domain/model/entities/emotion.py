@@ -28,8 +28,8 @@ class Emotion(BaseEntity):
         name: EmotionName | None = None,
         description: EmotionDescription | None = None,
     ) -> Self:
-        if name.value:
+        if name:
             self.name = name
-        if description.value:
+        if description:
             self.description = description
         return self
