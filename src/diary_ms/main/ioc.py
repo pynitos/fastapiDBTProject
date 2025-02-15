@@ -1,9 +1,11 @@
-from collections.abc import AsyncIterable
+from collections.abc import AsyncIterable, AsyncIterator
 from datetime import timedelta
 
 from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
+from taskiq_faststream import BrokerWrapper
+from taskiq_redis import RedisAsyncResultBackend
 
 from src.diary_ms.application.admin.diary_card.dto.diary_card import GetDiaryCardAdminDTO, GetDiaryCardsAdminDTO
 from src.diary_ms.application.admin.diary_card.interactors.commands.delete_diary_card import DeleteDiaryCardAdminHandler
@@ -217,6 +219,16 @@ class AdaptersProvider(Provider):
     async def get_broker_session(self, broker_client: KafkaBroker) -> AsyncIterable[KafkaBroker]:
         async with broker_client as broker:
             yield broker
+
+    @provide(scope=Scope.APP)
+    async def task_broker(message_broker: Broker, config: Settings) -> AsyncIterator[BrokerWrapper]:
+        result_backend = RedisAsyncResultBackend(config.REDIS_URI)
+        task_broker: BrokerWrapper = BrokerWrapper(message_broker).with_result_backend(result_backend)
+        await task_broker.startup()
+        try:
+            yield task_broker
+        finally:
+            await task_broker.shutdown()
 
     @provide(scope=Scope.REQUEST)
     async def get_broker(self, broker_session: KafkaBroker) -> AnyOf[BrokerImpl, Broker]:

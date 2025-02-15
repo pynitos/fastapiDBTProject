@@ -70,6 +70,7 @@ class Settings(BaseSettings):
         )
 
     BROKER_URI: str = Field(examples=["kafka:9092"])
+    REDIS_URI: str
 
     SMTP_TLS: bool = True
     SMTP_SSL: bool = False

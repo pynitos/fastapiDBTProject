@@ -11,7 +11,7 @@ class Broker(Protocol):
         raise NotImplementedError
 
     async def start(self) -> None:
-        """ "Connect broker and startup all subscribers."""
+        """Connect broker and startup all subscribers."""
         raise NotImplementedError
 
     async def close(self) -> None:
