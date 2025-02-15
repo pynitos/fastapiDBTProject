@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from faststream import FastStream
 from faststream.kafka import KafkaBroker
+from taskiq_faststream import BrokerWrapper, StreamScheduler
 
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorProvider
@@ -41,12 +42,14 @@ async def get_faststream_app() -> FastStream:
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.debug("Start app lifespan.")
-    faststream_app = await get_faststream_app()
-    if faststream_app.broker:
-        await faststream_app.broker.start()
+    await get_faststream_app()
+    task_broker: BrokerWrapper = await app.state.dishka_container.get(BrokerWrapper)
+    scheduler: StreamScheduler = await app.state.dishka_container.get(StreamScheduler)
+    if not task_broker.is_worker_process:
+        await scheduler.startup()
     yield
-    if faststream_app.broker:
-        await faststream_app.broker.close()
+    if not task_broker.is_worker_process:
+        await scheduler.shutdown()
     app.state.dishka_container.close()
     logger.debug("Close app lifespan.")
 
