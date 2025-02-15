@@ -1,13 +1,13 @@
-from datetime import datetime
 from typing import Any, Protocol
 
-type BrokerMessageType = str | bytes | datetime | bool | None
+from src.diary_ms.application.common.interfaces.types.base import BaseSendableMessage
+
 type BrokerKeyType = bytes | Any | None
 type BrokerTopicType = str
 
 
 class Broker(Protocol):
-    async def publish(self, message: BrokerMessageType, topic: Any) -> Any | None:
+    async def publish(self, message: BaseSendableMessage, topic: Any) -> Any | None:
         raise NotImplementedError
 
     async def start(self) -> None:

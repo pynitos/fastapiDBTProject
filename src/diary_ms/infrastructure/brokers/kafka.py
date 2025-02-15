@@ -2,10 +2,10 @@ from typing import Any
 
 from faststream.kafka.broker import KafkaBroker
 
+from src.diary_ms.application.common.interfaces.types.base import BaseSendableMessage
 from src.diary_ms.infrastructure.brokers.interface import (
     Broker,
     BrokerKeyType,
-    BrokerMessageType,
     BrokerTopicType,
 )
 
@@ -16,7 +16,7 @@ class KafkaBrokerImpl(Broker):
 
     async def publish(
         self,
-        message: BrokerMessageType,
+        message: BaseSendableMessage,
         topic: BrokerTopicType,
         key: BrokerKeyType = None,
     ) -> Any | None:

@@ -3,12 +3,16 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from dishka import AsyncContainer, make_async_container
+from dishka.integrations import faststream as faststream_integration
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+from faststream import FastStream
+from faststream.kafka import KafkaBroker
 
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorProvider
+from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
 from src.diary_ms.presentation.api import v1
 from src.diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
@@ -17,11 +21,32 @@ from src.diary_ms.presentation.api.exceptions import include_exception_handlers
 
 logger: logging.Logger = logging.getLogger(__name__)
 
+container: AsyncContainer = make_async_container(
+    AdaptersProvider(),
+    InteractorProvider(),
+    FastapiProvider(),
+    AdaptersFastapiProvider(),
+    context={Settings: settings},
+)
+
+
+async def get_faststream_app() -> FastStream:
+    broker: KafkaBroker = await container.get(KafkaBroker)
+    faststream_app = FastStream(broker=broker)
+    faststream_integration.setup_dishka(container, faststream_app, auto_inject=True)
+    broker.include_router(AMQPDiaryCardController)
+    return faststream_app
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.debug("Start app lifespan.")
+    faststream_app = await get_faststream_app()
+    if faststream_app.broker:
+        await faststream_app.broker.start()
     yield
+    if faststream_app.broker:
+        await faststream_app.broker.close()
     app.state.dishka_container.close()
     logger.debug("Close app lifespan.")
 
@@ -60,13 +85,6 @@ def create_app() -> FastAPI:
         format="%(asctime)s  %(process)-7s %(module)-20s %(message)s",
     )
     app: FastAPI = create_fastapi_app()
-    container: AsyncContainer = make_async_container(
-        AdaptersProvider(),
-        InteractorProvider(),
-        FastapiProvider(),
-        AdaptersFastapiProvider(),
-        context={Settings: settings},
-    )
     setup_dishka(container, app)
     return app
 

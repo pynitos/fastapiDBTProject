@@ -222,7 +222,7 @@ class AdaptersProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def task_broker(message_broker: Broker, config: Settings) -> AsyncIterator[BrokerWrapper]:
-        result_backend = RedisAsyncResultBackend(config.REDIS_URI)
+        result_backend: RedisAsyncResultBackend = RedisAsyncResultBackend(config.REDIS_URI)  # type: ignore
         task_broker: BrokerWrapper = BrokerWrapper(message_broker).with_result_backend(result_backend)
         await task_broker.startup()
         try:
