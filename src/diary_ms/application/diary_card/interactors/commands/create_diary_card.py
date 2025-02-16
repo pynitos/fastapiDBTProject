@@ -1,6 +1,6 @@
 from uuid import UUID, uuid4
 
-from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher
+from src.diary_ms.application.common.interfaces.dispatcher.base import Publisher
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
@@ -22,17 +22,17 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
         self,
         db_gateway: DiaryCardSaver,
         id_provider: IdProvider,
-        uow: TransactionManager,
-        mediator: Dispatcher,
+        transaction_manager: TransactionManager,
+        publisher: Publisher,
     ) -> None:
-        self.db_gateway = db_gateway
-        self.id_provider = id_provider
-        self.uow = uow
-        self.mediator = mediator
+        self._db_gateway = db_gateway
+        self._id_provider = id_provider
+        self._transaction_manager = transaction_manager
+        self._publisher = publisher
 
     async def __call__(self, command: CreateDiaryCardCommand) -> None:
         id: UUID = uuid4()
-        user_id: UserId = self.id_provider.get_current_user_id()
+        user_id: UserId = self._id_provider.get_current_user_id()
         skill_assotiations: list[DiaryCardSkillAssotiation] = (
             [
                 DiaryCardSkillAssotiation(
@@ -57,6 +57,6 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
             skill_assotiations=skill_assotiations,
             skill_type=command.skills_type,
         )
-        await self.db_gateway.create(diary_card)
-        await self.mediator.publish(diary_card.pull_events())
-        await self.uow.commit()
+        await self._db_gateway.create(diary_card)
+        await self._publisher.publish(diary_card.pull_events())
+        await self._transaction_manager.commit()

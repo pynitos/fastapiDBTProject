@@ -19,5 +19,5 @@ async def handle(data: DiaryCardCreatedEvent, sender: AMQPSenderDep) -> UUID:  #
     #     is_read=data.is_read
     # )
     # uuid = await sender.send(dto)
-    logger.info(f'diary card with id {data.diary_card_id} created.')
+    logger.info(f"diary card with id {data.diary_card_id} created.")
     return data.diary_card_id

@@ -84,7 +84,7 @@ def create_fastapi_app() -> FastAPI:
 
 def create_app() -> FastAPI:
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(asctime)s  %(process)-7s %(module)-20s %(message)s",
     )
     app: FastAPI = create_fastapi_app()

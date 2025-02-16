@@ -75,6 +75,7 @@ from src.diary_ms.application.admin.target_behavior.interfaces.gateway import (
 )
 from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
+from src.diary_ms.application.common.interfaces.task_sender import TaskSender
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import (
@@ -185,6 +186,7 @@ from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
+from src.diary_ms.infrastructure.tasks.brokers.faststream_taskiq import FaststreamTaskiqTaskSenderImpl
 from src.diary_ms.main.config import Settings
 
 
@@ -411,6 +413,7 @@ class InteractorProvider(Provider):
 
     dispather = provide(WithParents[DispatcherImpl], scope=Scope.REQUEST)  # type: ignore
     resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
+    task_sender = provide(FaststreamTaskiqTaskSenderImpl, provides=TaskSender)
 
     @provide(scope=Scope.APP)
     def init_registry(self) -> AnyOf[Registry, RegistryImpl]:

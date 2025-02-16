@@ -13,13 +13,23 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python Debugger: FastAPI",
+            "name": "Debugger: FastAPI",
             "type": "debugpy",
             "request": "launch",
             "module": "fastapi",
             "args": [
                 "dev",
                 "./src/diary_ms/main/web.py",
+            ],
+        },
+        {
+            "name": "Taskiq Scheduler",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "taskiq",
+            "args": [
+                "scheduler",
+                "src.diary_ms.main.scheduler:scheduler",
             ],
         }
     ]
