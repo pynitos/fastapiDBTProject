@@ -14,5 +14,4 @@ class DiaryCardCreatedEventHandler(EventHandler[DiaryCardCreatedEvent, None]):
         self._message_broker = message_broker
 
     async def __call__(self, event: DiaryCardCreatedEvent) -> None:
-        # await self._message_broker.publish(message=event, topic="new_diary_card")
-        self._task_sender.send_task(message=event, topic="new_diary_card", schedule=[{"cron": "*/1 */1 * * * *"}])
+        await self._message_broker.publish(message=event, topic="new_diary_card")
