@@ -45,10 +45,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     await get_faststream_app()
     task_broker: BrokerWrapper = await app.state.dishka_container.get(BrokerWrapper)
     scheduler: StreamScheduler = await app.state.dishka_container.get(StreamScheduler)
-    await scheduler.startup()
+    if not task_broker.is_worker_process:
+        await scheduler.startup()
     logger.debug("Scheduler started.")
     yield
-    await scheduler.shutdown()
+    if not task_broker.is_worker_process:
+        await scheduler.shutdown()
     app.state.dishka_container.close()
     logger.debug("Close app lifespan.")
 

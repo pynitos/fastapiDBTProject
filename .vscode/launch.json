@@ -29,7 +29,7 @@
             "module": "taskiq",
             "args": [
                 "scheduler",
-                "src.diary_ms.main.scheduler:scheduler",
+                "src.diary_ms.infrastructure.tasks.brokers.broker:scheduler",
             ],
         }
     ]
