@@ -13,7 +13,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Debugger: FastAPI",
+            "name": "FastAPI",
             "type": "debugpy",
             "request": "launch",
             "module": "fastapi",
