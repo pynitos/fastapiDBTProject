@@ -23,12 +23,22 @@
             ],
         },
         {
-            "name": "Taskiq Scheduler",
+            "name": "Scheduler",
             "type": "debugpy",
             "request": "launch",
             "module": "taskiq",
             "args": [
                 "scheduler",
+                "src.diary_ms.infrastructure.tasks.brokers.broker:scheduler",
+            ],
+        },
+        {
+            "name": "Taskiq",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "taskiq",
+            "args": [
+                "worker",
                 "src.diary_ms.infrastructure.tasks.brokers.broker:scheduler",
             ],
         }

@@ -22,4 +22,4 @@ async def handle(data: DiaryCardCreatedEvent, sender: AMQPSenderDep, task_sender
 @AMQPDiaryCardController.subscriber("get_diary_cards")
 @AMQPDiaryCardController.publisher("diary_card_statuses")
 async def handle_2(data: str, sender: AMQPSenderDep, task_sender: FromDishka[TaskSender]) -> str:  # noqa: ARG001
-    return 'Task done.'
+    return "Task done."
