@@ -15,6 +15,11 @@ AMQPDiaryCardController = KafkaRouter()
 @AMQPDiaryCardController.subscriber("new_diary_card")
 @AMQPDiaryCardController.publisher("diary_card_statuses")
 async def handle(data: DiaryCardCreatedEvent, sender: AMQPSenderDep, task_sender: FromDishka[TaskSender]) -> UUID:  # noqa: ARG001
-    task_sender.send_task('ok', 'diary_card_statuses', [{"cron": "*/1 */1 * * * *"}])
     logger.info(f"diary card with id {data.diary_card_id} created.")
     return data.diary_card_id
+
+
+@AMQPDiaryCardController.subscriber("get_diary_cards")
+@AMQPDiaryCardController.publisher("diary_card_statuses")
+async def handle_2(data: str, sender: AMQPSenderDep, task_sender: FromDishka[TaskSender]) -> str:  # noqa: ARG001
+    return 'Task done.'

@@ -1,3 +1,4 @@
+import logging
 from http import HTTPStatus
 from uuid import UUID
 
@@ -20,6 +21,8 @@ from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
     CreateDiaryCardReq,
     UpdateDiaryCardReq,
 )
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     route_class=DishkaRoute,
