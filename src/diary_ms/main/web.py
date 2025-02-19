@@ -90,6 +90,7 @@ def create_app() -> FastAPI:
     )
     app: FastAPI = create_fastapi_app()
     setup_dishka(container, app)
+    logger.debug(settings.REDIS_URI)
     return app
 
 

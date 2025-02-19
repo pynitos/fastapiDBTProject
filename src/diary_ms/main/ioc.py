@@ -232,8 +232,7 @@ class AdaptersProvider(Provider):
         result_backend: RedisAsyncResultBackend = RedisAsyncResultBackend(config.REDIS_URI)  # type: ignore
         task_broker: ListQueueBroker = ListQueueBroker(
             url=config.REDIS_URI,
-            result_backend=result_backend,
-        )
+        ).with_result_backend(result_backend)
         return task_broker
 
     @provide(scope=Scope.APP)
@@ -419,7 +418,6 @@ class InteractorsProvider(Provider):
 
     dispather = provide(WithParents[DispatcherImpl], scope=Scope.REQUEST)  # type: ignore
     resolver = provide(DishkaResolver, provides=Resolver, scope=Scope.REQUEST)
-    task_sender = provide(FaststreamTaskiqTaskSenderImpl, provides=TaskSender)
 
     @provide(scope=Scope.APP)
     def init_registry(self) -> AnyOf[Registry, RegistryImpl]:

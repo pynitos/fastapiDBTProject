@@ -20,5 +20,5 @@ class DiaryCardCreatedEventHandler(EventHandler[DiaryCardCreatedEvent, None]):
     async def __call__(self, event: DiaryCardCreatedEvent) -> None:
         # await self._message_broker.publish(message=event, topic="new_diary_card")
         task_id: str = await self._task_sender.send_task("create_diary_cards_report")
-        result: str = await self._task_sender.get_result(task_id)
-        logger.info(result)
+        # result: str = await self._task_sender.get_result(task_id)
+        logger.info(task_id)
