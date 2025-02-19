@@ -185,7 +185,8 @@ from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
-from src.diary_ms.infrastructure.tasks.brokers.faststream_taskiq import FaststreamTaskiqTaskSenderImpl
+from src.diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
+from src.diary_ms.infrastructure.tasks.brokers.registry import register_tasks
 from src.diary_ms.main.config import Settings
 
 
@@ -352,6 +353,11 @@ class AdaptersProvider(Provider):
         TargetAdminDeleter,
     ]:
         return TargetAdminGateway(session=session)
+
+    @provide(scope=Scope.APP)
+    async def get_task_dispather(self, task_broker: AsyncBroker) -> AnyOf[TaskSender, TaskDispatcher]:
+        task_dispatcher: TaskDispatcher = register_tasks(task_broker)
+        return task_dispatcher
 
 
 class InteractorsProvider(Provider):
