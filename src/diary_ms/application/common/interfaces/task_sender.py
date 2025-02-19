@@ -4,7 +4,7 @@ from typing import Any, Protocol
 
 class TaskSender(Protocol):
     @abstractmethod
-    async def send_task(self, message: Any, topic: str, schedule: list[Any]) -> str:
+    async def send_task(self, task_name: str) -> str:
         raise NotImplementedError
 
     @abstractmethod

@@ -72,6 +72,7 @@ from src.diary_ms.application.admin.target_behavior.interfaces.gateway import (
     TargetAdminSaver,
     TargetAdminUpdater,
 )
+from src.diary_ms.application.common.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.task_sender import TaskSender
@@ -118,7 +119,6 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     EmotionReader,
     SkillReader,
 )
-from src.diary_ms.application.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.application.medicament.dto.commands.create_medicament import (
     CreateMedicamentAdminCommand,
     CreateMedicamentCommand,

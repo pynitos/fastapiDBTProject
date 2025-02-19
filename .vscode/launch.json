@@ -39,7 +39,7 @@
             "module": "taskiq",
             "args": [
                 "worker",
-                "src.diary_ms.infrastructure.tasks.brokers.broker:scheduler",
+                "src.diary_ms.infrastructure.tasks.brokers.broker:task_broker",
             ],
         }
     ]

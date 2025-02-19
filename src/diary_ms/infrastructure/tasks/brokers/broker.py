@@ -3,6 +3,7 @@ from dishka.integrations.taskiq import setup_dishka
 from taskiq import TaskiqScheduler
 from taskiq_redis import ListQueueBroker, RedisAsyncResultBackend, RedisScheduleSource
 
+from src.diary_ms.infrastructure.tasks.brokers.registry import register_tasks
 from src.diary_ms.main.config import settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 
@@ -12,6 +13,7 @@ task_broker: ListQueueBroker = ListQueueBroker(
     result_backend=result_backend,
 )
 
+register_tasks(task_broker)
 
 redis_source = RedisScheduleSource(settings.REDIS_URI)
 scheduler = TaskiqScheduler(task_broker, sources=[redis_source])
