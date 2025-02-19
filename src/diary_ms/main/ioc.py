@@ -4,7 +4,8 @@ from datetime import timedelta
 from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
-from taskiq_faststream import BrokerWrapper, StreamScheduler
+from taskiq import AsyncBroker, TaskiqScheduler
+from taskiq_redis import ListQueueBroker, RedisAsyncResultBackend, RedisScheduleSource
 
 from src.diary_ms.application.admin.diary_card.dto.diary_card import GetDiaryCardAdminDTO, GetDiaryCardsAdminDTO
 from src.diary_ms.application.admin.diary_card.interactors.commands.delete_diary_card import DeleteDiaryCardAdminHandler
@@ -173,7 +174,6 @@ from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreated
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
-from src.diary_ms.infrastructure.brokers.message_broker import message_broker
 from src.diary_ms.infrastructure.gateways.sqla.admin.diary_card import DiaryCardAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.emotion import EmotionAdminGateway
 from src.diary_ms.infrastructure.gateways.sqla.admin.medicament import MedicamentAdminGateway
@@ -185,7 +185,6 @@ from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
-from src.diary_ms.infrastructure.tasks.brokers.broker import scheduler, task_broker
 from src.diary_ms.infrastructure.tasks.brokers.faststream_taskiq import FaststreamTaskiqTaskSenderImpl
 from src.diary_ms.main.config import Settings
 
@@ -216,7 +215,7 @@ class AdaptersProvider(Provider):
 
     @provide(scope=Scope.APP)
     def get_broker_client(self, config: Settings) -> KafkaBroker:
-        return message_broker
+        return KafkaBroker(config.BROKER_URI)
 
     @decorate
     async def get_broker_session(self, broker_client: KafkaBroker) -> AsyncIterable[KafkaBroker]:
@@ -228,11 +227,18 @@ class AdaptersProvider(Provider):
         return BrokerImpl(broker_session=broker_session)
 
     @provide(scope=Scope.APP)
-    async def task_broker(self) -> BrokerWrapper:
+    async def task_broker(self, config: Settings) -> AsyncBroker:
+        result_backend: RedisAsyncResultBackend = RedisAsyncResultBackend(config.REDIS_URI)  # type: ignore
+        task_broker: ListQueueBroker = ListQueueBroker(
+            url=config.REDIS_URI,
+            result_backend=result_backend,
+        )
         return task_broker
 
     @provide(scope=Scope.APP)
-    async def get_scheduler(self) -> StreamScheduler:
+    async def get_scheduler(self, config: Settings, task_broker: AsyncBroker) -> TaskiqScheduler:
+        redis_source = RedisScheduleSource(config.REDIS_URI)
+        scheduler = TaskiqScheduler(task_broker, sources=[redis_source])
         return scheduler
 
     @provide
@@ -348,7 +354,7 @@ class AdaptersProvider(Provider):
         return TargetAdminGateway(session=session)
 
 
-class InteractorProvider(Provider):
+class InteractorsProvider(Provider):
     scope = Scope.REQUEST
 
     mappers = provide_all(

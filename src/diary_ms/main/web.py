@@ -9,10 +9,10 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from faststream import FastStream
 from faststream.kafka import KafkaBroker
-from taskiq_faststream import BrokerWrapper, StreamScheduler
+from taskiq import AsyncBroker, TaskiqScheduler
 
 from src.diary_ms.main.config import Settings, settings
-from src.diary_ms.main.ioc import AdaptersProvider, InteractorProvider
+from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
 from src.diary_ms.presentation.api import v1
 from src.diary_ms.presentation.api.dependencies.base_provider import (
@@ -24,7 +24,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 container: AsyncContainer = make_async_container(
     AdaptersProvider(),
-    InteractorProvider(),
+    InteractorsProvider(),
     FastapiProvider(),
     AdaptersFastapiProvider(),
     context={Settings: settings},
@@ -43,8 +43,8 @@ async def get_faststream_app() -> FastStream:
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.info("Start app lifespan.")
     await get_faststream_app()
-    task_broker: BrokerWrapper = await app.state.dishka_container.get(BrokerWrapper)
-    scheduler: StreamScheduler = await app.state.dishka_container.get(StreamScheduler)
+    task_broker: AsyncBroker = await app.state.dishka_container.get(AsyncBroker)
+    scheduler: TaskiqScheduler = await app.state.dishka_container.get(TaskiqScheduler)
     if not task_broker.is_worker_process:
         await scheduler.startup()
     logger.debug("Scheduler started.")

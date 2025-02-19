@@ -1,18 +1,20 @@
-from taskiq.schedule_sources import LabelScheduleSource
-from taskiq_faststream import BrokerWrapper, StreamScheduler
-from taskiq_redis import RedisAsyncResultBackend
+from dishka import make_async_container
+from dishka.integrations.taskiq import setup_dishka
+from taskiq import TaskiqScheduler
+from taskiq_redis import ListQueueBroker, RedisAsyncResultBackend, RedisScheduleSource
 
-from src.diary_ms.infrastructure.brokers.message_broker import message_broker
 from src.diary_ms.main.config import settings
+from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 
 result_backend: RedisAsyncResultBackend = RedisAsyncResultBackend(settings.REDIS_URI)  # type: ignore
-task_broker: BrokerWrapper = BrokerWrapper(message_broker).with_result_backend(result_backend)
-
-diary_cards_get_report_task = task_broker.task(
-    "task message", topic="get_diary_cards", schedule=[{"cron": "*/1 * * * *"}]
+task_broker: ListQueueBroker = ListQueueBroker(
+    url=settings.REDIS_URI,
+    result_backend=result_backend,
 )
 
-scheduler: StreamScheduler = StreamScheduler(
-    broker=task_broker,
-    sources=[LabelScheduleSource(task_broker)],
-)
+
+redis_source = RedisScheduleSource(settings.REDIS_URI)
+scheduler = TaskiqScheduler(task_broker, sources=[redis_source])
+
+container = make_async_container(AdaptersProvider(), InteractorsProvider())
+setup_dishka(container, task_broker)
