@@ -11,6 +11,7 @@ from faststream import FastStream
 from faststream.kafka import KafkaBroker
 from taskiq import AsyncBroker, TaskiqScheduler
 
+from src.diary_ms.infrastructure.tasks.brokers.broker import scheduler, task_broker
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
@@ -27,7 +28,7 @@ container: AsyncContainer = make_async_container(
     InteractorsProvider(),
     FastapiProvider(),
     AdaptersFastapiProvider(),
-    context={Settings: settings},
+    context={Settings: settings, AsyncBroker: task_broker, TaskiqScheduler: scheduler},
 )
 
 
@@ -43,15 +44,15 @@ async def get_faststream_app() -> FastStream:
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.info("Start app lifespan.")
     await get_faststream_app()
-    task_broker: AsyncBroker = await app.state.dishka_container.get(AsyncBroker)
-    scheduler: TaskiqScheduler = await app.state.dishka_container.get(TaskiqScheduler)
     if not task_broker.is_worker_process:
+        await task_broker.startup()
         await scheduler.startup()
     logger.debug("Scheduler started.")
     yield
     if not task_broker.is_worker_process:
+        await task_broker.shutdown()
         await scheduler.shutdown()
-    app.state.dishka_container.close()
+    await app.state.dishka_container.close()
     logger.debug("Close app lifespan.")
 
 

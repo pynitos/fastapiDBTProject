@@ -5,7 +5,6 @@ from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, 
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 from taskiq import AsyncBroker, TaskiqScheduler
-from taskiq_redis import ListQueueBroker, RedisAsyncResultBackend, RedisScheduleSource
 
 from src.diary_ms.application.admin.diary_card.dto.diary_card import GetDiaryCardAdminDTO, GetDiaryCardsAdminDTO
 from src.diary_ms.application.admin.diary_card.interactors.commands.delete_diary_card import DeleteDiaryCardAdminHandler
@@ -186,7 +185,7 @@ from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGatew
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
 from src.diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
-from src.diary_ms.infrastructure.tasks.brokers.registry import register_tasks
+from src.diary_ms.infrastructure.tasks.brokers.registry import get_task_dispatcher
 from src.diary_ms.main.config import Settings
 
 
@@ -194,6 +193,8 @@ class AdaptersProvider(Provider):
     scope = Scope.REQUEST
 
     settings = from_context(provides=Settings, scope=Scope.APP)
+    task_borker = from_context(provides=AsyncBroker, scope=Scope.APP)
+    scheduler = from_context(provides=TaskiqScheduler, scope=Scope.APP)
 
     @provide(scope=Scope.APP)
     def get_jwt_token_processor(self, config: Settings) -> JwtTokenProcessor:
@@ -226,20 +227,6 @@ class AdaptersProvider(Provider):
     @provide(scope=Scope.REQUEST)
     async def get_broker(self, broker_session: KafkaBroker) -> AnyOf[BrokerImpl, Broker]:
         return BrokerImpl(broker_session=broker_session)
-
-    @provide(scope=Scope.APP)
-    async def task_broker(self, config: Settings) -> AsyncBroker:
-        result_backend: RedisAsyncResultBackend = RedisAsyncResultBackend(config.REDIS_URI)  # type: ignore
-        task_broker: ListQueueBroker = ListQueueBroker(
-            url=config.REDIS_URI,
-        ).with_result_backend(result_backend)
-        return task_broker
-
-    @provide(scope=Scope.APP)
-    async def get_scheduler(self, config: Settings, task_broker: AsyncBroker) -> TaskiqScheduler:
-        redis_source = RedisScheduleSource(config.REDIS_URI)
-        scheduler = TaskiqScheduler(task_broker, sources=[redis_source])
-        return scheduler
 
     @provide
     def get_diary_cards_gateway(
@@ -355,7 +342,7 @@ class AdaptersProvider(Provider):
 
     @provide(scope=Scope.APP)
     async def get_task_dispather(self, task_broker: AsyncBroker) -> AnyOf[TaskSender, TaskDispatcher]:
-        task_dispatcher: TaskDispatcher = register_tasks(task_broker)
+        task_dispatcher: TaskDispatcher = get_task_dispatcher(task_broker)
         return task_dispatcher
 
 

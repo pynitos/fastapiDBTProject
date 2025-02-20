@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from sqlalchemy import (
+    DATE,
     TIMESTAMP,
     UUID,
     Boolean,
@@ -66,7 +67,7 @@ diary_cards_table = Table(
     Column("user_id", UUID(as_uuid=True)),
     Column("mood", Integer),
     Column("description", String(1000)),
-    Column("date_of_entry", TIMESTAMP(timezone=False), server_default=func.now()),
+    Column("date_of_entry", DATE, server_default=func.now()),
     Column(
         "type",
         Enum(SkillType, name="skill_type", create_type=False),

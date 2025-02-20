@@ -1938,7 +1938,7 @@ version = "5.2.1"
 description = "Python client for Redis database and key-value store"
 optional = false
 python-versions = ">=3.8"
-groups = ["diary-ms"]
+groups = ["dev", "diary-ms"]
 files = [
     {file = "redis-5.2.1-py3-none-any.whl", hash = "sha256:ee7e1056b9aea0f04c6c2ed59452947f34c4940ee025f5dd83e6a6418b6989e4"},
     {file = "redis-5.2.1.tar.gz", hash = "sha256:16f2e22dff21d5125e8481515e386711a34cbec50f0e44413dd7d9c060a54e0f"},
@@ -1947,6 +1947,21 @@ files = [
 [package.extras]
 hiredis = ["hiredis (>=3.0.0)"]
 ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==23.2.1)", "requests (>=2.31.0)"]
+
+[[package]]
+name = "redis-cli"
+version = "1.0.1"
+description = "A Redis Python Client"
+optional = false
+python-versions = ">=3.7"
+groups = ["dev"]
+files = [
+    {file = "redis-cli-1.0.1.tar.gz", hash = "sha256:6be46d8e6ae638fec27cb425d499b7f25b1592402c74d5d17f5b85b5e7f988a0"},
+    {file = "redis_cli-1.0.1-py3-none-any.whl", hash = "sha256:e9f6af4a8b7591d8bfd1e23be89bdd9666ce824df881748fb02b88dd30575dc8"},
+]
+
+[package.dependencies]
+redis = ">=4"
 
 [[package]]
 name = "referencing"
@@ -2405,6 +2420,22 @@ files = [
 ]
 
 [[package]]
+name = "taskiq-fastapi"
+version = "0.3.3"
+description = "FastAPI integration for taskiq"
+optional = false
+python-versions = "<4.0.0,>=3.8.1"
+groups = ["diary-ms"]
+files = [
+    {file = "taskiq_fastapi-0.3.3-py3-none-any.whl", hash = "sha256:b08df2f923ead3acaddae4e0afe9f07a29b9fac879300ba964c894288c91e90a"},
+    {file = "taskiq_fastapi-0.3.3.tar.gz", hash = "sha256:c72fd3f1b602b7ab611ce7a5131c9b12167c5fc1b11f3c938b0c7a3f0e507b83"},
+]
+
+[package.dependencies]
+fastapi = ">=0.93.0"
+taskiq = ">=0.8.0,<1"
+
+[[package]]
 name = "taskiq-faststream"
 version = "0.2.0"
 description = "FastStream - taskiq integration to schedule FastStream tasks"
@@ -2804,4 +2835,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "1f340eec408316ddc4aecea31a5f71abdd410c29fcee36547d5dc6e5b7a0882b"
+content-hash = "fae7096fc685c5017bffeeb0988ada1ccdfee3c0161e645c8f2214aee3719201"
