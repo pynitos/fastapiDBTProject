@@ -16,7 +16,7 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
     OwnDiaryCardDTO,
 )
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.infrastructure.tasks.brokers.broker import create_diary_cards_report_
+from src.diary_ms.infrastructure.tasks.diary_cards import create_diary_cards_report
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
     CreateDiaryCardReq,
@@ -42,10 +42,10 @@ async def get_diary_cards(
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO] | dict:
     diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
-    task = await create_diary_cards_report_.kiq()
+    task = await create_diary_cards_report.kiq()
     print("SENT")
     result = await task.wait_result()
-    print("RESULT GOT")
+    print(result.return_value)
     if result.return_value:
         return {"Result:": result.return_value}
     return diary_cards
