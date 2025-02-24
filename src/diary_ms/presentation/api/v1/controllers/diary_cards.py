@@ -2,10 +2,12 @@ import logging
 from http import HTTPStatus
 from uuid import UUID
 
+from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
 from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.common.interfaces.task_sender import TaskSender
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
@@ -16,7 +18,6 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
     OwnDiaryCardDTO,
 )
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.infrastructure.tasks.diary_cards import create_diary_cards_report
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
     CreateDiaryCardReq,
@@ -38,16 +39,17 @@ router = APIRouter(
 @router.get("/", response_model=list[OwnDiaryCardDTO])
 async def get_diary_cards(
     sender: SenderDep,
+    task_sender: FromDishka[TaskSender],
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO] | dict:
     diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
-    task = await create_diary_cards_report.kiq()
+    task_id = await task_sender.send_task("create_diary_cards_report")
     print("SENT")
-    result = await task.wait_result()
-    print(result.return_value)
-    if result.return_value:
-        return {"Result:": result.return_value}
+    result = await task_sender.get_result(task_id)
+    print(result)
+    if result:
+        return {"Result:": result}
     return diary_cards
 
 
