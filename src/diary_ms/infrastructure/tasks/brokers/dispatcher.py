@@ -16,10 +16,12 @@ class TaskDispatcher(TaskSender):
         self.tasks[task_name] = task
 
     async def send_task(self, task_name: str) -> str:
-        task_func: Callable | None = self.tasks.get(task_name)
-        if not task_func:
+        # task_func: Callable | None = self.tasks.get(task_name)
+        # if not task_func:
+        #     raise InfraError
+        task_: AsyncTaskiqDecoratedTask | None = self._broker.find_task(task_name)
+        if not task_:
             raise InfraError
-        task_: AsyncTaskiqDecoratedTask = self._broker.task(task_func)
         task: AsyncTaskiqTask = await task_.kiq()
         await task.wait_result()
         return task.task_id

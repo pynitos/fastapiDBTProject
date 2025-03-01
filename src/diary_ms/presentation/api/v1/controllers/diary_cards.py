@@ -17,6 +17,10 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardsDTO,
     OwnDiaryCardDTO,
 )
+from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report import (
+    CreateDiaryCardsReportCommand,
+    CreateDiaryCardsReportDTO,
+)
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
@@ -39,17 +43,10 @@ router = APIRouter(
 @router.get("/", response_model=list[OwnDiaryCardDTO])
 async def get_diary_cards(
     sender: SenderDep,
-    task_sender: FromDishka[TaskSender],
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnDiaryCardDTO] | dict:
     diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
-    task_id = await task_sender.send_task("create_diary_cards_report")
-    print("SENT")
-    result = await task_sender.get_result(task_id)
-    print(result)
-    if result:
-        return {"Result:": result}
     return diary_cards
 
 
@@ -117,3 +114,13 @@ async def delete_diary_card(
     sender: SenderDep,
 ) -> None:
     await sender.send_command(DeleteDiaryCardCommand(id=id))
+
+
+@router.post("/report", status_code=200, response_model=CreateDiaryCardsReportDTO)
+async def create_diary_cards_report(sender: SenderDep) -> CreateDiaryCardsReportDTO:
+    return await sender.send_command(CreateDiaryCardsReportCommand())
+
+
+@router.get("/report", status_code=200, response_model=str)
+async def get_diary_cards_report(task_id: str, sender: FromDishka[TaskSender]) -> str:
+    return await sender.get_result(task_id)

@@ -5,7 +5,7 @@ from src.diary_ms.infrastructure.tasks.diary_cards import create_diary_cards_rep
 
 
 def register_tasks(task_broker: AsyncBroker) -> None:
-    task_broker.register_task(create_diary_cards_report)
+    task_broker.register_task(create_diary_cards_report, "create_diary_cards_report")
 
 
 def get_task_dispatcher(task_broker: AsyncBroker) -> TaskDispatcher:
