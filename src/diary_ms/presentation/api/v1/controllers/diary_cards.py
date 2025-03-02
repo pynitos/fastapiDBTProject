@@ -2,12 +2,10 @@ import logging
 from http import HTTPStatus
 from uuid import UUID
 
-from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
@@ -17,9 +15,13 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardsDTO,
     OwnDiaryCardDTO,
 )
+from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report import (
     CreateDiaryCardsReportCommand,
     CreateDiaryCardsReportDTO,
+)
+from src.diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
+    GetDiaryCardsReportTaskQuery,
 )
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 from src.diary_ms.presentation.api.deps import SenderDep
@@ -121,6 +123,6 @@ async def create_diary_cards_report(sender: SenderDep) -> CreateDiaryCardsReport
     return await sender.send_command(CreateDiaryCardsReportCommand())
 
 
-@router.get("/report", status_code=200, response_model=str)
-async def get_diary_cards_report(task_id: str, sender: FromDishka[TaskSender]) -> str:
-    return await sender.get_result(task_id)
+@router.get("/report", status_code=200, response_model=DiaryCardsReportDTO)
+async def get_diary_cards_report(task_id: str, sender: SenderDep) -> DiaryCardsReportDTO:
+    return await sender.send_query(GetDiaryCardsReportTaskQuery(task_id))

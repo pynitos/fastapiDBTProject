@@ -108,6 +108,10 @@ from src.diary_ms.application.diary_card.interactors.events.diary_card_created i
     DiaryCardCreatedEventHandler,
 )
 from src.diary_ms.application.diary_card.interactors.queries.get_data_for_diary_card import GetDataForDiaryCard
+from src.diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
+    GetDiaryCardsReportTaskHandler,
+    GetDiaryCardsReportTaskQuery,
+)
 from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
 )
@@ -344,7 +348,9 @@ class AdaptersProvider(Provider):
         return TargetAdminGateway(session=session)
 
     @provide(scope=Scope.APP)
-    async def get_task_dispather(self, task_broker: AsyncBroker, schedule_source: ScheduleSource) -> AnyOf[TaskSender, TaskDispatcher]:
+    async def get_task_dispather(
+        self, task_broker: AsyncBroker, schedule_source: ScheduleSource
+    ) -> AnyOf[TaskSender, TaskDispatcher]:
         task_dispatcher: TaskDispatcher = TaskDispatcher(task_broker, schedule_source)
         return task_dispatcher
 
@@ -403,6 +409,7 @@ class InteractorsProvider(Provider):
         GetOwnTarget,
         GetTargetAdminHandler,
         GetTargetsAdminHandler,
+        GetDiaryCardsReportTaskHandler,
     )
 
     event_handlers = provide_all(DiaryCardCreatedEventHandler, scope=Scope.REQUEST)
@@ -422,6 +429,7 @@ class InteractorsProvider(Provider):
         registry.register_query_handler(GetOwnDiaryCardDTO, GetOwnDiaryCard)
         registry.register_query_handler(GetOwnDiaryCardsDTO, GetOwnDiaryCards)
         registry.register_query_handler(GetDataForDiaryCardQuery, GetDataForDiaryCard)
+        registry.register_query_handler(GetDiaryCardsReportTaskQuery, GetDiaryCardsReportTaskHandler)
         registry.register_event_handler(DiaryCardCreatedEvent, DiaryCardCreatedEventHandler)
 
         registry.register_command_handler(DeleteDiaryCardAdminCommand, DeleteDiaryCardAdminHandler)
