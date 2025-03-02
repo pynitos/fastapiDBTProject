@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 
 from dishka.integrations.taskiq import FromDishka, inject
 
@@ -12,5 +13,5 @@ logger = logging.getLogger(__name__)
 
 
 @inject
-async def create_diary_cards_report(sender: FromDishka[Sender]) -> DiaryCardsReportDTO:
-    return await sender.send_command(CreateDiaryCardsReportCommand())
+async def create_diary_cards_report(user_id: UUID, sender: FromDishka[Sender]) -> DiaryCardsReportDTO:
+    return await sender.send_command(CreateDiaryCardsReportCommand(user_id))

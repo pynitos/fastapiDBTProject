@@ -1,11 +1,13 @@
 from abc import abstractmethod
 from typing import Protocol
 
+from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
@@ -22,6 +24,15 @@ class DiaryCardReader(Protocol):
 
     @abstractmethod
     async def get_all(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[DiaryCard]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def generate_report_data(
+        self,
+        user_id: UserId,
+        start_date: DCDateOfEntry,
+        end_date: DCDateOfEntry,
+    ) -> DiaryCardsReportDTO:
         raise NotImplementedError
 
 

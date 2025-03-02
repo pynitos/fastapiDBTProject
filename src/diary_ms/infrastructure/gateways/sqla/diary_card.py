@@ -1,9 +1,11 @@
 import logging
+from typing import Any
 
-from sqlalchemy import ScalarResult, Select, select
+from sqlalchemy import Row, ScalarResult, Select, func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.common.exceptions.base import GatewayError
+from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
 from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
@@ -19,6 +21,7 @@ from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
 from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
+from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
     diary_cards_table,
     emotions_table,
@@ -104,3 +107,31 @@ class DiaryCardGateway(
         if not entity:
             raise DiaryCardNotFoundError
         await self._session.delete(entity)
+
+    async def generate_report_data(
+        self,
+        user_id: UserId,
+        start_date: DCDateOfEntry,
+        end_date: DCDateOfEntry,
+    ) -> DiaryCardsReportDTO:
+        stmt = (
+            select(
+                func.count(diary_cards_table.c.id).label("total_entries"),
+                func.avg(diary_cards_table.c.mood).label("average_mood"),
+            )
+            .where(diary_cards_table.c.user_id == user_id.value)
+            .where(diary_cards_table.c.date_of_entry >= start_date.value)
+            .where(diary_cards_table.c.date_of_entry <= end_date.value)
+        )
+        result = await self._session.execute(stmt)
+        row: Row[tuple[int, Any]] | None = result.first()
+
+        total_entries = row.total_entries if row else 0
+        row_average_mood = row.average_mood if row else 0
+        average_mood = row_average_mood if row_average_mood else 0
+        return DiaryCardsReportDTO(
+            start_date=start_date.value,
+            end_date=end_date.value,
+            total_entries=total_entries,
+            average_mood=average_mood,
+        )

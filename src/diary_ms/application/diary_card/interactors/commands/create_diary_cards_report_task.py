@@ -33,5 +33,5 @@ class CreateDiaryCardsReportTaskHandler(
         user_id: UserId = self._id_provider.get_current_user_id()
         if not user_id.value:
             raise AuthenticationError
-        task_id: str = await self._task_sender.send_task("create_diary_cards_report")
+        task_id: str = await self._task_sender.send_task("create_diary_cards_report", user_id=user_id.value)
         return CreateDiaryCardsReportTaskDTO(task_id=task_id)
