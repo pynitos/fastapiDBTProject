@@ -1,28 +1,33 @@
-from collections.abc import Callable
+from datetime import datetime
 from typing import Any
 
-from taskiq import AsyncBroker, AsyncTaskiqDecoratedTask, AsyncTaskiqTask
+from taskiq import AsyncBroker, AsyncTaskiqDecoratedTask, AsyncTaskiqTask, ScheduleSource
+from taskiq.scheduler.created_schedule import CreatedSchedule
 
 from src.diary_ms.application.common.exceptions.base import InfraError
 from src.diary_ms.application.common.interfaces.task_sender import TaskSender
 
 
 class TaskDispatcher(TaskSender):
-    def __init__(self, broker: AsyncBroker) -> None:
+    def __init__(self, broker: AsyncBroker, schedule_sourse: ScheduleSource) -> None:
         self._broker = broker
-        self.tasks: dict[str, Callable] = {}
+        self._schedule_sourse = schedule_sourse
 
-    def register_task(self, task_name: str, task: Callable) -> None:
-        self.tasks[task_name] = task
-
-    async def send_task(self, task_name: str) -> str:
-        # task_func: Callable | None = self.tasks.get(task_name)
-        # if not task_func:
-        #     raise InfraError
-        task_: AsyncTaskiqDecoratedTask | None = self._broker.find_task(task_name)
-        if not task_:
+    async def send_task(self, task_name: str, schedule_time: str | datetime | None = None, *args, **kwargs) -> str:
+        decorated_task: AsyncTaskiqDecoratedTask | None = self._broker.find_task(task_name)
+        if not decorated_task:
             raise InfraError
-        task: AsyncTaskiqTask = await task_.kiq()
+        if isinstance(schedule_time, str):
+            schedule: CreatedSchedule = await decorated_task.schedule_by_cron(
+                self._schedule_sourse, schedule_time, *args, **kwargs
+            )
+            return schedule.schedule_id
+        elif isinstance(schedule_time, datetime):
+            schedule: CreatedSchedule = await decorated_task.schedule_by_time(
+                self._schedule_sourse, schedule_time, *args, **kwargs
+            )
+            return schedule.schedule_id
+        task: AsyncTaskiqTask = await decorated_task.kiq(*args, **kwargs)
         await task.wait_result()
         return task.task_id
 

@@ -4,7 +4,7 @@ from datetime import timedelta
 from dishka import AnyOf, Provider, Scope, WithParents, decorate, from_context, provide, provide_all
 from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
-from taskiq import AsyncBroker, TaskiqScheduler
+from taskiq import AsyncBroker, ScheduleSource
 
 from src.diary_ms.application.admin.diary_card.dto.diary_card import GetDiaryCardAdminDTO, GetDiaryCardsAdminDTO
 from src.diary_ms.application.admin.diary_card.interactors.commands.delete_diary_card import DeleteDiaryCardAdminHandler
@@ -189,7 +189,6 @@ from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGatew
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
 from src.diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
-from src.diary_ms.infrastructure.tasks.brokers.registry import get_task_dispatcher
 from src.diary_ms.main.config import Settings
 
 
@@ -198,7 +197,7 @@ class AdaptersProvider(Provider):
 
     settings = from_context(provides=Settings, scope=Scope.APP)
     task_borker = from_context(provides=AsyncBroker, scope=Scope.APP)
-    scheduler = from_context(provides=TaskiqScheduler, scope=Scope.APP)
+    schedule_sourse = from_context(provides=ScheduleSource, scope=Scope.APP)
 
     @provide(scope=Scope.APP)
     def get_jwt_token_processor(self, config: Settings) -> JwtTokenProcessor:
@@ -345,8 +344,8 @@ class AdaptersProvider(Provider):
         return TargetAdminGateway(session=session)
 
     @provide(scope=Scope.APP)
-    async def get_task_dispather(self, task_broker: AsyncBroker) -> AnyOf[TaskSender, TaskDispatcher]:
-        task_dispatcher: TaskDispatcher = get_task_dispatcher(task_broker)
+    async def get_task_dispather(self, task_broker: AsyncBroker, schedule_source: ScheduleSource) -> AnyOf[TaskSender, TaskDispatcher]:
+        task_dispatcher: TaskDispatcher = TaskDispatcher(task_broker, schedule_source)
         return task_dispatcher
 
 

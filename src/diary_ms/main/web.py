@@ -9,9 +9,9 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from faststream import FastStream
 from faststream.kafka import KafkaBroker
-from taskiq import AsyncBroker, TaskiqScheduler
+from taskiq import AsyncBroker, ScheduleSource
 
-from src.diary_ms.infrastructure.tasks.brokers.broker import scheduler, task_broker
+from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
 from src.diary_ms.main.config import Settings, settings
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
@@ -28,7 +28,7 @@ container: AsyncContainer = make_async_container(
     InteractorsProvider(),
     FastapiProvider(),
     AdaptersFastapiProvider(),
-    context={Settings: settings, AsyncBroker: task_broker, TaskiqScheduler: scheduler},
+    context={Settings: settings, AsyncBroker: task_broker, ScheduleSource: schedule_source},
 )
 
 

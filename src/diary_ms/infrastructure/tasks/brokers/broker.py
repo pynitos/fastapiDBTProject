@@ -17,8 +17,8 @@ task_broker: ListQueueBroker = ListQueueBroker(
 
 register_tasks(task_broker)
 
-redis_source = RedisScheduleSource(settings.REDIS_URI)
-scheduler = TaskiqScheduler(task_broker, sources=[redis_source])
+schedule_source = RedisScheduleSource(settings.REDIS_URI)
+scheduler = TaskiqScheduler(task_broker, sources=[schedule_source])
 
 container: AsyncContainer = make_async_container(
     AdaptersProvider(),
