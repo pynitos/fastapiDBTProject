@@ -21,6 +21,4 @@ class GetDiaryCardsReportTaskHandler(QueryHandler[GetDiaryCardsReportTaskQuery, 
 
     async def __call__(self, query: GetDiaryCardsReportTaskQuery) -> DiaryCardsReportDTO:
         self._id_provider.get_current_user_id()
-        result = await self._task_sender.get_result(query.task_id)
-        dto = DiaryCardsReportDTO(total=result.total)
-        return dto
+        return await self._task_sender.get_result(query.task_id)
