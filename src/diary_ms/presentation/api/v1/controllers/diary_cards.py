@@ -16,9 +16,9 @@ from src.diary_ms.application.diary_card.dto.diary_card import (
     OwnDiaryCardDTO,
 )
 from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
-from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report import (
-    CreateDiaryCardsReportCommand,
-    CreateDiaryCardsReportDTO,
+from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
+    CreateDiaryCardsReportTaskCommand,
+    CreateDiaryCardsReportTaskDTO,
 )
 from src.diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
     GetDiaryCardsReportTaskQuery,
@@ -118,9 +118,9 @@ async def delete_diary_card(
     await sender.send_command(DeleteDiaryCardCommand(id=id))
 
 
-@router.post("/report", status_code=200, response_model=CreateDiaryCardsReportDTO)
-async def create_diary_cards_report(sender: SenderDep) -> CreateDiaryCardsReportDTO:
-    return await sender.send_command(CreateDiaryCardsReportCommand())
+@router.post("/report", status_code=200, response_model=CreateDiaryCardsReportTaskDTO)
+async def create_diary_cards_report(sender: SenderDep) -> CreateDiaryCardsReportTaskDTO:
+    return await sender.send_command(CreateDiaryCardsReportTaskCommand())
 
 
 @router.get("/report", status_code=200, response_model=DiaryCardsReportDTO)

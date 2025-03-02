@@ -94,9 +94,9 @@ from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCard
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
-from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report import (
-    CreateDiaryCardsReport,
-    CreateDiaryCardsReportCommand,
+from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
+    CreateDiaryCardsReportTaskCommand,
+    CreateDiaryCardsReportTaskHandler,
 )
 from src.diary_ms.application.diary_card.interactors.commands.delete_diary_card import (
     DeleteDiaryCard,
@@ -369,7 +369,7 @@ class InteractorsProvider(Provider):
         CreateDiaryCard,
         UpdateDiaryCard,
         DeleteDiaryCard,
-        CreateDiaryCardsReport,
+        CreateDiaryCardsReportTaskHandler,
         DeleteDiaryCardAdminHandler,
         CreateMedicament,
         UpdateMedicament,
@@ -425,7 +425,7 @@ class InteractorsProvider(Provider):
         registry.register_command_handler(CreateDiaryCardCommand, CreateDiaryCard)
         registry.register_command_handler(UpdateDiaryCardCommand, UpdateDiaryCard)
         registry.register_command_handler(DeleteDiaryCardCommand, DeleteDiaryCard)
-        registry.register_command_handler(CreateDiaryCardsReportCommand, CreateDiaryCardsReport)
+        registry.register_command_handler(CreateDiaryCardsReportTaskCommand, CreateDiaryCardsReportTaskHandler)
         registry.register_query_handler(GetOwnDiaryCardDTO, GetOwnDiaryCard)
         registry.register_query_handler(GetOwnDiaryCardsDTO, GetOwnDiaryCards)
         registry.register_query_handler(GetDataForDiaryCardQuery, GetDataForDiaryCard)

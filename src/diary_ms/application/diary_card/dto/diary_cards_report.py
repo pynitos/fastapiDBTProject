@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
+from src.diary_ms.application.common.dto.base import DTO
+
 
 @dataclass
-class DiaryCardsReportDTO:
+class DiaryCardsReportDTO(DTO):
     total: str
