@@ -1782,27 +1782,6 @@ files = [
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
-name = "pydantic-settings"
-version = "2.7.0"
-description = "Settings management using Pydantic"
-optional = false
-python-versions = ">=3.8"
-groups = ["diary-ms"]
-files = [
-    {file = "pydantic_settings-2.7.0-py3-none-any.whl", hash = "sha256:e00c05d5fa6cbbb227c84bd7487c5c1065084119b750df7c8c1a554aed236eb5"},
-    {file = "pydantic_settings-2.7.0.tar.gz", hash = "sha256:ac4bfd4a36831a48dbf8b2d9325425b549a0a6f18cea118436d728eb4f1c4d66"},
-]
-
-[package.dependencies]
-pydantic = ">=2.7.0"
-python-dotenv = ">=0.21.0"
-
-[package.extras]
-azure-key-vault = ["azure-identity (>=1.16.0)", "azure-keyvault-secrets (>=4.8.0)"]
-toml = ["tomli (>=2.0.1)"]
-yaml = ["pyyaml (>=6.0.1)"]
-
-[[package]]
 name = "pygments"
 version = "2.18.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -2533,31 +2512,6 @@ fastapi = ">=0.93.0"
 taskiq = ">=0.8.0,<1"
 
 [[package]]
-name = "taskiq-faststream"
-version = "0.2.0"
-description = "FastStream - taskiq integration to schedule FastStream tasks"
-optional = false
-python-versions = ">=3.8"
-groups = ["diary-ms"]
-files = [
-    {file = "taskiq_faststream-0.2.0-py3-none-any.whl", hash = "sha256:d909195cf1a20057c5cfc1f8feaec879636b4eb051f3c550c64eeee57f6a55fc"},
-    {file = "taskiq_faststream-0.2.0.tar.gz", hash = "sha256:719b2a99b64e4bbb8ed1e5a7b4258da83ec7aa19c505c6e1269e192f8e416880"},
-]
-
-[package.dependencies]
-faststream = ">=0.3.14,<0.6.0"
-taskiq = ">=0.11.0,<0.12.0"
-
-[package.extras]
-confluent = ["faststream[confluent]"]
-dev = ["coverage[toml] (>=7.2.0,<8.0.0)", "faststream[confluent]", "faststream[kafka]", "faststream[nats]", "faststream[rabbit]", "faststream[redis]", "mypy (>=1.8.0,<1.12.0)", "pre-commit (>=3.6.0,<4.0.0)", "pytest (>=7.4.0,<9)", "ruff (==0.4.1)"]
-kafka = ["faststream[kafka]"]
-nats = ["faststream[nats]"]
-rabbit = ["faststream[rabbit]"]
-redis = ["faststream[redis]"]
-test = ["coverage[toml] (>=7.2.0,<8.0.0)", "faststream[confluent]", "faststream[kafka]", "faststream[nats]", "faststream[rabbit]", "faststream[redis]", "pytest (>=7.4.0,<9)"]
-
-[[package]]
 name = "taskiq-redis"
 version = "1.0.2"
 description = "Redis integration for taskiq"
@@ -2932,4 +2886,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "aaefa66683cac9597b641d1f395f596e2f3e52d462c572d56f4bde2b50a0e185"
+content-hash = "1e6444c3519dfa2de59d5533c544e98cc73a9e94af62e840b35670582e9e6ffa"
