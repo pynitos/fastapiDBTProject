@@ -2,12 +2,12 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.infrastructure.gateways.sqla.db.mapper import init_mapper
-from src.diary_ms.main.config import Settings
+from src.diary_ms.main.config import WebConfig
 
 
-def new_session_maker(settings: Settings) -> async_sessionmaker[AsyncSession]:
+def new_session_maker(config: WebConfig) -> async_sessionmaker[AsyncSession]:
     engine = create_async_engine(
-        str(settings.SQLALCHEMY_DATABASE_URI),
+        str(config.DB_URI),
         pool_size=15,
         max_overflow=15,
         connect_args={

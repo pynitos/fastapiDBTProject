@@ -12,7 +12,7 @@ from faststream.kafka import KafkaBroker
 from taskiq import AsyncBroker, ScheduleSource
 
 from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
-from src.diary_ms.main.config import Settings, settings
+from src.diary_ms.main.config import WebConfig, web_config
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
 from src.diary_ms.presentation.api import v1
@@ -28,7 +28,7 @@ container: AsyncContainer = make_async_container(
     InteractorsProvider(),
     FastapiProvider(),
     AdaptersFastapiProvider(),
-    context={Settings: settings, AsyncBroker: task_broker, ScheduleSource: schedule_source},
+    context={WebConfig: web_config, AsyncBroker: task_broker, ScheduleSource: schedule_source},
 )
 
 
@@ -58,24 +58,24 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 
 def create_fastapi_app() -> FastAPI:
     app: FastAPI = FastAPI(
-        title=settings.PROJECT_NAME,
-        docs_url=f"{settings.API_PREFIX}/docs",
-        redoc_url=f"{settings.API_PREFIX}/redoc",
+        title=web_config.PROJECT_NAME,
+        docs_url=f"{web_config.API_PREFIX}/docs",
+        redoc_url=f"{web_config.API_PREFIX}/redoc",
         lifespan=lifespan,
         default_response_class=ORJSONResponse,
     )
     include_exception_handlers(app)
-    app.mount(f"{settings.API_PREFIX}/v1", v1.api)
+    app.mount(f"{web_config.API_PREFIX}/v1", v1.api)
 
-    @app.get(f"{settings.API_PREFIX}/v1/openapi.json", name="1.0", tags=["Versions"])
-    @app.get(f"{settings.API_PREFIX}/v1/docs", name="1.0", tags=["Documentations"])
+    @app.get(f"{web_config.API_PREFIX}/v1/openapi.json", name="1.0", tags=["Versions"])
+    @app.get(f"{web_config.API_PREFIX}/v1/docs", name="1.0", tags=["Documentations"])
     @app.get(
-        f"{settings.API_PREFIX}/v1/admin/openapi.json",
+        f"{web_config.API_PREFIX}/v1/admin/openapi.json",
         name="Admin 1.0",
         tags=["Versions"],
     )
     @app.get(
-        f"{settings.API_PREFIX}/v1/admin/docs",
+        f"{web_config.API_PREFIX}/v1/admin/docs",
         name="Admin 1.0",
         tags=["Documentations"],
     )
@@ -88,10 +88,11 @@ def create_app() -> FastAPI:
     logging.basicConfig(
         level=logging.DEBUG,
         format="%(asctime)s  %(process)-7s %(module)-20s %(message)s",
+        handlers=[logging.StreamHandler()],
     )
     app: FastAPI = create_fastapi_app()
     setup_dishka(container, app)
-    logger.debug(settings.REDIS_URI)
+    logger.debug(web_config.REDIS_URI)
     return app
 
 

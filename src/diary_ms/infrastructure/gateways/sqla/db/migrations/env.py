@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from src.diary_ms.main.config import settings
+from src.diary_ms.main.config import web_config
 from src.diary_ms.infrastructure.gateways.sqla.db.metadata import metadata
 
 # this is the Alembic Config object, which provides
@@ -15,7 +15,7 @@ from src.diary_ms.infrastructure.gateways.sqla.db.metadata import metadata
 config = context.config
 
 config.set_main_option(
-    "sqlalchemy.url", settings.DB_URI)
+    "sqlalchemy.url", web_config.DB_URI)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

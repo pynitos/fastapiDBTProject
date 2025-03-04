@@ -197,18 +197,18 @@ from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGatew
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
 from src.diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
-from src.diary_ms.main.config import Settings
+from src.diary_ms.main.config import WebConfig
 
 
 class AdaptersProvider(Provider):
     scope = Scope.REQUEST
 
-    settings = from_context(provides=Settings, scope=Scope.APP)
+    settings = from_context(provides=WebConfig, scope=Scope.APP)
     task_borker = from_context(provides=AsyncBroker, scope=Scope.APP)
     schedule_sourse = from_context(provides=ScheduleSource, scope=Scope.APP)
 
     @provide(scope=Scope.APP)
-    def get_jwt_token_processor(self, config: Settings) -> JwtTokenProcessor:
+    def get_jwt_token_processor(self, config: WebConfig) -> JwtTokenProcessor:
         return JwtTokenProcessor(
             secret=config.JWT_SECRET_KEY,
             expires=timedelta(minutes=config.JWT_ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -216,7 +216,7 @@ class AdaptersProvider(Provider):
         )
 
     @provide(scope=Scope.APP)
-    def get_session_maker(self, config: Settings) -> async_sessionmaker[AsyncSession]:
+    def get_session_maker(self, config: WebConfig) -> async_sessionmaker[AsyncSession]:
         return new_session_maker(config)
 
     @provide(scope=Scope.REQUEST)
@@ -227,7 +227,7 @@ class AdaptersProvider(Provider):
             yield session
 
     @provide(scope=Scope.APP)
-    def get_broker_client(self, config: Settings) -> KafkaBroker:
+    def get_broker_client(self, config: WebConfig) -> KafkaBroker:
         return KafkaBroker(config.BROKER_URI)
 
     @decorate

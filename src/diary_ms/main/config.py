@@ -1,18 +1,12 @@
+import os
 import warnings
-from typing import Annotated, Any, Literal, Self
+from dataclasses import dataclass, field
+from typing import Any, Literal
 
-from pydantic import (
-    AnyUrl,
-    BeforeValidator,
-    Field,
-    HttpUrl,
-    computed_field,
-    model_validator,
-)
-from pydantic_core import MultiHostUrl
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from dotenv import load_dotenv
 
 from src.diary_ms.infrastructure.auth.token import AlgorithmT
+from src.diary_ms.infrastructure.s3.config import S3Config
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -23,82 +17,37 @@ def parse_cors(v: Any) -> list[str] | str:
     raise ValueError(v)
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_ignore_empty=True,
-        extra="ignore",
-    )
+@dataclass
+class BaseConfig:
+    def post_init(self):
+        self._validate()
 
-    API_PREFIX: str = "/api"
+    def _validate(self):
+        pass
+
+
+@dataclass
+class WebConfig(BaseConfig):
+    s3: S3Config
+    DB_URI: str
+    BROKER_URI: str
+    REDIS_URI: str
     JWT_SECRET_KEY: str
+    API_PREFIX: str = "/api"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     JWT_ALGORITHM: AlgorithmT = "HS256"
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
+    BACKEND_CORS_ORIGINS: list[str] | str = field(default_factory=list)
+    PROJECT_NAME: str = "Diary card API"
+    SENTRY_DSN: str | None = None
 
-    LOGIN_URL: str = "/auth/jwt/create"
+    def _validate(self):
+        parse_cors(self.BACKEND_CORS_ORIGINS)
 
-    BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = []
-
-    @computed_field  # type: ignore[prop-decorator]
     @property
     def all_cors_origins(self) -> list[str]:
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [self.FRONTEND_HOST]
-
-    PROJECT_NAME: str = "Diary card API"
-    SENTRY_DSN: HttpUrl | None = None
-    POSTGRES_SERVER: str = "localhost"
-    POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "postgres"
-    DB_URI: str
-
-    @computed_field  # type: ignore[prop-decorator]
-    @property
-    def SQLALCHEMY_DATABASE_URI(self) -> str:
-        return str(
-            MultiHostUrl.build(
-                scheme="postgresql+asyncpg",
-                username=self.POSTGRES_USER,
-                password=self.POSTGRES_PASSWORD,
-                host=self.POSTGRES_SERVER,
-                port=self.POSTGRES_PORT,
-                path=self.POSTGRES_DB,
-            )
-        )
-
-    BROKER_URI: str = Field(examples=["kafka:9092"])
-    REDIS_URI: str
-
-    SMTP_TLS: bool = True
-    SMTP_SSL: bool = False
-    SMTP_PORT: int = 587
-    SMTP_HOST: str | None = None
-    SMTP_USER: str | None = None
-    SMTP_PASSWORD: str | None = None
-    EMAILS_FROM_EMAIL: str | None = None
-    EMAILS_FROM_NAME: str | None = None
-
-    @model_validator(mode="after")
-    def _set_default_emails_from(self) -> Self:
-        if not self.EMAILS_FROM_NAME:
-            self.EMAILS_FROM_NAME = self.PROJECT_NAME
-        return self
-
-    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
-
-    @computed_field  # type: ignore[prop-decorator]
-    @property
-    def emails_enabled(self) -> bool:
-        return bool(self.SMTP_HOST and self.EMAILS_FROM_EMAIL)
-
-    # update type to EmailStr when sqlmodel supports it
-    EMAIL_TEST_USER: str = "test@example.com"
-    # update type to EmailStr when sqlmodel supports it
-    FIRST_SUPERUSER: str | None = None
-    FIRST_SUPERUSER_PASSWORD: str | None = None
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":
@@ -110,13 +59,25 @@ class Settings(BaseSettings):
             else:
                 raise ValueError(message)
 
-    @model_validator(mode="after")
-    def _enforce_non_default_secrets(self) -> Self:
-        self._check_default_secret("JWT_SECRET_KEY", self.JWT_SECRET_KEY)
-        self._check_default_secret("POSTGRES_PASSWORD", self.POSTGRES_PASSWORD)
-        self._check_default_secret("FIRST_SUPERUSER_PASSWORD", self.FIRST_SUPERUSER_PASSWORD)
 
-        return self
+def load_web_config() -> WebConfig:
+    load_dotenv()
+    db_uri = os.environ["DB_URI"]
+    broker_uri = os.environ["BROKER_URI"]
+    redis_uri = os.environ["REDIS_URI"]
+    jwt_secret_key = os.environ["JWT_SECRET_KEY"]
+    s3 = S3Config(
+        endpoint_url=os.environ["MINIO_URL"],
+        aws_access_key_id=os.environ["MINIO_ACCESS_KEY"],
+        aws_secret_access_key=os.environ["MINIO_SECRET_KEY"],
+    )
+    return WebConfig(
+        s3=s3,
+        DB_URI=db_uri,
+        BROKER_URI=broker_uri,
+        REDIS_URI=redis_uri,
+        JWT_SECRET_KEY=jwt_secret_key,
+    )
 
 
-settings = Settings()
+web_config: WebConfig = load_web_config()

@@ -25,6 +25,7 @@ taskiq-faststream = "^0.2.0"
 taskiq-redis = "^1.0.2"
 faststream = {extras = ["kafka"], version = "^0.5.34"}
 taskiq-fastapi = "^0.3.3"
+boto3 = "1.35.99"
 
 
 [tool.poetry.group.dev.dependencies]

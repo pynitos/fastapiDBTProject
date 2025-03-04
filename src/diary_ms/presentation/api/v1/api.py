@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.diary_ms.main.config import settings
+from src.diary_ms.main.config import web_config
 from src.diary_ms.presentation.api.constants.enums import Prefix, Tags
 from src.diary_ms.presentation.api.exceptions import include_exception_handlers
 
@@ -9,7 +9,7 @@ from .admin import admin_api_v1
 from .controllers import diary_cards, medicaments, target_behavior
 
 api_v1 = FastAPI(
-    title=settings.PROJECT_NAME,
+    title=web_config.PROJECT_NAME,
     description="",
     version="1.0",
     dependencies=[TokenDep],
