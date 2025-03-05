@@ -20,16 +20,16 @@ class PDFReportGenerator(ReportGenerator):
         story = []
 
         # Заголовок отчета
-        title = Paragraph("Отчет по DBT Diary Cards", styles["Title"])
+        title = Paragraph("Weekly DBT Diary Card Report", styles["Title"])
         story.append(title)
         story.append(Spacer(1, 12))
 
         # Данные отчета
         data = [
-            ["Начало недели", report_data.start_date.strftime("%Y-%m-%d")],
-            ["Конец недели", report_data.end_date.strftime("%Y-%m-%d")],
-            ["Всего записей", report_data.total_entries],
-            ["Среднее настроение", f"{report_data.average_mood:.2f}"],
+            ["Beginning of the week", report_data.start_date.strftime("%Y-%m-%d")],
+            ["End of the week", report_data.end_date.strftime("%Y-%m-%d")],
+            ["Total entries", report_data.total_entries],
+            ["Average mood", f"{report_data.average_mood:.2f}"],
         ]
 
         # Таблица с данными
@@ -48,8 +48,6 @@ class PDFReportGenerator(ReportGenerator):
             )
         )
         story.append(table)
-
-        # Генерация PDF
         doc.build(story)
         buffer.seek(0)
         return buffer.getvalue()

@@ -74,6 +74,7 @@ from src.diary_ms.application.admin.target_behavior.interfaces.gateway import (
 from src.diary_ms.application.common.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
 from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
+from src.diary_ms.application.common.interfaces.file_manager import FileManager
 from src.diary_ms.application.common.interfaces.task_sender import TaskSender
 from src.diary_ms.application.common.interfaces.uow import TransactionManager
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
@@ -130,6 +131,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     EmotionReader,
     SkillReader,
 )
+from src.diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
 from src.diary_ms.application.medicament.dto.commands.create_medicament import (
     CreateMedicamentAdminCommand,
     CreateMedicamentCommand,
@@ -196,6 +198,9 @@ from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
 from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
 from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
 from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
+from src.diary_ms.infrastructure.s3.config import S3Config
+from src.diary_ms.infrastructure.s3.file_manager import S3FileManager
+from src.diary_ms.infrastructure.services.report_generators.pdf_report_generator import PDFReportGenerator
 from src.diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
 from src.diary_ms.main.config import WebConfig
 
@@ -206,6 +211,13 @@ class AdaptersProvider(Provider):
     settings = from_context(provides=WebConfig, scope=Scope.APP)
     task_borker = from_context(provides=AsyncBroker, scope=Scope.APP)
     schedule_sourse = from_context(provides=ScheduleSource, scope=Scope.APP)
+
+    report_generator = provide(PDFReportGenerator, provides=ReportGenerator)
+    file_manager = provide(S3FileManager, provides=FileManager)
+
+    @provide(scope=Scope.APP)
+    def s3_config(self, config: WebConfig) -> S3Config:
+        return config.s3
 
     @provide(scope=Scope.APP)
     def get_jwt_token_processor(self, config: WebConfig) -> JwtTokenProcessor:

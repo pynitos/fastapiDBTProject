@@ -28,7 +28,6 @@ class TaskDispatcher(TaskSender):
             )
             return schedule.schedule_id
         task: AsyncTaskiqTask = await decorated_task.kiq(*args, **kwargs)
-        await task.wait_result()
         return task.task_id
 
     async def get_result(self, task_id: str) -> Any:

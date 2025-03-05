@@ -11,7 +11,7 @@ from src.diary_ms.infrastructure.s3.config import S3Config
 class S3FileManager(FileManager):
     def __init__(self, config: S3Config):
         self._config: S3Config = config
-        self._bucket: str = "diary_cards"
+        self._bucket: str = "diary-cards"
 
     @property
     def _client(self) -> BaseClient:
