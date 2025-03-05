@@ -10,3 +10,4 @@ class DiaryCardsReportDTO(DTO):
     end_date: date
     total_entries: int
     average_mood: int
+    file_path: str | None = None

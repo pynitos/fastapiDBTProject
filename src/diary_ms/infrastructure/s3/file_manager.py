@@ -13,6 +13,7 @@ class S3FileManager(FileManager):
         self._config: S3Config = config
         self._bucket: str = "diary_cards"
 
+    @property
     def _client(self) -> BaseClient:
         return client(
             "s3",
@@ -23,33 +24,24 @@ class S3FileManager(FileManager):
         )
 
     def save(self, payload: bytes, path: str) -> None:
-        s3 = self._client()
-
         with BytesIO(payload) as file_obj:
-            s3.upload_fileobj(file_obj, self._bucket, path)
+            self._client.upload_fileobj(file_obj, self._bucket, path)
 
     def get_by_file_id(self, file_path: str) -> bytes | None:
-        s3 = self._client()
-
-        data = s3.get_object(Bucket=self._bucket, Key=file_path)
+        data = self._client.get_object(Bucket=self._bucket, Key=file_path)
 
         if not data:
             return None
         return data["Body"].read()
 
     def delete_object(self, path: str) -> None:
-        s3 = self._client()
-
-        s3.delete_object(Bucket=self._bucket, Key=path)
+        self._client.delete_object(Bucket=self._bucket, Key=path)
 
     def delete_folder(self, folder: str) -> None:
-        s3 = self._client()
-
-        objects_to_delete = s3.list_objects_v2(
+        objects_to_delete = self._client.list_objects_v2(
             Bucket=self._bucket,
             Prefix=folder,
         )
-
         if "Contents" in objects_to_delete:
             for obj in objects_to_delete["Contents"]:
-                s3.delete_object(Bucket=self._bucket, Key=obj["Key"])
+                self._client.delete_object(Bucket=self._bucket, Key=obj["Key"])
