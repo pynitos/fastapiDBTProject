@@ -23,6 +23,7 @@ class AdaptersFastapiProvider(Provider):
         request: Request,
     ) -> AnyOf[IdProvider, AdminIdProvider, TokenIdProvider]:
         auth_header: str | None = request.headers.get("AUTHORIZATION")
+        logger.info("User id provider running.")
         if not auth_header:
             raise AuthenticationError("Unautenticated. Authorization header is empty.", 401)
         jwt_token: str = auth_header.split("Bearer ")[-1]

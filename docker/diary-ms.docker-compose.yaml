@@ -1,5 +1,5 @@
 name: dbt_diary
-version: "3.8"
+version: "3.9"
 
 networks:
   diary_backend_nw:
@@ -7,6 +7,8 @@ networks:
     driver: bridge
 
 volumes:
+  grafana-storage:
+    driver:local
   postgres_data:
     driver: local
   minio_data:
@@ -140,4 +142,34 @@ services:
       interval: 30s
       timeout: 20s
       retries: 2
-    
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    volumes:
+      - ./logs:/var/log  # Монтируем директорию с логами
+      - ./alloy-config.yaml:/etc/alloy/config.yaml
+    command: -config.file=/etc/alloy/config.yaml
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - loki

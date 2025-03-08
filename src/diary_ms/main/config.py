@@ -6,6 +6,7 @@ from typing import Any, Literal
 from dotenv import load_dotenv
 
 from src.diary_ms.infrastructure.auth.token import AlgorithmT
+from src.diary_ms.infrastructure.log.config import LogConfig
 from src.diary_ms.infrastructure.s3.config import S3Config
 
 
@@ -29,6 +30,7 @@ class BaseConfig:
 @dataclass
 class WebConfig(BaseConfig):
     s3: S3Config
+    log: LogConfig
     DB_URI: str
     BROKER_URI: str
     REDIS_URI: str
@@ -71,8 +73,10 @@ def load_web_config() -> WebConfig:
         aws_access_key_id=os.environ["MINIO_ACCESS_KEY"],
         aws_secret_access_key=os.environ["MINIO_SECRET_KEY"],
     )
+    log = LogConfig()
     return WebConfig(
         s3=s3,
+        log=log,
         DB_URI=db_uri,
         BROKER_URI=broker_uri,
         REDIS_URI=redis_uri,

@@ -11,6 +11,7 @@ from faststream import FastStream
 from faststream.kafka import KafkaBroker
 from taskiq import AsyncBroker, ScheduleSource
 
+from src.diary_ms.infrastructure.log.main import configure_logging
 from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
 from src.diary_ms.main.config import WebConfig, web_config
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
@@ -20,6 +21,8 @@ from src.diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
 )
 from src.diary_ms.presentation.api.exceptions import include_exception_handlers
+
+configure_logging(web_config.log)
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -58,12 +61,16 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 
 def create_fastapi_app() -> FastAPI:
     app: FastAPI = FastAPI(
+        debug=True,
         title=web_config.PROJECT_NAME,
         docs_url=f"{web_config.API_PREFIX}/docs",
         redoc_url=f"{web_config.API_PREFIX}/redoc",
         lifespan=lifespan,
         default_response_class=ORJSONResponse,
     )
+    logger_: logging.Logger = logging.getLogger(__name__)
+    logger_.info("APP CREATED")
+
     include_exception_handlers(app)
     app.mount(f"{web_config.API_PREFIX}/v1", v1.api)
 
@@ -85,14 +92,9 @@ def create_fastapi_app() -> FastAPI:
 
 
 def create_app() -> FastAPI:
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s  %(process)-7s %(module)-20s %(message)s",
-        handlers=[logging.StreamHandler()],
-    )
     app: FastAPI = create_fastapi_app()
     setup_dishka(container, app)
-    logger.debug(web_config.REDIS_URI)
+    logger.info("App created!!!")
     return app
 
 
