@@ -20,24 +20,14 @@ def configure_logging(cfg: LogConfig) -> None:
             },
         },
         "loggers": {
-            "": {  # Корневой логгер
+            "": {  # Root logger
                 "handlers": ["console"],
-                "level": cfg.level,  # Уровень логирования
+                "level": cfg.level,
                 "propagate": True,
             },
-            "uvicorn": {  # Логгер Uvicorn
+            "aiokafka": {
                 "handlers": ["console"],
-                "level": cfg.level,  # Уровень логирования
-                "propagate": False,
-            },
-            "uvicorn.error": {  # Логгер ошибок Uvicorn
-                "handlers": ["console"],
-                "level": cfg.level,  # Уровень логирования
-                "propagate": False,
-            },
-            "uvicorn.access": {  # Логгер доступа Uvicorn
-                "handlers": ["console"],
-                "level": cfg.level,  # Уровень логирования
+                "level": "WARNING",
                 "propagate": False,
             },
         },
