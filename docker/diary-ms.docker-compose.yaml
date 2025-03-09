@@ -5,8 +5,7 @@ networks:
   diary_backend_nw:
     name: diary_backend_nw
     driver: bridge
-    logs:
-     
+
 
 volumes:
   grafana_storage:
