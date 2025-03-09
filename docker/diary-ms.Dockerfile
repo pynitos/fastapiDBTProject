@@ -18,6 +18,7 @@ COPY alembic.ini .
 COPY .env .
 COPY ./src/__init__.py ./src/__init__.py
 COPY ./src/diary_ms/ ./src/diary_ms/
+COPY ./logs ./logs
 
 
 FROM base_image AS prod_image
