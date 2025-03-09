@@ -1,10 +1,14 @@
-name: dbt_diary
+name: dbt-diary
 version: "3.9"
 
 networks:
   diary_backend_nw:
     name: diary_backend_nw
     driver: bridge
+  logs:
+    driver: bridge
+    external: true
+    name: logs
 
 volumes:
   grafana_storage:
@@ -32,6 +36,7 @@ services:
       - postgres_data:/var/lib/postgresql/data'
     networks:
       - diary_backend_nw
+      - logs
     
   redis_backend:
       image: redis:latest
@@ -46,6 +51,7 @@ services:
         - ./redis.conf:/usr/local/etc/redis/redis.conf
       networks:
         - diary_backend_nw
+        - logs
 
   zookeeper:
     image: bitnami/zookeeper:latest
@@ -59,6 +65,7 @@ services:
       ALLOW_ANONYMOUS_LOGIN: "yes"
     networks:
       - diary_backend_nw
+      - logs
 
   kafka:
     image: bitnami/kafka:latest
@@ -84,6 +91,7 @@ services:
       - zookeeper
     networks:
       - diary_backend_nw
+      - logs
 
   kafka-ui:
     image: provectuslabs/kafka-ui
@@ -100,6 +108,7 @@ services:
       - zookeeper
     networks:
       - diary_backend_nw
+      - logs
 
 
   api-diary:
@@ -125,6 +134,7 @@ services:
       - ../.env:/code/.env
     networks:
       - diary_backend_nw
+      - logs
 
   minio:
     image: minio/minio
@@ -142,3 +152,6 @@ services:
       interval: 30s
       timeout: 20s
       retries: 2
+    networks:
+      - diary_backend_nw
+      - logs
