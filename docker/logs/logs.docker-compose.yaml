@@ -1,14 +1,22 @@
 networks:
   loki:
+  diary_backend_nw:
+    driver: bridge
+    external: true
+    name: diary_backend_nw
+  user_backend_nw:
+    driver: bridge
+    external: true
+    name: user_backend_nw
 
 services:
   read:
     image: grafana/loki:latest
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
-      - "3101:3100"
-      - "7946"
-      - "9095"
+      - 3101:3100
+      - 7946
+      - 9095
     volumes:
       - ./loki-config.yaml:/etc/loki/config.yaml
     depends_on:
@@ -27,9 +35,9 @@ services:
     image: grafana/loki:latest
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
-      - "3102:3100"
-      - "7946"
-      - "9095"
+      - 3102:3100
+      - 7946
+      - 9095
     volumes:
       - ./loki-config.yaml:/etc/loki/config.yaml
     healthcheck:
@@ -70,7 +78,7 @@ services:
       - MINIO_PROMETHEUS_AUTH_TYPE=public
       - MINIO_UPDATE=off
     ports:
-      - "9002:9000"
+      - 9000
     volumes:
       - ./.data/minio:/data
     healthcheck:

@@ -18,21 +18,15 @@ def configure_logging(cfg: LogConfig) -> None:
                 "formatter": "default",
                 "stream": "ext://sys.stdout",
             },
-            'file': {
-                'level': cfg.level,
-                'class': 'logging.FileHandler',  # Запись в файл
-                'filename': './logs/app.log',  # Имя файла
-                'formatter': 'default',
-                },
         },
         "loggers": {
             "": {  # Root logger
-                "handlers": ["console", "file"],
+                "handlers": ["console"],
                 "level": cfg.level,
                 "propagate": True,
             },
             "aiokafka": {
-                "handlers": ["console", "file"],
+                "handlers": ["console"],
                 "level": "WARNING",
                 "propagate": False,
             },
