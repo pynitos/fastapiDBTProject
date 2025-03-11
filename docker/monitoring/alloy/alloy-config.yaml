@@ -29,33 +29,36 @@ loki.write "default" {
 	external_labels = {}
 }
 
-
-prometheus.exporter.unix "local_system" { }
-
-prometheus.scrape "scrape_metrics" {
-  targets         = prometheus.exporter.unix.local_system.targets
-  forward_to      = [prometheus.relabel.filter_metrics.receiver]
-  scrape_interval = "10s"
+prometheus.scrape "default" {
+  targets = [
+    {"__address__" = "prometheus:9090"},
+  ]
+  forward_to = [prometheus.remote_write.default.receiver]
 }
 
-prometheus.relabel "filter_metrics" {
-  rule {
-    action        = "drop"
-    source_labels = ["env"]
-    regex         = "dev"
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4318"
   }
 
-  forward_to = [prometheus.remote_write.metrics_service.receiver]
+  output {
+    metrics = [otelcol.exporter.prometheus.default.receiver]
+    traces  = [otelcol.exporter.otlp.tempo.receiver]
+  }
 }
 
-prometheus.remote_write "metrics_service" {
-    endpoint {
-        url = "http://prometheus:9090/api/v1/write"
-
-        // basic_auth {
-        //   username = "admin"
-        //   password = "admin"
-        // }
-    }
+otelcol.exporter.prometheus "default" {
+  forward_to = [prometheus.remote_write.default.receiver]
 }
 
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = "tempo:4317"
+  }
+}

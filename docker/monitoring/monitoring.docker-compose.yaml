@@ -1,5 +1,5 @@
 networks:
-  loki:
+  monitoring:
     driver: bridge
   diary_backend_nw:
     driver: bridge
@@ -28,9 +28,9 @@ services:
       timeout: 5s
       retries: 5
     networks: &loki-dns
-      loki:
+      monitoring:
         aliases:
-          - loki
+          - monitoring
 
   write:
     image: grafana/loki:latest
@@ -62,7 +62,7 @@ services:
     depends_on:
       - gateway
     networks:
-      - loki
+      - monitoring
 
   minio:
     image: minio/minio
@@ -88,7 +88,7 @@ services:
       timeout: 20s
       retries: 5
     networks:
-      - loki
+      - monitoring
 
   grafana:
     image: grafana/grafana:latest
@@ -98,33 +98,17 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     depends_on:
       - gateway
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            url: http://gateway:3100
-            jsonData:
-              httpHeaderName1: "X-Scope-OrgID"
-            secureJsonData:
-              httpHeaderValue1: "tenant1"
-        EOF
-        /run.sh
     ports:
       - "3000:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - loki
+      - monitoring
 
   backend:
     image: grafana/loki:latest
@@ -137,7 +121,7 @@ services:
     depends_on:
       - gateway
     networks:
-      - loki
+      - monitoring
     
 
   gateway:
@@ -207,11 +191,27 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - loki
-  
+      - monitoring
 
-  flog:
-    image: mingrammer/flog
-    command: -f json -d 200ms -l
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
     networks:
-      - loki
+      - monitoring
+
+  tempo:
+    image: grafana/tempo:latest
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    command: ["-config.file=/etc/tempo.yaml"]
+    networks:
+      - monitoring
