@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from src.diary_ms.infrastructure.auth.token import AlgorithmT
 from src.diary_ms.infrastructure.log.config import LogConfig
 from src.diary_ms.infrastructure.s3.config import S3Config
+from src.diary_ms.infrastructure.telemetry.config import TelemetryConfig
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -31,6 +32,7 @@ class BaseConfig:
 class WebConfig(BaseConfig):
     s3: S3Config
     log: LogConfig
+    telemetry: TelemetryConfig
     DB_URI: str
     BROKER_URI: str
     REDIS_URI: str
@@ -74,9 +76,11 @@ def load_web_config() -> WebConfig:
         aws_secret_access_key=os.environ["MINIO_SECRET_KEY"],
     )
     log = LogConfig()
+    telemetry = TelemetryConfig()
     return WebConfig(
         s3=s3,
         log=log,
+        telemetry=telemetry,
         DB_URI=db_uri,
         BROKER_URI=broker_uri,
         REDIS_URI=redis_uri,

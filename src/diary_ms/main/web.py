@@ -13,6 +13,7 @@ from taskiq import AsyncBroker, ScheduleSource
 
 from src.diary_ms.infrastructure.log.main import configure_logging
 from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
+from src.diary_ms.infrastructure.telemetry.main import configure_telemetry_fastapi
 from src.diary_ms.main.config import WebConfig, web_config
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
 from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
@@ -68,8 +69,7 @@ def create_fastapi_app() -> FastAPI:
         lifespan=lifespan,
         default_response_class=ORJSONResponse,
     )
-    logger_: logging.Logger = logging.getLogger(__name__)
-    logger_.info("APP CREATED")
+    configure_telemetry_fastapi(app, web_config.telemetry)
 
     include_exception_handlers(app)
     app.mount(f"{web_config.API_PREFIX}/v1", v1.api)

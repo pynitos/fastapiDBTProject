@@ -204,6 +204,7 @@ services:
       - "--web.enable-remote-write-receiver"
     networks:
       - monitoring
+      - diary_backend_nw
 
   tempo:
     image: grafana/tempo:latest
@@ -215,3 +216,4 @@ services:
     command: ["-config.file=/etc/tempo.yaml"]
     networks:
       - monitoring
+      - diary_backend_nw

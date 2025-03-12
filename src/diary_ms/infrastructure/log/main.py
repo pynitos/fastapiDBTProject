@@ -4,12 +4,18 @@ from src.diary_ms.infrastructure.log.config import LogConfig
 
 
 def configure_logging(cfg: LogConfig) -> None:
+    UVICORN_ACCESS_LOG_FORMAT = "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s resource.service.name=%(otelServiceName)s] - %(message)s"  # noqa: E501
     logging_config = {
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
             "default": {
                 "format": cfg.format,
+            },
+            "access": {
+                "()": "uvicorn.logging.AccessFormatter",
+                "fmt": UVICORN_ACCESS_LOG_FORMAT,
+                "use_colors": True,
             },
         },
         "handlers": {
