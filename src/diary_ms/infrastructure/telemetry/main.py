@@ -1,5 +1,7 @@
 
 import logging
+
+from fastapi import FastAPI
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -7,7 +9,6 @@ from opentelemetry.instrumentation.logging import LoggingInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from fastapi import FastAPI
 
 from src.diary_ms.infrastructure.telemetry.config import TelemetryConfig
 from src.diary_ms.infrastructure.telemetry.utils import PrometheusMiddleware, metrics
@@ -44,6 +45,6 @@ def configure_telemetry_fastapi(app: FastAPI, cfg: TelemetryConfig) -> None:
         # Uvicorn endpoint access log filter
         def filter(self, record: logging.LogRecord) -> bool:
             return record.getMessage().find("GET /metrics") == -1
-        
+
     # Filter out /endpoint
     logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
