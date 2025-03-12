@@ -28,37 +28,3 @@ loki.write "default" {
 	}
 	external_labels = {}
 }
-
-prometheus.scrape "default" {
-  targets = [
-    {"__address__" = "prometheus:9090"},
-  ]
-  forward_to = [prometheus.remote_write.default.receiver]
-}
-
-prometheus.remote_write "default" {
-  endpoint {
-    url = "http://prometheus:9090/api/v1/write"
-  }
-}
-
-otelcol.receiver.otlp "default" {
-  grpc {
-    endpoint = "0.0.0.0:4318"
-  }
-
-  output {
-    metrics = [otelcol.exporter.prometheus.default.receiver]
-    traces  = [otelcol.exporter.otlp.tempo.receiver]
-  }
-}
-
-otelcol.exporter.prometheus "default" {
-  forward_to = [prometheus.remote_write.default.receiver]
-}
-
-otelcol.exporter.otlp "tempo" {
-  client {
-    endpoint = "tempo:4317"
-  }
-}
