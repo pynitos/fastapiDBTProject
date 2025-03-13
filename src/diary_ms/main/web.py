@@ -37,7 +37,7 @@ container: AsyncContainer = make_async_container(
 
 
 async def get_faststream_app() -> FastStream:
-    broker: KafkaBroker = await container.get(KafkaBroker)
+    broker: KafkaBroker = KafkaBroker(web_config.BROKER_URI)
     faststream_app = FastStream(broker=broker)
     faststream_integration.setup_dishka(container, faststream_app, auto_inject=True)
     broker.include_router(AMQPDiaryCardController)

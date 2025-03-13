@@ -72,8 +72,8 @@ def load_web_config() -> WebConfig:
     jwt_secret_key = os.environ["JWT_SECRET_KEY"]
     s3 = S3Config(
         endpoint_url=os.environ["MINIO_URL"],
-        aws_access_key_id=os.environ["MINIO_ACCESS_KEY"],
-        aws_secret_access_key=os.environ["MINIO_SECRET_KEY"],
+        aws_access_key_id=os.environ["MINIO_ROOT_USER"],
+        aws_secret_access_key=os.environ["MINIO_ROOT_PASSWORD"],
     )
     log = LogConfig()
     telemetry = TelemetryConfig()
