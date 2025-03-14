@@ -57,23 +57,19 @@ datasources:
           - compose_service
     readOnly: false
     editable: true
-  - uid: loki
-    orgId: 1
-    name: Loki
+
+  - name: Loki
     type: loki
-    typeName: Loki
     access: proxy
-    url: http://loki:3100
-    password: ''
-    user: ''
-    database: ''
-    basicAuth: false
-    isDefault: false
+    url: http://gateway:3100
     jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
       derivedFields:
         - datasourceUid: tempo
           matcherRegex: (?:trace_id)=(\w+)
           name: TraceID
           url: $${__value.raw}
+    secureJsonData:
+      httpHeaderValue1: "tenant1"
     readOnly: false
     editable: true
