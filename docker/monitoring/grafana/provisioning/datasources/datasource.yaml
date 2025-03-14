@@ -34,8 +34,8 @@ datasources:
     name: Tempo
     type: tempo
     typeName: Tempo
+    url: http://tempo:4317
     access: proxy
-    url: http://tempo
     password: ''
     user: ''
     database: ''
@@ -57,19 +57,12 @@ datasources:
           - compose_service
     readOnly: false
     editable: true
-
   - name: Loki
+    uid: loki
     type: loki
     access: proxy
     url: http://gateway:3100
     jsonData:
       httpHeaderName1: "X-Scope-OrgID"
-      derivedFields:
-        - datasourceUid: tempo
-          matcherRegex: (?:trace_id)=(\w+)
-          name: TraceID
-          url: $${__value.raw}
     secureJsonData:
       httpHeaderValue1: "tenant1"
-    readOnly: false
-    editable: true

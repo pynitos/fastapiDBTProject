@@ -802,7 +802,7 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "loki"
+          "uid": "P8E80F9AEF21F6940"
         },
         "fieldConfig": {
           "defaults": {
@@ -927,9 +927,9 @@
           {
             "datasource": {
               "type": "loki",
-              "uid": "loki"
+              "uid": "P8E80F9AEF21F6940"
             },
-            "expr": "sum by(type) (rate({compose_service=~\"app-.*\"} | pattern `<date> <time> <type> <logger> <code> [<_>=<trace_id> <_>=<span_id> <_>=<service_name>] - <msg>` | type != \"\" |= \"$log_keyword\" [1m]))",
+            "expr": "sum by(type) (rate({container=\"api-diary\"} | pattern `<date> <time> <type> <logger> <code> [<_>=<trace_id> <_>=<span_id> <_>=<service_name>] - <msg>` | type != \"\" |= \"$log_keyword\" [1m]))",
             "legendFormat": "{{type}}",
             "refId": "A"
           }
@@ -940,7 +940,11 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "loki"
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
         },
         "gridPos": {
           "h": 9,
@@ -951,6 +955,7 @@
         "id": 2,
         "options": {
           "dedupStrategy": "none",
+          "enableInfiniteScrolling": false,
           "enableLogDetails": true,
           "prettifyLogMessage": false,
           "showCommonLabels": false,
@@ -959,15 +964,17 @@
           "sortOrder": "Descending",
           "wrapLogMessage": true
         },
-        "pluginVersion": "8.4.3",
+        "pluginVersion": "11.5.2",
         "targets": [
           {
             "datasource": {
               "type": "loki",
-              "uid": "loki"
+              "uid": "P8E80F9AEF21F6940"
             },
-            "expr": "{compose_service=~\"app-.*\"} | pattern `<date> <time> <type> <logger> <code> [<_>=<trace_id> <_>=<span_id> <_>=<service_name>] - <msg>` | line_format \"{{.compose_service}}\\t{{.type}}\\t trace_id={{.trace_id}}\\t {{.msg}}\" |= \"$log_keyword\"",
-            "hide": false,
+            "direction": "backward",
+            "editorMode": "code",
+            "expr": "{container=\"api-diary\"}",
+            "queryType": "range",
             "refId": "A"
           }
         ],
