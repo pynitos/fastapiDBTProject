@@ -18,7 +18,7 @@ def configure_telemetry_fastapi(app: FastAPI, cfg: TelemetryConfig) -> None:
     # Setting OpenTelemetry
     # set the service name to show in traces
     app_name = cfg.app_name
-    endpoint = cfg.oltp_grpc_endpoint
+    endpoint = cfg.telemetry_url
     log_correlation = cfg.log_correlation
 
     app.add_middleware(PrometheusMiddleware, app_name=app_name)
