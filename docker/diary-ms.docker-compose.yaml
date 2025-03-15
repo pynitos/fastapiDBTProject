@@ -94,12 +94,8 @@ services:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
-    links:
-      - kafka
-      - zookeeper
     networks:
       - diary_backend_nw
-
 
   api-diary:
     container_name: api-diary
@@ -109,11 +105,6 @@ services:
       context: ..
       dockerfile: ./docker/diary-ms.Dockerfile
     env_file: ../.env
-    links:
-      - kafka
-      - db-diary
-      - minio
-      - redis_backend
     depends_on:
       db-diary:
         condition: service_healthy

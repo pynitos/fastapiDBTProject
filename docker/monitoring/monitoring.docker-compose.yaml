@@ -212,18 +212,10 @@ services:
 
   tempo:
     image: grafana/tempo:latest
+    command: [ "--target=all", "--storage.trace.backend=local", "--storage.trace.local.path=/var/tempo", "--auth.enabled=false" ]
     ports:
       - "4317:4317"
       - "4318:4318"
-    volumes:
-      - ./tempo/tempo.yaml:/etc/tempo.yaml
-    command: [
-      "-config.file=/etc/tempo.yaml",
-      "--target=all",
-      "--storage.trace.backend=local",
-      "--storage.trace.local.path=/var/tempo",
-      "--auth.enabled=false"
-      ]
     networks:
       - monitoring
       - diary_backend_nw
