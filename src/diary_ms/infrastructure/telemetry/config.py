@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class TelemetryConfig:
-    telemetry_url: str
-    app_name: str = 'diary_app'
+    endpoint: str
+    app_name: str = 'api-diary'
     log_correlation: bool = True
 

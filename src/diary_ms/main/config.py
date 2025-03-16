@@ -77,7 +77,7 @@ def load_web_config() -> WebConfig:
     )
     log = LogConfig()
     telemetry = TelemetryConfig(
-        telemetry_url=os.environ['TELEMETRY_URL']
+        endpoint=os.environ['TELEMETRY_URL']
         )
     return WebConfig(
         s3=s3,
