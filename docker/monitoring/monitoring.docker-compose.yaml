@@ -69,6 +69,7 @@ services:
       - tempo
     networks:
       - monitoring
+      - diary_backend_nw
 
   minio:
     image: minio/minio
@@ -235,7 +236,6 @@ services:
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
-      - ./tempo-data:/var/tempo
     ports:
       - "3200" # tempo
       - "4317" # otlp grpc
@@ -245,4 +245,3 @@ services:
     depends_on:
       - backend
       - init_tempo
-
