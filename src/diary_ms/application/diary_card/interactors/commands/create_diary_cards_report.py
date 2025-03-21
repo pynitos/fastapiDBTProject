@@ -35,9 +35,7 @@ class CreateDiaryCardsReport(CommandHandler[CreateDiaryCardsReportCommand, Diary
             user_id=UserId(command.user_id), start_date=DCDateOfEntry(start_of_week), end_date=DCDateOfEntry(today)
         )
         pdf_report = await self._report_generator.generate(report)
-        file_path = (
-            f"reports/{command.user_id}_{report.start_date.strftime('%Y-%m-%d')}_{report.end_date.strftime('%Y-%m-%d')}.pdf"
-            )
+        file_path = f"reports/{command.user_id}_{report.start_date.strftime('%Y-%m-%d')}_{report.end_date.strftime('%Y-%m-%d')}.pdf"  # noqa: E501
         self._file_manager.save(pdf_report, file_path)
         report.file_path = file_path
         return report

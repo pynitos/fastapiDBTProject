@@ -1,3 +1,4 @@
+import logging
 import os
 import warnings
 from dataclasses import dataclass, field
@@ -5,10 +6,13 @@ from typing import Any, Literal
 
 from dotenv import load_dotenv
 
+from src.diary_ms.domain.common.exceptions.base import AppError
 from src.diary_ms.infrastructure.auth.token import AlgorithmT
 from src.diary_ms.infrastructure.log.config import LogConfig
 from src.diary_ms.infrastructure.s3.config import S3Config
 from src.diary_ms.infrastructure.telemetry.config import TelemetryConfig
+
+logger = logging.getLogger()
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -21,6 +25,11 @@ def parse_cors(v: Any) -> list[str] | str:
 
 @dataclass
 class BaseConfig:
+    log: LogConfig
+    DB_URI: str
+    BROKER_URI: str
+    REDIS_URI: str
+
     def post_init(self):
         self._validate()
 
@@ -31,11 +40,7 @@ class BaseConfig:
 @dataclass
 class WebConfig(BaseConfig):
     s3: S3Config
-    log: LogConfig
     telemetry: TelemetryConfig
-    DB_URI: str
-    BROKER_URI: str
-    REDIS_URI: str
     JWT_SECRET_KEY: str
     API_PREFIX: str = "/api"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
@@ -64,6 +69,19 @@ class WebConfig(BaseConfig):
                 raise ValueError(message)
 
 
+@dataclass
+class BotConfig(BaseConfig):
+    bot_token: str
+
+
+def get_str_env(key: str) -> str:
+    val: str | None = os.getenv(key)
+    if not val:
+        logger.error("%s is not set", key)
+        raise AppError(f"{key} is not set")
+    return val
+
+
 def load_web_config() -> WebConfig:
     load_dotenv()
     db_uri = os.environ["DB_URI"]
@@ -76,9 +94,7 @@ def load_web_config() -> WebConfig:
         aws_secret_access_key=os.environ["MINIO_ROOT_PASSWORD"],
     )
     log = LogConfig()
-    telemetry = TelemetryConfig(
-        endpoint=os.environ['TELEMETRY_URL']
-        )
+    telemetry = TelemetryConfig(endpoint=os.environ["TELEMETRY_URL"])
     return WebConfig(
         s3=s3,
         log=log,
@@ -91,3 +107,19 @@ def load_web_config() -> WebConfig:
 
 
 web_config: WebConfig = load_web_config()
+
+
+def load_bot_config() -> BotConfig:
+    load_dotenv()
+    db_uri = os.environ["DB_URI"]
+    broker_uri = os.environ["BROKER_URI"]
+    redis_uri = os.environ["REDIS_URI"]
+    bot_token = get_str_env("BOT_TOKEN")
+    log = LogConfig()
+    return BotConfig(
+        bot_token=bot_token,
+        log=log,
+        DB_URI=db_uri,
+        BROKER_URI=broker_uri,
+        REDIS_URI=redis_uri,
+    )
