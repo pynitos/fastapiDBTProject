@@ -88,8 +88,8 @@ emotions_table = Table(
         server_default=func.now(),
         server_onupdate=func.now(),
     ),
-    Column("name", String(20)),
-    Column("description", String(100)),
+    Column("name", String(100)),
+    Column("description", String(200)),
 )
 
 targets_table = Table(
@@ -105,8 +105,8 @@ targets_table = Table(
         server_onupdate=func.now(),
     ),
     Column("user_id", UUID(as_uuid=True)),
-    Column("urge", String(50)),
-    Column("action", String(200)),
+    Column("urge", String(100)),
+    Column("action", String(300)),
     Column("is_default", Boolean, default=False),
 )
 
@@ -122,10 +122,10 @@ skills_table = Table(
         server_default=func.now(),
         server_onupdate=func.now(),
     ),
-    Column("category", String(20)),
-    Column("group", String(20)),
-    Column("name", String(20)),
-    Column("description", String(200)),
+    Column("category", String(100)),
+    Column("group", String(100)),
+    Column("name", String(100)),
+    Column("description", String(300)),
     Column(
         "type",
         Enum(SkillType, name="skill_type", create_type=False),

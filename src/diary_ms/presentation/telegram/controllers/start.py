@@ -14,6 +14,6 @@ async def start(
     dialog_manager: DialogManager,
 ) -> None:
     await dialog_manager.start(
-        states.CreateDiaryCardState.mood,
+        states.CreateDiaryCardSG.mood,
         mode=StartMode.RESET_STACK,
     )
