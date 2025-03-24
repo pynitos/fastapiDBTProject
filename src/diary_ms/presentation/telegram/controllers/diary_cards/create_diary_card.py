@@ -8,7 +8,7 @@ from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Multiselect, Next, Row, Select
 from aiogram_dialog.widgets.kbd.select import ManagedMultiselect
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
@@ -183,17 +183,22 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.emotions,
     ),
     Window(
-        Const("Проверьте введенные данные:"),
-        Format("Настроение: {mood}"),
-        Format("Описание: {description}"),
-        Format("Цели: {targets}"),
-        Format("Эмоции: {selected_emotions}"),
-        Format("Медикаменты: {medicaments}"),
-        Format("Навыки: {skills}"),
+        Jinja(
+            """
+<b>Проверьте введенные данные:</b>
+Настроение: {{mood}}
+Описание: {{description}}
+Цели: {{targets}}
+Эмоции: {{selected_emotions}}
+Медикаменты: {{medicaments}}
+Навыки: {{skills}}
+            """
+            ),
         Button(Const("Подтвердить"), on_click=on_confirmation, id="confirm"),
         Back(Const("Назад")),
         getter=get_confirmation_data,
         state=states.CreateDiaryCardSG.CONFIRMATION,
+        parse_mode='HTML',
     ),
     Window(
         Const("Дневниковая карточка успешно добавлена!"),
