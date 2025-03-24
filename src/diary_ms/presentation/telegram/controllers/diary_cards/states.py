@@ -13,6 +13,7 @@ class CreateDiaryCardSG(StatesGroup):
     medicaments = State()
     skills = State()
     CONFIRMATION = State()
+    DONE = State()
 
 
 class GetOwnDiaryCardsSG(StatesGroup):

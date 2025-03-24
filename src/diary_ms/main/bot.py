@@ -28,20 +28,16 @@ container: AsyncContainer = make_async_container(
 
 def get_dispatcher(config: BotConfig) -> Dispatcher:
     dp = Dispatcher()
-    setup_dishka(container=container, router=dp, auto_inject=True)
     # dp.update.middleware(IdProviderMiddleware())
     dp.include_router(start_router)
     dp.include_router(create_diary_card_dialog)
     # dp.include_router(create_wishlist_dialog)
     # dp.include_router(own_wishlists_dialog)
     # dp.include_router(wishlist_dialog)
+    setup_dishka(container=container, router=dp, auto_inject=True)
     setup_dialogs(dp)
     logger.info("DP done.")
     return dp
-
-
-def get_dispatcher_preview() -> Dispatcher:
-    return get_dispatcher(BotConfig(bot_token="--"))
 
 
 async def bot_main():
