@@ -1,4 +1,5 @@
 import operator
+import logging
 from dataclasses import asdict
 from typing import Any
 
@@ -6,6 +7,7 @@ from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Multiselect, Next, Row, Select
+from aiogram_dialog.widgets.kbd.select import ManagedMultiselect
 from aiogram_dialog.widgets.text import Const, Format
 from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -17,15 +19,17 @@ from src.diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, CA
 
 from . import states
 
+logger = logging.getLogger(__name__)
 
-async def get_mood_data(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
+
+async def get_mood_data(**kwargs) -> dict[str, Any]:
     # Предоставляем пользователю выбор из пяти вариантов настроения
     moods = [
-        ("Очень плохое", 1),
-        ("Плохое", 2),
-        ("Нейтральное", 3),
-        ("Хорошее", 4),
         ("Отличное", 5),
+        ("Хорошее", 4),
+        ("Нейтральное", 3),
+        ("Плохое", 2),
+        ("Очень плохое", 1),
     ]
     return {"moods": moods}
 
@@ -47,12 +51,15 @@ async def on_description_entered(
 
 
 @inject
-async def get_data(sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
+async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
     d: DataForDiaryCardDTO = await sender.send_query(GetDataForDiaryCardQuery())
     emotions: list[dict[str, Any]] = [asdict(x) for x in d.emotions]
     skills: list[dict[str, Any]] = [asdict(x) for x in d.skills]
     targets: list[dict[str, Any]] = [asdict(x) for x in d.targets]
     medicaments: list[dict[str, Any]] = [asdict(x) for x in d.medicaments]
+
+    dialog_manager.dialog_data["emotions"] = emotions
+
     return {
         "emotions": emotions,
         "skills": skills,
@@ -69,15 +76,15 @@ async def on_target_selected(callback: CallbackQuery, widget: Select, manager: D
 
 
 async def on_emotion_selected(
-    event: CallbackQuery,
-    select: Multiselect,
+    _: CallbackQuery,
+    __: ManagedMultiselect[str],
     dialog_manager: DialogManager,
     data: list[str],
 ) -> None:
-    dialog_manager.dialog_data["selected_emotions"] = [
+    logger.info(data)
+    dialog_manager.dialog_data.setdefault("selected_emotions", []).extend([
         e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in data
-    ]
-    await dialog_manager.next()
+    ])
 
 
 async def on_medicaments_selected(call: CallbackQuery, widget: Select, manager: DialogManager, selected: str):
@@ -101,12 +108,15 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
     }
     mood = dialog_manager.dialog_data.get("mood", "Не указано")
     mood_text = mood_mapping.get(mood, "Не указано")
+    emotions = dialog_manager.dialog_data.get("selected_emotions", [])
+
+    selected_emotions = [e.get('name') for e in emotions]
 
     return {
         "mood": mood_text,  # Отображаем текстовое описание
         "description": dialog_manager.dialog_data.get("description", "Не указано"),
         "targets": dialog_manager.dialog_data.get("targets", []),
-        "emotions": dialog_manager.dialog_data.get("selected_emotions", []),
+        "selected_emotions": selected_emotions,
         "medicaments": dialog_manager.dialog_data.get("medicaments", []),
         "skills": dialog_manager.dialog_data.get("skills", []),
     }
@@ -114,20 +124,21 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
 
 @inject
 async def on_confirmation(
-    call: CallbackQuery, widget: Button, manager: DialogManager, sender: FromDishka[Sender]
+    _: CallbackQuery, __: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
 ) -> None:
-    # Логика подтверждения и сохранения данных
+    emotions = dialog_manager.dialog_data.get("selected_emotions", [])
+    emotions_ids = [e.get('id') for e in emotions]
     await sender.send_command(
         CreateDiaryCardCommand(
-            mood=manager.dialog_data["mood"],
-            description=manager.dialog_data.get("description"),
-            targets=manager.dialog_data.get("targets"),
-            emotions=manager.dialog_data.get("emotions"),
-            medicaments=manager.dialog_data.get("medicaments"),
-            skills=manager.dialog_data.get("skills"),
+            mood=dialog_manager.dialog_data["mood"],
+            description=dialog_manager.dialog_data.get("description"),
+            targets=dialog_manager.dialog_data.get("targets"),
+            emotions=emotions_ids,
+            medicaments=dialog_manager.dialog_data.get("medicaments"),
+            skills=dialog_manager.dialog_data.get("skills"),
         )
     )
-    await manager.next()
+    await dialog_manager.next()
 
 
 DESCRIPTION_INPUT_ID = "description_input_id"
@@ -158,26 +169,25 @@ create_diary_card_dialog = Dialog(
     ),
     Window(
         Const("Выберите  ключевые эмоции за день:"),
-        # Column(
-        #     Multiselect(
-        #         Format("✓ {item[0]}"),
-        #         Format("{item[0]}"),
-        #         id="m_emotions",
-        #         item_id_getter=lambda x: str(x["id"]),
-        #         items="emotions",
-        #         on_click=on_emotion_selected
-        #         )
-        #         ),
+        Column(
+            Multiselect(
+                Format("✓ {item[name]}"),
+                Format("{item[name]}"),
+                id="m_emotions",
+                item_id_getter=lambda x: str(x["id"]),
+                items="emotions",
+                on_click=on_emotion_selected, # type: ignore
+                )
+            ),
         back_next_row,
-        getter=get_data,
-        state=states.CreateDiaryCardSG.targets,
+        state=states.CreateDiaryCardSG.emotions,
     ),
     Window(
         Const("Проверьте введенные данные:"),
         Format("Настроение: {mood}"),
         Format("Описание: {description}"),
         Format("Цели: {targets}"),
-        Format("Эмоции: {emotions}"),
+        Format("Эмоции: {selected_emotions}"),
         Format("Медикаменты: {medicaments}"),
         Format("Навыки: {skills}"),
         Button(Const("Подтвердить"), on_click=on_confirmation, id="confirm"),
@@ -189,4 +199,5 @@ create_diary_card_dialog = Dialog(
         Const("Дневниковая карточка успешно добавлена!"),
         state=states.CreateDiaryCardSG.DONE,
     ),
+    getter=get_data
 )
