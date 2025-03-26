@@ -12,6 +12,7 @@ class CreateDiaryCardSG(StatesGroup):
     emotions = State()
     medicaments = State()
     skills = State()
+    skill_description = State()
     CONFIRMATION = State()
     DONE = State()
 
