@@ -3,7 +3,7 @@ import logging
 from dataclasses import asdict
 from typing import Any
 
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InaccessibleMessage
 from aiogram_dialog import Dialog, DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Multiselect, Next, Row, Select
@@ -162,7 +162,7 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
 
 @inject
 async def on_confirmation(
-    _: CallbackQuery, __: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
+    callback: CallbackQuery, __: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
 ) -> None:
     emotions = dialog_manager.dialog_data.get("selected_emotions", [])
     emotions_ids = [e.get('id') for e in emotions]
@@ -182,7 +182,11 @@ async def on_confirmation(
             skills=skills_for_create,
         )
     )
-    await dialog_manager.next()
+
+    if not isinstance(callback.message, InaccessibleMessage | None):
+        text = str(callback.message.text).replace("Проверьте в", "В") + "\n\n✅ Карточка успешно сохранена!"
+        await callback.message.edit_text(text)
+    await dialog_manager.done()
 
 
 DESCRIPTION_INPUT_ID = "description_input_id"
@@ -296,14 +300,10 @@ create_diary_card_dialog = Dialog(
             """
             ),
         Button(Const(CONFIRM_BTN_TXT), on_click=on_confirmation, id="confirm"),
-        Back(Const("Назад")),
+        Back(Const(BACK_BTN_TXT)),
         getter=get_confirmation_data,
         state=states.CreateDiaryCardSG.CONFIRMATION,
         parse_mode='HTML',
-    ),
-    Window(
-        Const("Дневниковая карточка успешно добавлена!"),
-        state=states.CreateDiaryCardSG.DONE,
     ),
     getter=get_data
 )

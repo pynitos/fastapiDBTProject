@@ -14,7 +14,6 @@ class CreateDiaryCardSG(StatesGroup):
     skills = State()
     skill_description = State()
     CONFIRMATION = State()
-    DONE = State()
 
 
 class GetOwnDiaryCardsSG(StatesGroup):
