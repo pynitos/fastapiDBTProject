@@ -76,7 +76,9 @@ async def on_skills_next_btn(
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    if "selected_skills" not in dialog_manager.dialog_data:
+    ms_skill = dialog_manager.find("ms_skills")
+    checked_ids = ms_skill.get_checked() if ms_skill else []
+    if len(checked_ids) == 0:
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_description)
 
 
@@ -170,6 +172,7 @@ async def on_confirmation(
     if not isinstance(callback.message, InaccessibleMessage | None):
         text = str(callback.message.text).replace("Проверьте в", "В") + "\n\n✅ Карточка успешно сохранена!"
         await callback.message.edit_text(text)
+    dialog_manager.show_mode = ShowMode.SEND
     await dialog_manager.done()
 
 
