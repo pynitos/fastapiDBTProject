@@ -89,9 +89,15 @@ async def on_emotion_selected(
     ])
 
 
-async def on_medicaments_selected(call: CallbackQuery, widget: Select, manager: DialogManager, selected: str):
-    manager.dialog_data.setdefault("medicaments", []).append(selected)
-    await manager.next()
+async def on_medicament_selected(
+    _: CallbackQuery,
+    __: ManagedMultiselect[str],
+    dialog_manager: DialogManager,
+    data: list[str],
+) -> None:
+    dialog_manager.dialog_data.setdefault("selected_medicaments", []).extend([
+        m for m in dialog_manager.dialog_data["medicaments"] if str(m["id"]) in data
+    ])
 
 
 async def on_skill_selected(
