@@ -22,18 +22,6 @@ from . import states
 logger = logging.getLogger(__name__)
 
 
-async def get_mood_data(**kwargs) -> dict[str, Any]:
-    # Предоставляем пользователю выбор из пяти вариантов настроения
-    moods = [
-        ("Отличное", 5),
-        ("Хорошее", 4),
-        ("Нейтральное", 3),
-        ("Плохое", 2),
-        ("Очень плохое", 1),
-    ]
-    return {"moods": moods}
-
-
 async def on_mood_selected(call: CallbackQuery, widget: Select, manager: DialogManager, selected: int):
     # Сохраняем выбранное настроение как число
     manager.dialog_data["mood"] = selected
@@ -41,7 +29,7 @@ async def on_mood_selected(call: CallbackQuery, widget: Select, manager: DialogM
 
 
 async def on_description_entered(
-    message: Message,  # noqa: ARG001
+    message: Message,
     _: ManagedTextInput[str],
     dialog_manager: DialogManager,
     data: str,
@@ -59,56 +47,24 @@ async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **
     skills: list[dict[str, Any]] = [asdict(x) for x in d.skills]
     targets: list[dict[str, Any]] = [asdict(x) for x in d.targets]
     medicaments: list[dict[str, Any]] = [asdict(x) for x in d.medicaments]
+    moods = [
+        ("Отличное", 5),
+        ("Хорошее", 4),
+        ("Нейтральное", 3),
+        ("Плохое", 2),
+        ("Очень плохое", 1),
+    ]
 
     dialog_manager.dialog_data["emotions"] = emotions
     dialog_manager.dialog_data["skills"] = skills
 
     return {
+        "moods": moods,
         "emotions": emotions,
         "skills": skills,
         "targets": targets,
         "medicaments": medicaments,
     }
-
-
-async def on_target_selected(callback: CallbackQuery, widget: Select, manager: DialogManager, selected_id: str):
-    targets = manager.dialog_data["targets"]
-    selected_target = next(t for t in targets if str(t["id"]) == selected_id)
-    manager.dialog_data["selected_target"] = selected_target
-    await manager.next()
-
-
-async def on_emotion_selected(
-    _: CallbackQuery,
-    __: ManagedMultiselect[str],
-    dialog_manager: DialogManager,
-    data: list[str],
-) -> None:
-    dialog_manager.dialog_data.setdefault("selected_emotions", []).extend([
-        e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in data
-    ])
-
-
-async def on_medicament_selected(
-    _: CallbackQuery,
-    __: ManagedMultiselect[str],
-    dialog_manager: DialogManager,
-    data: list[str],
-) -> None:
-    dialog_manager.dialog_data.setdefault("selected_medicaments", []).extend([
-        m for m in dialog_manager.dialog_data["medicaments"] if str(m["id"]) in data
-    ])
-
-
-async def on_skill_selected(
-    _: CallbackQuery,
-    __: ManagedMultiselect[str],
-    dialog_manager: DialogManager,
-    data: list[str],
-) -> None:
-    dialog_manager.dialog_data.setdefault("selected_skills", []).extend([
-        s for s in dialog_manager.dialog_data["skills"] if str(s["id"]) in data
-    ])
 
 
 async def on_skills_next_btn(
@@ -121,6 +77,13 @@ async def on_skills_next_btn(
 
 
 async def skill_name_getter(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
+    if "selected_skills" not in dialog_manager.dialog_data:
+        ms_skills = dialog_manager.find('ms_skills')
+        s_ids = ms_skills.get_checked() if ms_skills else []
+        dialog_manager.dialog_data["selected_skills"] = [
+            s for s in dialog_manager.dialog_data["skills"] if str(s["id"]) in s_ids
+        ]
+
     selected_skills = dialog_manager.dialog_data["selected_skills"]
     skill_name = selected_skills[0]['name']
     return {"skill_name": skill_name}
@@ -166,7 +129,9 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
     }
     mood = dialog_manager.dialog_data.get("mood", "Не указано")
     mood_text = mood_mapping.get(mood, "Не указано")
-    emotions = dialog_manager.dialog_data.get("selected_emotions", [])
+    ms_emotions = dialog_manager.find("ms_emotions")
+    e_ids = ms_emotions.get_checked() if ms_emotions else []
+    emotions = [e for e in dialog_manager.dialog_data['emotions'] if str(e['id']) in e_ids]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
     return {
         "mood": mood_text,  # Отображаем текстовое описание
@@ -224,7 +189,6 @@ create_diary_card_dialog = Dialog(
             )
         ),
         Cancel(Const(CANCEL_BTN_TXT)),
-        getter=get_mood_data,
         state=states.CreateDiaryCardSG.mood,
     ),
     Window(
@@ -239,10 +203,9 @@ create_diary_card_dialog = Dialog(
             Multiselect(
                 Format("✓ {item[name]}"),
                 Format("{item[name]}"),
-                id="m_emotions",
+                id="ms_emotions",
                 item_id_getter=lambda x: str(x["id"]),
                 items="emotions",
-                on_click=on_emotion_selected, # type: ignore
                 )
             ),
         back_next_row,
@@ -266,7 +229,6 @@ create_diary_card_dialog = Dialog(
                 id="ms_meds",
                 item_id_getter=lambda x: str(x["id"]),
                 items="medicaments",
-                on_click=on_medicaments_selected, # type: ignore
                 ),
             ),
         back_next_row,
@@ -282,7 +244,6 @@ create_diary_card_dialog = Dialog(
                 id="ms_skills",
                 item_id_getter=lambda x: str(x["id"]),
                 items="skills",
-                on_click=on_skill_selected, # type: ignore
                 )
             ),
         Row(
@@ -341,9 +302,9 @@ create_diary_card_dialog = Dialog(
 <b>🛠 Навыки:</b>
 {% if skills %}
 {% for skill in skills -%}
-• {{ skill.name }} {% if skill.description %}
-✧ {{ skill.description }}
-{% endif %}
+
+• {{ skill.name }} {% if skill.description %} ✧ {{ skill.description }} {% endif %}
+
 {% endfor %}
 {% else %}
 - Не указаны
