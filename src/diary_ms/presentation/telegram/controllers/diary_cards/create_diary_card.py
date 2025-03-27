@@ -143,7 +143,6 @@ async def on_skill_description_next_btn(
 ) -> None:
     selected_skills: list[dict[str, Any]] = dialog_manager.dialog_data["selected_skills"]
     skill = selected_skills.pop(0)
-    skill['description'] = None
     dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
     if len(selected_skills) > 0:
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
@@ -336,8 +335,7 @@ create_diary_card_dialog = Dialog(
 <b>🛠 Навыки:</b>
 {% if skills %}
 {% for skill in skills -%}
-• {{ skill.name }}
-{% if skill.description %}
+• {{ skill.name }} {% if skill.description %}
 ✧ {{ skill.description }}
 {% endif %}
 {% endfor %}
