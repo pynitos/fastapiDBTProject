@@ -1,13 +1,12 @@
-import operator
 import logging
+import operator
 from dataclasses import asdict
 from typing import Any
 
-from aiogram.types import CallbackQuery, Message, InaccessibleMessage
+from aiogram.types import CallbackQuery, InaccessibleMessage, Message
 from aiogram_dialog import Dialog, DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Multiselect, Next, Row, Select
-from aiogram_dialog.widgets.kbd.select import ManagedMultiselect
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -15,7 +14,12 @@ from dishka.integrations.aiogram_dialog import inject
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
-from src.diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, CANCEL_BTN_TXT, NEXT_BTN_TXT, CONFIRM_BTN_TXT
+from src.diary_ms.presentation.telegram.common.constants import (
+    BACK_BTN_TXT,
+    CANCEL_BTN_TXT,
+    CONFIRM_BTN_TXT,
+    NEXT_BTN_TXT,
+)
 
 from . import states
 
@@ -35,7 +39,7 @@ async def on_description_entered(
     data: str,
 ) -> None:
     dialog_manager.dialog_data["description"] = data
-    dialog_manager.show_mode=ShowMode.EDIT
+    dialog_manager.show_mode = ShowMode.EDIT
     await message.delete()
     await dialog_manager.next()
 
@@ -72,21 +76,22 @@ async def on_skills_next_btn(
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    if 'selected_skills' not in dialog_manager.dialog_data:
+    if "selected_skills" not in dialog_manager.dialog_data:
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_description)
 
 
 async def skill_name_getter(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
     if "selected_skills" not in dialog_manager.dialog_data:
-        ms_skills = dialog_manager.find('ms_skills')
+        ms_skills = dialog_manager.find("ms_skills")
         s_ids = ms_skills.get_checked() if ms_skills else []
         dialog_manager.dialog_data["selected_skills"] = [
             s for s in dialog_manager.dialog_data["skills"] if str(s["id"]) in s_ids
         ]
 
     selected_skills = dialog_manager.dialog_data["selected_skills"]
-    skill_name = selected_skills[0]['name']
+    skill_name = selected_skills[0]["name"]
     return {"skill_name": skill_name}
+
 
 async def on_skill_description_entered(
     message: Message,
@@ -96,14 +101,15 @@ async def on_skill_description_entered(
 ) -> None:
     selected_skills: list[dict[str, Any]] = dialog_manager.dialog_data["selected_skills"]
     skill = selected_skills.pop(0)
-    skill['description'] = data
+    skill["description"] = data
     dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
     await message.delete()
-    dialog_manager.show_mode=ShowMode.EDIT
+    dialog_manager.show_mode = ShowMode.EDIT
     if len(selected_skills) > 0:
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_description)
     else:
         await dialog_manager.next()
+
 
 async def on_skill_description_next_btn(
     _: CallbackQuery,
@@ -115,7 +121,6 @@ async def on_skill_description_next_btn(
     dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
     if len(selected_skills) > 0:
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
-
 
 
 async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
@@ -131,7 +136,7 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
     mood_text = mood_mapping.get(mood, "Не указано")
     ms_emotions = dialog_manager.find("ms_emotions")
     e_ids = ms_emotions.get_checked() if ms_emotions else []
-    emotions = [e for e in dialog_manager.dialog_data['emotions'] if str(e['id']) in e_ids]
+    emotions = [e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in e_ids]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
     return {
         "mood": mood_text,  # Отображаем текстовое описание
@@ -139,7 +144,7 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
         "targets": dialog_manager.dialog_data.get("targets", []),
         "emotions": emotions,
         "medicaments": dialog_manager.dialog_data.get("medicaments", []),
-        "skills": skills
+        "skills": skills,
     }
 
 
@@ -148,13 +153,9 @@ async def on_confirmation(
     callback: CallbackQuery, __: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
 ) -> None:
     emotions = dialog_manager.dialog_data.get("selected_emotions", [])
-    emotions_ids = [e.get('id') for e in emotions]
+    emotions_ids = [e.get("id") for e in emotions]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
-    skills_for_create = [
-        CreateDiaryCardCommand.Skill(
-            id=s['id'], situation=s.get("descriprtion")
-            ) for s in skills
-            ]
+    skills_for_create = [CreateDiaryCardCommand.Skill(id=s["id"], situation=s.get("descriprtion")) for s in skills]
     await sender.send_command(
         CreateDiaryCardCommand(
             mood=dialog_manager.dialog_data["mood"],
@@ -206,8 +207,8 @@ create_diary_card_dialog = Dialog(
                 id="ms_emotions",
                 item_id_getter=lambda x: str(x["id"]),
                 items="emotions",
-                )
-            ),
+            )
+        ),
         back_next_row,
         state=states.CreateDiaryCardSG.emotions,
     ),
@@ -221,7 +222,7 @@ create_diary_card_dialog = Dialog(
 Вы можете добавить их позже в главном меню.
 {% endif %}
             """
-            ),
+        ),
         Column(
             Multiselect(
                 Format("✓ {item[name]} | {item[dosage]}"),
@@ -229,11 +230,11 @@ create_diary_card_dialog = Dialog(
                 id="ms_meds",
                 item_id_getter=lambda x: str(x["id"]),
                 items="medicaments",
-                ),
             ),
+        ),
         back_next_row,
         state=states.CreateDiaryCardSG.medicaments,
-        parse_mode='HTML'
+        parse_mode="HTML",
     ),
     Window(
         Const("Выберите  применённые навыки:"),
@@ -244,29 +245,17 @@ create_diary_card_dialog = Dialog(
                 id="ms_skills",
                 item_id_getter=lambda x: str(x["id"]),
                 items="skills",
-                )
-            ),
-        Row(
-            Back(Const(BACK_BTN_TXT)),
-            Next(
-                Const(NEXT_BTN_TXT),
-                on_click=on_skills_next_btn
-                )
-            ),
+            )
+        ),
+        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_skills_next_btn)),
         state=states.CreateDiaryCardSG.skills,
     ),
     Window(
         Format("Опишите то, как вы прменили навык: {skill_name}"),
-        Row(
-            Back(Const(BACK_BTN_TXT)),
-            Next(
-                Const(NEXT_BTN_TXT),
-                on_click=on_skill_description_next_btn
-                )
-            ),
-        TextInput[str](id='skill_input_id', on_success=on_skill_description_entered),
+        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_skill_description_next_btn)),
+        TextInput[str](id="skill_input_id", on_success=on_skill_description_entered),
         state=states.CreateDiaryCardSG.skill_description,
-        getter=skill_name_getter
+        getter=skill_name_getter,
     ),
     Window(
         Jinja(
@@ -310,12 +299,12 @@ create_diary_card_dialog = Dialog(
 - Не указаны
 {% endif %}
             """
-            ),
+        ),
         Button(Const(CONFIRM_BTN_TXT), on_click=on_confirmation, id="confirm"),
         Cancel(Const("✖️ Удалить")),
         getter=get_confirmation_data,
         state=states.CreateDiaryCardSG.CONFIRMATION,
-        parse_mode='HTML',
+        parse_mode="HTML",
     ),
-    getter=get_data
+    getter=get_data,
 )

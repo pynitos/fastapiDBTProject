@@ -1,8 +1,8 @@
-from aiogram_dialog import Dialog, Window, DialogManager
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import CallbackQuery
+from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.kbd import Button, Column
 from aiogram_dialog.widgets.text import Const
-from aiogram.types import CallbackQuery
-from aiogram.fsm.state import State, StatesGroup
 
 from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG
 
@@ -23,12 +23,12 @@ main_menu_dialog = Dialog(
             Button(
                 Const("📝 Заполнить новую карточку"),
                 id="create_card",
-                on_click=lambda _, __, m: m.start(CreateDiaryCardSG.mood)
+                on_click=lambda _, __, m: m.start(CreateDiaryCardSG.mood),
             ),
             Button(
                 Const("📖 Мои дневниковые карточки"),
                 id="view_cards",
-                on_click=lambda _, __, m: m.start(GetOwnDiaryCardsSG.view)
+                on_click=lambda _, __, m: m.start(GetOwnDiaryCardsSG.view),
             ),
             # Button(
             #     Const("💊 Медикаменты"),
