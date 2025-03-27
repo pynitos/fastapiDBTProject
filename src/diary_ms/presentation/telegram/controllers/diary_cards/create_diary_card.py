@@ -336,9 +336,11 @@ create_diary_card_dialog = Dialog(
 <b>🛠 Навыки:</b>
 {% if skills %}
 {% for skill in skills -%}
-• {{ skill.name }} ✧ {% if skill.description %} {{ skill.description }}
-{% endfor %}
+• {{ skill.name }}
+{% if skill.description %}
+✧ {{ skill.description }}
 {% endif %}
+{% endfor %}
 {% else %}
 - Не указаны
 {% endif %}
