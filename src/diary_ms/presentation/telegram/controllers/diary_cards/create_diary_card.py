@@ -231,6 +231,31 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.emotions,
     ),
     Window(
+        Jinja(
+            """
+{% if medicaments %}
+💊 <b>Выберите принятые медикаменты:</b>
+{% else %}
+🧪 <b>Медикаменты не указаны.</b>
+Вы можете добавить их позже в главном меню.
+{% endif %}
+            """
+            ),
+        Column(
+            Multiselect(
+                Format("✓ {item[name]} | {item[dosage]}"),
+                Format("{item[name]} | {item[dosage]}"),
+                id="ms_meds",
+                item_id_getter=lambda x: str(x["id"]),
+                items="medicaments",
+                on_click=on_medicaments_selected, # type: ignore
+                ),
+            ),
+        back_next_row,
+        state=states.CreateDiaryCardSG.medicaments,
+        parse_mode='HTML'
+    ),
+    Window(
         Const("Выберите  применённые навыки:"),
         Column(
             Multiselect(
