@@ -136,6 +136,19 @@ async def on_skill_description_entered(
     else:
         await dialog_manager.next()
 
+async def on_skill_description_next_btn(
+    _: CallbackQuery,
+    __: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    selected_skills: list[dict[str, Any]] = dialog_manager.dialog_data["selected_skills"]
+    skill = selected_skills.pop(0)
+    skill['description'] = None
+    dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
+    if len(selected_skills) > 0:
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
+
+
 
 async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
     # Преобразуем число в текстовое описание для отображения
@@ -278,7 +291,13 @@ create_diary_card_dialog = Dialog(
     ),
     Window(
         Format("Опишите то, как вы прменили навык: {skill_name}"),
-        back_next_row,
+        Row(
+            Back(Const(BACK_BTN_TXT)),
+            Next(
+                Const(NEXT_BTN_TXT),
+                on_click=on_skill_description_next_btn
+                )
+            ),
         TextInput[str](id='skill_input_id', on_success=on_skill_description_entered),
         state=states.CreateDiaryCardSG.skill_description,
         getter=skill_name_getter
@@ -317,15 +336,16 @@ create_diary_card_dialog = Dialog(
 <b>🛠 Навыки:</b>
 {% if skills %}
 {% for skill in skills -%}
-• {{ skill.name }} ✧ {% if skill.description %} {{ skill.description }} {% endif %}
+• {{ skill.name }} ✧ {% if skill.description %} {{ skill.description }}
 {% endfor %}
+{% endif %}
 {% else %}
 - Не указаны
 {% endif %}
             """
             ),
         Button(Const(CONFIRM_BTN_TXT), on_click=on_confirmation, id="confirm"),
-        Back(Const(BACK_BTN_TXT)),
+        Cancel(Const("✖️ Удалить")),
         getter=get_confirmation_data,
         state=states.CreateDiaryCardSG.CONFIRMATION,
         parse_mode='HTML',
