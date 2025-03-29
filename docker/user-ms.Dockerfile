@@ -12,31 +12,24 @@ RUN apt-get update && \
 WORKDIR /code
 COPY poetry.lock .
 COPY pyproject.toml .
+
+EXPOSE 8000
+
+FROM base_image as dev_image
+RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
+
 COPY ./docker/user-ms.sh .
 COPY user_ms.env .
 COPY ./src/user_ms/ ./src/user_ms/
 
-# Expose port 8000
-EXPOSE 8000
-
-# Entrypoint script for migrations import
-ENTRYPOINT ["bash", "./user-ms.sh"]
+CMD ["python", "src/user_ms/manage.py", "runserver"]
 
 
 FROM base_image as prod_image
-
-# Install project's dependencies
 RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
 
-# Run server
-WORKDIR /code/todolist
+COPY ./docker/user-ms.sh .
+COPY user_ms.env .
+COPY ./src/user_ms/ ./src/user_ms/
+
 CMD ["gunicorn", "src.user_ms.wsgi", "-w", "2", "-b", "0.0.0.0:8000"]
-
-FROM base_image as dev_image
-
-# Install project's dependencies
-RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
-
-# Run server
-
-CMD ["python", "src/user_ms/manage.py", "runserver", "0.0.0.0:8000"]
