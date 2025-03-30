@@ -23,7 +23,7 @@ COPY ./src/user_ms/ ./src/user_ms/
 WORKDIR /code/src/user_ms/
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 
 FROM base_image as prod_image
