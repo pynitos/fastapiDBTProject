@@ -8,7 +8,7 @@ from src.diary_ms.application.target_behavior.exceptions.target_behavior import 
 from src.diary_ms.application.target_behavior.interfaces.gateway import TargetUpdater
 from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 
@@ -34,7 +34,7 @@ class UpdateTarget(CommandHandler[UpdateTargetCommand, None]):
             raise TargetNotFoundError(medicament_id)
         new_target: Target = old_target.update(
             urge=TargetUrge(command.urge) if command.urge else None,
-            action=TargetAction(command.action) if command.action else None,
+            action=CopingAction(command.action) if command.action else None,
         )
         await self._db_gateway.update(new_target)
         await self._transaction_manager.commit()

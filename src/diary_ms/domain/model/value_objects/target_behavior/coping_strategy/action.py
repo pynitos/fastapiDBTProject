@@ -7,11 +7,13 @@ MAX_CATEGORY_VALUE = 200
 MIN_CATEGORY_VALUE = 3
 
 
-class WrongTargetActionValueError(ValueError, DomainValueError):
+class WrongCopingActionValueError(ValueError, DomainValueError):
     pass
 
 
 @dataclass(frozen=True)
-class TargetAction(ValueObject[str]):
+class CopingAction(ValueObject[str | None]):
+    value: str | None = None
+
     def _validate(self) -> None:
         pass

@@ -28,10 +28,10 @@ class DiaryCardAdminDTOMapper:
                     urge=x.urge.value,
                     action=x.action.value,
                 )
-                for x in dm.targets
+                for x in dm.coping_strategies
                 if x.id.value
             ]
-            if dm.targets
+            if dm.coping_strategies
             else None,
             emotions=[
                 EmotionAdminDTO(

@@ -13,7 +13,7 @@ from src.diary_ms.domain.model.value_objects.skill.description import SkillDescr
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
 from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
@@ -364,61 +364,61 @@ def get_default_targets() -> list[Target]:
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Импульсивное поведение"),
-            action=TargetAction("Использовать навык STOP для остановки импульсивных действий."),
+            action=CopingAction("Использовать навык STOP для остановки импульсивных действий."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Эмоциональное переедание"),
-            action=TargetAction("Применить навык осознанности к текущим эмоциям и выбрать альтернативное действие."),
+            action=CopingAction("Применить навык осознанности к текущим эмоциям и выбрать альтернативное действие."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Саморазрушительные мысли"),
-            action=TargetAction("Использовать навык проверки фактов для анализа мыслей."),
+            action=CopingAction("Использовать навык проверки фактов для анализа мыслей."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Избегание социальных ситуаций"),
-            action=TargetAction("Применить навык противоположного действия для участия в социальных событиях."),
+            action=CopingAction("Применить навык противоположного действия для участия в социальных событиях."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Чрезмерная самокритика"),
-            action=TargetAction("Использовать навык самоуспокоения и радикального принятия."),
+            action=CopingAction("Использовать навык самоуспокоения и радикального принятия."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Прокрастинация"),
-            action=TargetAction("Разбить задачу на мелкие шаги и использовать навык участия."),
+            action=CopingAction("Разбить задачу на мелкие шаги и использовать навык участия."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Конфликты в отношениях"),
-            action=TargetAction("Применить навык DEAR MAN для эффективного общения."),
+            action=CopingAction("Применить навык DEAR MAN для эффективного общения."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Чувство вины"),
-            action=TargetAction("Использовать навык проверки фактов и радикального принятия."),
+            action=CopingAction("Использовать навык проверки фактов и радикального принятия."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Тревога перед будущим"),
-            action=TargetAction("Применить навык ACCEPTS для отвлечения и успокоения."),
+            action=CopingAction("Применить навык ACCEPTS для отвлечения и успокоения."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Чувство одиночества"),
-            action=TargetAction("Использовать навык GIVE для построения позитивных отношений."),
+            action=CopingAction("Использовать навык GIVE для построения позитивных отношений."),
             is_default=TargetIsDefault(True),
         ),
     ]

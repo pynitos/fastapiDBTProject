@@ -8,7 +8,7 @@ from src.diary_ms.application.target_behavior.dto.commands.create_target import 
 from src.diary_ms.application.target_behavior.interfaces.gateway import TargetSaver
 from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 
@@ -30,7 +30,7 @@ class CreateTarget(CommandHandler[CreateTargetCommand, None]):
         user_id: UserId = self._id_provider.get_current_user_id()
         command.user_id = user_id.value
         medicament: Target = Target.create(
-            id=TargetId(uuid4()), user_id=user_id, urge=TargetUrge(command.urge), action=TargetAction(command.action)
+            id=TargetId(uuid4()), user_id=user_id, urge=TargetUrge(command.urge), action=CopingAction(command.action)
         )
         await self._db_gateway.create(medicament)
         await self._transaction_manager.commit()

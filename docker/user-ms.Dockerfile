@@ -13,23 +13,24 @@ WORKDIR /code
 COPY poetry.lock .
 COPY pyproject.toml .
 
-EXPOSE 8000
 
 FROM base_image as dev_image
 RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
 
-COPY ./docker/user-ms.sh .
 COPY user_ms.env .
 COPY ./src/user_ms/ ./src/user_ms/
 
-CMD ["python", "src/user_ms/manage.py", "runserver"]
+WORKDIR /code/src/user_ms/
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver"]
 
 
 FROM base_image as prod_image
 RUN poetry config virtualenvs.create false && poetry install --without dev --without diary-ms --no-interaction --no-root
 
-COPY ./docker/user-ms.sh .
 COPY user_ms.env .
 COPY ./src/user_ms/ ./src/user_ms/
+EXPOSE 8000
 
 CMD ["gunicorn", "src.user_ms.wsgi", "-w", "2", "-b", "0.0.0.0:8000"]

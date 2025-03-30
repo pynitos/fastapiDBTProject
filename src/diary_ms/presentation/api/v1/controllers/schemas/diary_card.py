@@ -23,8 +23,14 @@ class DiaryCardReq(BaseModel):
 
 
 class DiaryCardSkillReq(BaseModel):
-    id: UUID
+    skill_id: UUID
     situation: str | None = None
+
+
+class DiaryCardTargetReq(BaseModel):
+    target_id: UUID
+    action: str | None = None
+    effectiveness: int | None = None
 
 
 class CreateDiaryCardReq(BaseModel):
@@ -33,7 +39,7 @@ class CreateDiaryCardReq(BaseModel):
     date_of_entry: date = Field(default_factory=date.today)
     type: SkillType = SkillType.DBT
 
-    targets: list[UUID] | None = None
+    targets: list[DiaryCardTargetReq] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
     skills: list[DiaryCardSkillReq] | None = None

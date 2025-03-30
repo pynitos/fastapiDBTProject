@@ -26,7 +26,6 @@ from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
     diary_cards_table,
     emotions_table,
     medicaments_table,
-    targets_table,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,10 +46,11 @@ class DiaryCardGateway(
         self._db_model = db_model
 
     async def _set_entity_relationships(self, entity: DiaryCard) -> None:
-        if entity.targets_ids:
-            entity.targets = list(
-                (await self._session.scalars(select(Target).where(targets_table.c.id.in_(entity.targets_ids)))).all()
-            )
+        if coping_strategies := entity.coping_strategies:
+            for t in coping_strategies:
+                id: str = str(t.target_id.value)
+                if not await self._session.get(Target, id):
+                    raise GatewayError(f"Target with id: {id} not found.", 404)
         if entity.emotions_ids:
             entity.emotions = list(
                 (await self._session.scalars(select(Emotion).where(emotions_table.c.id.in_(entity.emotions_ids)))).all()
@@ -63,8 +63,8 @@ class DiaryCardGateway(
                     )
                 ).all()
             )
-        if entity.skill_assotiations:
-            for s in entity.skill_assotiations:
+        if entity.skill_usages:
+            for s in entity.skill_usages:
                 id: str = str(s.skill_id.value)
                 if not await self._session.get(Skill, id):
                     raise GatewayError(f"Skill with id: {id} not found.", 404)

@@ -10,6 +10,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     MetaData,
+    SmallInteger,
     String,
     Table,
     func,
@@ -34,6 +35,8 @@ diary_card_target_assotiation = Table(
     Column("id", UUID(as_uuid=True), primary_key=True, default=uuid4),
     Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id", ondelete="CASCADE")),
     Column("target_id", UUID(as_uuid=True), ForeignKey("targets.id", ondelete="CASCADE")),
+    Column("action", String(500), default=None, nullable=True),
+    Column("effectiveness", SmallInteger, default=None, nullable=True),
 )
 
 diary_card_emotion_assotiation = Table(
@@ -106,7 +109,7 @@ targets_table = Table(
     ),
     Column("user_id", UUID(as_uuid=True)),
     Column("urge", String(100)),
-    Column("action", String(300)),
+    Column("action", String(500), default=None, nullable=True),
     Column("is_default", Boolean, default=False),
 )
 

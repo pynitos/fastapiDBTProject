@@ -7,7 +7,7 @@ from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituati
 
 
 @dataclass
-class DiaryCardSkillAssotiation(BaseEntity):
+class SkillUsage(BaseEntity):
     diary_card_id: DiaryCardId
     skill_id: SkillId
     situation: SkillSituation

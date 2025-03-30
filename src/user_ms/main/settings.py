@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 from pathlib import Path
 
 import environ
@@ -207,3 +208,24 @@ SOCIAL_AUTH_REQUIRE_POST = True
 SOCIAL_AUTH_VK_OAUTH2_KEY = ""
 SOCIAL_AUTH_VK_OAUTH2_SECRET = ""
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = []
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+    },
+}

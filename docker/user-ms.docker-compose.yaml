@@ -40,7 +40,7 @@ services:
     depends_on:
       db-user:
         condition: service_healthy
-    command: ["python", "src/user_ms/manage.py", "migrate"]
+    command: ["python", "manage.py", "migrate"]
     networks:
       - user_backend_nw
 

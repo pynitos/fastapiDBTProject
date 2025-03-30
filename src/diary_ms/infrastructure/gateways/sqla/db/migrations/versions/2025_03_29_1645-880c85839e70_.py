@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7474baa0baed
+Revision ID: 880c85839e70
 Revises: 
-Create Date: 2025-02-14 10:42:49.742951
+Create Date: 2025-03-29 16:45:26.443392
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7474baa0baed'
+revision: str = '880c85839e70'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,7 +27,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=True),
     sa.Column('mood', sa.Integer(), nullable=True),
     sa.Column('description', sa.String(length=1000), nullable=True),
-    sa.Column('date_of_entry', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('date_of_entry', sa.DATE(), server_default=sa.text('now()'), nullable=True),
     sa.Column('type', sa.Enum('DBT', 'RO_DBT', name='skill_type'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -35,8 +35,8 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('name', sa.String(length=20), nullable=True),
-    sa.Column('description', sa.String(length=100), nullable=True),
+    sa.Column('name', sa.String(length=100), nullable=True),
+    sa.Column('description', sa.String(length=200), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('medicaments',
@@ -52,10 +52,10 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('category', sa.String(length=20), nullable=True),
-    sa.Column('group', sa.String(length=20), nullable=True),
-    sa.Column('name', sa.String(length=20), nullable=True),
-    sa.Column('description', sa.String(length=200), nullable=True),
+    sa.Column('category', sa.String(length=100), nullable=True),
+    sa.Column('group', sa.String(length=100), nullable=True),
+    sa.Column('name', sa.String(length=100), nullable=True),
+    sa.Column('description', sa.String(length=300), nullable=True),
     sa.Column('type', sa.Enum('DBT', 'RO_DBT', name='skill_type'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -64,8 +64,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
     sa.Column('user_id', sa.UUID(), nullable=True),
-    sa.Column('urge', sa.String(length=50), nullable=True),
-    sa.Column('action', sa.String(length=200), nullable=True),
+    sa.Column('urge', sa.String(length=100), nullable=True),
     sa.Column('is_default', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -98,6 +97,8 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('diary_card_id', sa.UUID(), nullable=True),
     sa.Column('target_id', sa.UUID(), nullable=True),
+    sa.Column('action', sa.String(length=500), nullable=True),
+    sa.Column('effectiveness', sa.SmallInteger(), nullable=True),
     sa.ForeignKeyConstraint(['diary_card_id'], ['diary_cards.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['target_id'], ['targets.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

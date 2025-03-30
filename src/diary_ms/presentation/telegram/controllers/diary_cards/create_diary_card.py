@@ -26,7 +26,7 @@ from . import states
 logger = logging.getLogger(__name__)
 
 
-async def on_mood_selected(call: CallbackQuery, widget: Select, manager: DialogManager, selected: int):
+async def on_mood_selected(_: CallbackQuery, __: Select, manager: DialogManager, selected: int):
     # Сохраняем выбранное настроение как число
     manager.dialog_data["mood"] = selected
     await manager.next()
@@ -45,7 +45,7 @@ async def on_description_entered(
 
 
 @inject
-async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
+async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:  # noqa: ARG001
     d: DataForDiaryCardDTO = await sender.send_query(GetDataForDiaryCardQuery())
     emotions: list[dict[str, Any]] = [asdict(x) for x in d.emotions]
     skills: list[dict[str, Any]] = [asdict(x) for x in d.skills]
@@ -82,7 +82,7 @@ async def on_skills_next_btn(
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_description)
 
 
-async def skill_name_getter(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
+async def skill_name_getter(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:  # noqa: ARG001
     if "selected_skills" not in dialog_manager.dialog_data:
         ms_skills = dialog_manager.find("ms_skills")
         s_ids = ms_skills.get_checked() if ms_skills else []
@@ -125,7 +125,7 @@ async def on_skill_description_next_btn(
         await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
 
 
-async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:
+async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict[str, Any]:  # noqa: ARG001
     # Преобразуем число в текстовое описание для отображения
     mood_mapping = {
         1: "Очень плохое",

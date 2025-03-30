@@ -5,7 +5,8 @@ from uuid import UUID
 from src.diary_ms.domain.common.exceptions.base import DomainError
 from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
+from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
+from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
@@ -27,16 +28,16 @@ class DiaryCard(AggregateRoot):
     id: DiaryCardId = DiaryCardId(None)
     description: DCDescription = DCDescription(value=None)
     date_of_entry: DCDateOfEntry = DCDateOfEntry()
-    targets: list[Target] = field(default_factory=list)
     emotions: list[Emotion] = field(default_factory=list)
+    targets: list[Target] = field(default_factory=list)
     medicaments: list[Medicament] = field(default_factory=list)
     skills: list[Skill] = field(default_factory=list)
     type: SkillType = SkillType.DBT
 
-    targets_ids: list[UUID] | None = None
+    coping_strategies: list[CopingStrategy] = field(default_factory=list)
     emotions_ids: list[UUID] | None = None
     medicaments_ids: list[UUID] | None = None
-    skill_assotiations: list[DiaryCardSkillAssotiation] = field(default_factory=list)
+    skill_usages: list[SkillUsage] = field(default_factory=list)
 
     @classmethod
     def create(
@@ -46,10 +47,10 @@ class DiaryCard(AggregateRoot):
         user_id: UserId,
         description: DCDescription,
         date_of_entry: DCDateOfEntry,
-        targets: list[UUID] | None = None,
+        targets: list[CopingStrategy] | None = None,
         emotions: list[UUID] | None = None,
         medicaments: list[UUID] | None = None,
-        skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
+        skills: list[SkillUsage] | None = None,
         skill_type: SkillType = SkillType.DBT,
     ) -> Self:
         if not id.value:
@@ -60,10 +61,10 @@ class DiaryCard(AggregateRoot):
             mood=mood,
             description=description,
             date_of_entry=date_of_entry,
-            targets_ids=targets,
+            coping_strategies=targets if targets else [],
             emotions_ids=emotions,
             medicaments_ids=medicaments,
-            skill_assotiations=skill_assotiations if skill_assotiations else [],
+            skill_usages=skills if skills else [],
             type=skill_type,
         )
         diary_card.record_event(
@@ -81,10 +82,10 @@ class DiaryCard(AggregateRoot):
         mood: DCMood | None = None,
         description: DCDescription | None = None,
         date_of_entry: DCDateOfEntry | None = None,
-        targets: list[UUID] | None = None,
+        targets: list[CopingStrategy] | None = None,
         emotions: list[UUID] | None = None,
         medicaments: list[UUID] | None = None,
-        skill_assotiations: list[DiaryCardSkillAssotiation] | None = None,
+        skills: list[SkillUsage] | None = None,
         skill_type: SkillType | None = SkillType.DBT,
     ) -> Self:
         if mood:
@@ -94,13 +95,13 @@ class DiaryCard(AggregateRoot):
         if date_of_entry:
             self.date_of_entry = date_of_entry
         if targets:
-            self.targets_ids = targets
+            self.coping_strategies = targets
         if emotions:
             self.emotions_ids = emotions
         if medicaments:
             self.medicaments_ids = medicaments
-        if skill_assotiations:
-            self.skill_assotiations = skill_assotiations
+        if skills:
+            self.skill_usages = skills
         if skill_type:
             self.type = skill_type
 

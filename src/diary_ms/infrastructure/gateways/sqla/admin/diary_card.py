@@ -33,10 +33,10 @@ class DiaryCardAdminGateway(
         self._db_model = db_model
 
     async def _set_entity_relationships(self, entity: DiaryCard) -> None:
-        if entity.targets_ids:
-            entity.targets = list(
+        if entity.coping_strategies:
+            entity.coping_strategies = list(
                 (
-                    await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.targets_ids)))
+                    await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.coping_strategies)))
                 ).all()
             )
         if entity.emotions_ids:
@@ -55,8 +55,8 @@ class DiaryCardAdminGateway(
                     )
                 ).all()
             )
-        if entity.skill_assotiations:
-            for s in entity.skill_assotiations:
+        if entity.skill_usages:
+            for s in entity.skill_usages:
                 if not await self._session.get(Skill, s.skill_id.value):
                     raise GatewayError(f"Skill with id: {id} not found.", 404)
 

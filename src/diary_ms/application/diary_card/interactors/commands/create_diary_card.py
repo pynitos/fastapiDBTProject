@@ -8,13 +8,17 @@ from src.diary_ms.application.diary_card.dto.commands.create_diary_card import C
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardSaver
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
+from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
+from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.effectiveness import CopingEffectiveness
+from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 
 class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
@@ -33,9 +37,9 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
     async def __call__(self, command: CreateDiaryCardCommand) -> None:
         id: UUID = uuid4()
         user_id: UserId = self._id_provider.get_current_user_id()
-        skill_assotiations: list[DiaryCardSkillAssotiation] = (
+        skills: list[SkillUsage] = (
             [
-                DiaryCardSkillAssotiation(
+                SkillUsage(
                     diary_card_id=DiaryCardId(id),
                     skill_id=SkillId(s.id),
                     situation=SkillSituation(s.situation),
@@ -45,16 +49,29 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
             if command.skills
             else []
         )
+        targets: list[CopingStrategy] = (
+            [
+                CopingStrategy(
+                    diary_card_id=DiaryCardId(id),
+                    target_id=TargetId(t.target_id),
+                    action=CopingAction(t.action),
+                    effectiveness=CopingEffectiveness(t.effectiveness)
+                )
+                for t in command.targets
+            ]
+            if command.targets
+            else []
+        )
         diary_card: DiaryCard = DiaryCard.create(
             mood=DCMood(command.mood),
             id=DiaryCardId(id),
             user_id=user_id,
             description=DCDescription(command.description),
             date_of_entry=DCDateOfEntry(command.date_of_entry),
-            targets=command.targets,
+            targets=targets,
             emotions=command.emotions,
             medicaments=command.medicaments,
-            skill_assotiations=skill_assotiations,
+            skills=skills,
             skill_type=command.skills_type,
         )
         await self._db_gateway.create(diary_card)

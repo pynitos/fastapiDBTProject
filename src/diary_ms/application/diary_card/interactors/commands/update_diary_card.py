@@ -8,7 +8,7 @@ from src.diary_ms.application.diary_card.dto.commands.update_diary_card import U
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardUpdater
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
+from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
@@ -38,7 +38,7 @@ class UpdateDiaryCard(CommandHandler[UpdateDiaryCardCommand, None]):
                 raise AuthorizationError()
             skill_assotiations = (
                 [
-                    DiaryCardSkillAssotiation(
+                    SkillUsage(
                         diary_card_id=old_diary_card.id, skill_id=SkillId(s.id), situation=SkillSituation(s.situation)
                     )
                     for s in command.skills
@@ -53,7 +53,7 @@ class UpdateDiaryCard(CommandHandler[UpdateDiaryCardCommand, None]):
                 targets=command.targets,
                 emotions=command.emotions,
                 medicaments=command.medicaments,
-                skill_assotiations=skill_assotiations,
+                skills=skill_assotiations,
                 skill_type=command.skills_type,
             )
             await self.db_gateway.update(updated_diary_card)

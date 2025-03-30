@@ -6,7 +6,11 @@ from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
 from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
+from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
+    CreateCopingStrategyCommand,
+    CreateDiaryCardCommand,
+    CreateSkillUsageCommand,
+)
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
@@ -74,14 +78,27 @@ async def create_diary_card(
     schema: CreateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
-    skills: list[CreateDiaryCardCommand.Skill] | None = (
-        [CreateDiaryCardCommand.Skill(id=s.id, situation=s.situation) for s in schema.skills] if schema.skills else None
+    skills: list[CreateSkillUsageCommand] | None = (
+        [CreateSkillUsageCommand(
+            id=s.skill_id,
+            situation=s.situation
+            ) for s in schema.skills
+            ] if schema.skills else None
+    )
+    targets: list[CreateCopingStrategyCommand] | None = (
+        [CreateCopingStrategyCommand(
+            target_id=t.target_id,
+            action=t.action,
+            effectiveness=t.effectiveness
+            )
+              for t in schema.targets
+              ] if schema.targets else None
     )
     command = CreateDiaryCardCommand(
         mood=schema.mood,
         description=schema.description,
         date_of_entry=schema.date_of_entry,
-        targets=schema.targets,
+        targets=targets,
         emotions=schema.emotions,
         medicaments=schema.medicaments,
         skills=skills,
@@ -96,7 +113,7 @@ async def update_diary_card(
     schema: UpdateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
-    skills = [UpdateDiaryCardCommand.Skill(s.id, s.situation) for s in schema.skills] if schema.skills else None
+    skills = [UpdateDiaryCardCommand.Skill(s.skill_id, s.situation) for s in schema.skills] if schema.skills else None
     command = UpdateDiaryCardCommand(
         id=id,
         mood=schema.mood,

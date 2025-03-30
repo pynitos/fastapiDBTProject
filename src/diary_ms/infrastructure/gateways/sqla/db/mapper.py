@@ -2,7 +2,8 @@ from sqlalchemy.orm import composite, registry, relationship
 
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.diary_card_skill import DiaryCardSkillAssotiation
+from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
+from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
@@ -21,12 +22,15 @@ from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
 from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
-from src.diary_ms.domain.model.value_objects.target_behavior.action import TargetAction
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.effectiveness import CopingEffectiveness
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.id import CopingStrategyId
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
     diary_card_skill_assotiation,
+    diary_card_target_assotiation,
     diary_cards_table,
     emotions_table,
     medicaments_table,
@@ -54,15 +58,16 @@ def init_mapper() -> None:
             "date_of_entry": composite(lambda value: DCDateOfEntry(value), diary_cards_table.c.date_of_entry),
             "__date_of_entry": diary_cards_table.c.date_of_entry,
             "emotions": relationship("Emotion", secondary="diary_card_emotion", lazy="selectin"),
-            "targets": relationship("Target", secondary="diary_card_target", lazy="selectin"),
+            "targets": relationship("Target", secondary="diary_card_target", lazy="selectin", viewonly=True),
+            "target_assotiations": relationship("CopingStrategy", lazy="selectin"),
             "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
             "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin", viewonly=True),
-            "skill_assotiations": relationship("DiaryCardSkillAssotiation", lazy="selectin"),
+            "skill_assotiations": relationship("SkillUsage", lazy="selectin"),
         },
     )
 
     mapper_registry.map_imperatively(
-        DiaryCardSkillAssotiation,
+        SkillUsage,
         diary_card_skill_assotiation,
         properties={
             "diary_card_id": composite(lambda value: DiaryCardId(value), diary_card_skill_assotiation.c.diary_card_id),
@@ -115,12 +120,39 @@ def init_mapper() -> None:
             "__user_id": targets_table.c.user_id,
             "urge": composite(lambda value: TargetUrge(value), targets_table.c.urge),
             "__urge": targets_table.c.urge,
-            "action": composite(lambda value: TargetAction(value), targets_table.c.action),
+            "action": composite(lambda value: CopingAction(value), targets_table.c.action),
             "__action": targets_table.c.action,
             "is_default": composite(lambda value: TargetIsDefault(value), targets_table.c.is_default),
             "__is_default": targets_table.c.is_default,
         },
     )
+    mapper_registry.map_imperatively(
+        CopingStrategy,
+        diary_card_target_assotiation,
+        properties={
+            "id": composite(
+                lambda value: CopingStrategyId(value),
+                diary_card_target_assotiation.c.id
+            ),
+            "__id": diary_card_target_assotiation.c.id,  # Сырое значение для SQL
+            "target_id": composite(
+                lambda value: TargetId(value),
+                diary_card_target_assotiation.c.target_id
+            ),
+            "__target_id": diary_card_target_assotiation.c.target_id,
+            "action": composite(
+                lambda value: CopingAction(value),
+                diary_card_target_assotiation.c.action
+            ),
+            "__action": diary_card_target_assotiation.c.action,
+            "effectiveness": composite(
+                lambda value: CopingEffectiveness(value) if value is not None else None,
+                diary_card_target_assotiation.c.effectiveness
+            ),
+            "__effectiveness": diary_card_target_assotiation.c.effectiveness,
+        }
+    )
+
     mapper_registry.map_imperatively(
         Medicament,
         medicaments_table,
@@ -131,7 +163,7 @@ def init_mapper() -> None:
             "__user_id": medicaments_table.c.user_id,
             "name": composite(lambda value: TargetUrge(value), medicaments_table.c.name),
             "__name": medicaments_table.c.name,
-            "dosage": composite(lambda value: TargetAction(value), medicaments_table.c.dosage),
+            "dosage": composite(lambda value: CopingAction(value), medicaments_table.c.dosage),
             "__dosage": medicaments_table.c.dosage,
         },
     )
