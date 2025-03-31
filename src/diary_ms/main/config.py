@@ -94,7 +94,7 @@ def load_web_config() -> WebConfig:
         aws_secret_access_key=os.environ["MINIO_ROOT_PASSWORD"],
     )
     log = LogConfig()
-    telemetry = TelemetryConfig(endpoint=os.environ["TELEMETRY_URL"])
+    telemetry = TelemetryConfig(endpoint=os.environ.get("TELEMETRY_URL"))
     return WebConfig(
         s3=s3,
         log=log,

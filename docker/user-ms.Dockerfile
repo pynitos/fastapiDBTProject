@@ -1,4 +1,4 @@
-FROM python:3.13-slim as base_image
+FROM python:3.13-slim AS base_image
 
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on \
     POETRY_VERSION=1.8

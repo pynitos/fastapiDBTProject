@@ -94,7 +94,7 @@ def init_mapper() -> None:
             "description": composite(lambda value: SkillDescription(value), skills_table.c.description),
             "__description": skills_table.c.description,
             "diary_card_assotiations": relationship(
-                "DiaryCardSkillAssotiation", cascade="all, delete-orphan", lazy="selectin"
+                "SkillUsage", cascade="all, delete-orphan", lazy="selectin"
             ),
         },
     )
