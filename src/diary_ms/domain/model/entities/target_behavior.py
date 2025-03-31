@@ -53,6 +53,7 @@ class Target(BaseEntity):
             id=id,
             user_id=user_id,
             urge=urge,
+            action=action,
             is_default=is_default,
         )
         return t
