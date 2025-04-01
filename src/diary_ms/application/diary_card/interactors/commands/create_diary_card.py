@@ -55,7 +55,7 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
                     diary_card_id=DiaryCardId(id),
                     target_id=TargetId(t.target_id),
                     action=CopingAction(t.action),
-                    effectiveness=CopingEffectiveness(t.effectiveness)
+                    effectiveness=CopingEffectiveness(t.effectiveness),
                 )
                 for t in command.targets
             ]

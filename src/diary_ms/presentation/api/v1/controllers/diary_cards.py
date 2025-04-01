@@ -79,20 +79,17 @@ async def create_diary_card(
     sender: SenderDep,
 ) -> None:
     skills: list[CreateSkillUsageCommand] | None = (
-        [CreateSkillUsageCommand(
-            id=s.skill_id,
-            situation=s.situation
-            ) for s in schema.skills
-            ] if schema.skills else None
+        [CreateSkillUsageCommand(id=s.skill_id, situation=s.situation) for s in schema.skills]
+        if schema.skills
+        else None
     )
     targets: list[CreateCopingStrategyCommand] | None = (
-        [CreateCopingStrategyCommand(
-            target_id=t.target_id,
-            action=t.action,
-            effectiveness=t.effectiveness
-            )
-              for t in schema.targets
-              ] if schema.targets else None
+        [
+            CreateCopingStrategyCommand(target_id=t.target_id, action=t.action, effectiveness=t.effectiveness)
+            for t in schema.targets
+        ]
+        if schema.targets
+        else None
     )
     command = CreateDiaryCardCommand(
         mood=schema.mood,

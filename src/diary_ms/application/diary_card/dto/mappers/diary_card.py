@@ -24,13 +24,15 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
             type=dm.type,
             targets=[
                 TargetDTO(
-                    id=x.id.value,
-                    user_id=x.user_id.value,
-                    urge=x.urge.value,
-                    action=x.action.value,
+                    id=t.id.value,
+                    user_id=t.user_id.value,
+                    urge=t.urge.value,
+                    action=cs.action.value,
+                    effectiveness=cs.effectiveness.value,
                 )
-                for x in dm.coping_strategies
-                if x.id.value
+                for t in dm.targets
+                if t.id.value
+                for cs in dm.coping_strategies
             ]
             if dm.coping_strategies
             else None,
@@ -63,10 +65,11 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     category=x.category.value,
                     group=x.group.value,
                     name=x.name.value,
-                    situation=x.situation.value,
+                    situation=su.situation.value,
                 )
                 for x in dm.skills
                 if x.id.value
+                for su in dm.skill_usages
             ]
             if dm.skills
             else None,

@@ -7,7 +7,7 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.logging import LoggingInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 
 from src.diary_ms.infrastructure.telemetry.config import TelemetryConfig
 from src.diary_ms.infrastructure.telemetry.utils import PrometheusMiddleware, metrics
@@ -29,7 +29,11 @@ def configure_telemetry_fastapi(app: FastAPI, cfg: TelemetryConfig) -> None:
     tracer = TracerProvider(resource=resource)
     trace.set_tracer_provider(tracer)
 
-    tracer.add_span_processor(BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint)))
+    otlp_exporter = OTLPSpanExporter(endpoint=endpoint)
+    tracer.add_span_processor(BatchSpanProcessor(otlp_exporter))
+
+    console_exporter = ConsoleSpanExporter()
+    tracer.add_span_processor(BatchSpanProcessor(console_exporter))
 
     if log_correlation:
         LoggingInstrumentor().instrument(set_logging_format=True)

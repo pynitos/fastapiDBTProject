@@ -18,6 +18,7 @@ class CreateSkillUsageCommand:
     id: UUID
     situation: str | None = None
 
+
 @dataclass
 class CreateDiaryCardCommand(Command[None]):
     mood: int

@@ -13,7 +13,8 @@ class TargetDTO(DTO):
     id: UUID
     user_id: UUID
     urge: str
-    action: str
+    action: str | None = None
+    effectiveness: int | None = None
 
 
 @dataclass

@@ -36,7 +36,9 @@ class DiaryCardAdminGateway(
         if entity.coping_strategies:
             entity.coping_strategies = list(
                 (
-                    await self._session.scalars(select(targets_table).where(targets_table.c.id.in_(entity.coping_strategies)))
+                    await self._session.scalars(
+                        select(targets_table).where(targets_table.c.id.in_(entity.coping_strategies))
+                    )
                 ).all()
             )
         if entity.emotions_ids:

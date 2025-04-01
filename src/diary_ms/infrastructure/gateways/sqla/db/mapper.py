@@ -59,10 +59,10 @@ def init_mapper() -> None:
             "__date_of_entry": diary_cards_table.c.date_of_entry,
             "emotions": relationship("Emotion", secondary="diary_card_emotion", lazy="selectin"),
             "targets": relationship("Target", secondary="diary_card_target", lazy="selectin", viewonly=True),
-            "target_assotiations": relationship("CopingStrategy", lazy="selectin"),
+            "coping_strategies": relationship("CopingStrategy", lazy="selectin"),
             "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
             "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin", viewonly=True),
-            "skill_assotiations": relationship("SkillUsage", lazy="selectin"),
+            "skill_usages": relationship("SkillUsage", lazy="selectin"),
         },
     )
 
@@ -93,9 +93,7 @@ def init_mapper() -> None:
             "__name": skills_table.c.name,
             "description": composite(lambda value: SkillDescription(value), skills_table.c.description),
             "__description": skills_table.c.description,
-            "diary_card_assotiations": relationship(
-                "SkillUsage", cascade="all, delete-orphan", lazy="selectin"
-            ),
+            "diary_card_assotiations": relationship("SkillUsage", cascade="all, delete-orphan", lazy="selectin"),
         },
     )
     mapper_registry.map_imperatively(
@@ -130,27 +128,18 @@ def init_mapper() -> None:
         CopingStrategy,
         diary_card_target_assotiation,
         properties={
-            "id": composite(
-                lambda value: CopingStrategyId(value),
-                diary_card_target_assotiation.c.id
-            ),
+            "id": composite(lambda value: CopingStrategyId(value), diary_card_target_assotiation.c.id),
             "__id": diary_card_target_assotiation.c.id,  # Сырое значение для SQL
-            "target_id": composite(
-                lambda value: TargetId(value),
-                diary_card_target_assotiation.c.target_id
-            ),
+            "target_id": composite(lambda value: TargetId(value), diary_card_target_assotiation.c.target_id),
             "__target_id": diary_card_target_assotiation.c.target_id,
-            "action": composite(
-                lambda value: CopingAction(value),
-                diary_card_target_assotiation.c.action
-            ),
+            "action": composite(lambda value: CopingAction(value), diary_card_target_assotiation.c.action),
             "__action": diary_card_target_assotiation.c.action,
             "effectiveness": composite(
                 lambda value: CopingEffectiveness(value) if value is not None else None,
-                diary_card_target_assotiation.c.effectiveness
+                diary_card_target_assotiation.c.effectiveness,
             ),
             "__effectiveness": diary_card_target_assotiation.c.effectiveness,
-        }
+        },
     )
 
     mapper_registry.map_imperatively(
