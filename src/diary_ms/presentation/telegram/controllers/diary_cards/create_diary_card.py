@@ -2,6 +2,7 @@ import logging
 import operator
 from dataclasses import asdict
 from typing import Any
+from uuid import UUID
 
 from aiogram.types import CallbackQuery, InaccessibleMessage, Message
 from aiogram_dialog import Dialog, DialogManager, ShowMode, Window
@@ -12,7 +13,11 @@ from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
+from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
+    CreateCopingStrategyCommand,
+    CreateDiaryCardCommand,
+    CreateSkillUsageCommand,
+)
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
 from src.diary_ms.presentation.telegram.common.constants import (
     BACK_BTN_TXT,
@@ -61,6 +66,7 @@ async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **
 
     dialog_manager.dialog_data["emotions"] = emotions
     dialog_manager.dialog_data["skills"] = skills
+    dialog_manager.dialog_data["targets"] = targets
 
     return {
         "moods": moods,
@@ -69,6 +75,53 @@ async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **
         "targets": targets,
         "medicaments": medicaments,
     }
+
+
+async def on_targets_selected(
+    _: CallbackQuery,
+    __: Button,
+    dialog_manager: DialogManager,
+):
+    ms_targets = dialog_manager.find("ms_targets")
+    selected_ids = ms_targets.get_checked() if ms_targets else []
+    targets = [t for t in dialog_manager.dialog_data["targets"] if str(t["id"]) in selected_ids]
+    dialog_manager.dialog_data["selected_targets"] = targets
+
+
+
+async def target_data_getter(dialog_manager: DialogManager, **kwargs):  # noqa: ARG001
+    targets = dialog_manager.dialog_data["selected_targets"]
+    current_target = targets[0]
+    return {"target_name": current_target["urge"]}
+
+
+async def on_target_action_entered(
+    message: Message,
+    _: ManagedTextInput[str],
+    dialog_manager: DialogManager,
+    action: str,
+):
+    targets = dialog_manager.dialog_data["selected_targets"]
+    targets[0]["action"] = action  # Сохраняем action для текущей цели
+    dialog_manager.show_mode = ShowMode.EDIT
+    await message.delete()
+    await dialog_manager.next()
+
+
+async def on_target_effectiveness_selected(
+    _: CallbackQuery,
+    __: Select,
+    dialog_manager: DialogManager,
+    selected: int,  # Выбранное значение (1-10)
+):
+    targets = dialog_manager.dialog_data["selected_targets"]
+    targets[0]["effectiveness"] = selected
+
+    targets.pop(0)
+    if targets:
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.target_action)
+    else:
+        await dialog_manager.next()
 
 
 async def on_skills_next_btn(
@@ -157,12 +210,20 @@ async def on_confirmation(
     emotions = dialog_manager.dialog_data.get("selected_emotions", [])
     emotions_ids = [e.get("id") for e in emotions]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
-    skills_for_create = [CreateDiaryCardCommand.Skill(id=s["id"], situation=s.get("descriprtion")) for s in skills]
+    skills_for_create = [CreateSkillUsageCommand(id=s["id"], situation=s.get("descriprtion")) for s in skills]
+    targets_for_create = [
+        CreateCopingStrategyCommand(
+            target_id=UUID(t["id"]),
+            action=t.get("action"),
+            effectiveness=t.get("effectiveness"),
+        )
+        for t in dialog_manager.dialog_data["selected_targets"]
+    ]
     await sender.send_command(
         CreateDiaryCardCommand(
             mood=dialog_manager.dialog_data["mood"],
             description=dialog_manager.dialog_data.get("description"),
-            targets=dialog_manager.dialog_data.get("targets"),
+            targets=targets_for_create,
             emotions=emotions_ids,
             medicaments=dialog_manager.dialog_data.get("medicaments"),
             skills=skills_for_create,
@@ -216,6 +277,43 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.emotions,
     ),
     Window(
+        Const("🎯 Отметьте проблемное поведение:"),
+        Column(
+            Multiselect(
+                Format("✓ {item[urge]}"),
+                Format("{item[urge]}"),
+                id="ms_targets",
+                item_id_getter=lambda x: str(x["id"]),
+                items="targets",
+            )
+        ),
+        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_targets_selected)),
+        state=states.CreateDiaryCardSG.targets,
+    ),
+    Window(
+        Format("📌  Поведение: <b>{target_name}</b>\n\nОпишите действие:"),
+        TextInput(id="target_action_input", on_success=on_target_action_entered),
+        state=states.CreateDiaryCardSG.target_action,
+        getter=target_data_getter,  # Получаем текущую цель
+        parse_mode="HTML",
+    ),
+    Window(
+        Format("📌 Целевое поведение: <b>{target_name}</b>\n\nОцените эффективность:"),
+        Column(
+            Select(
+                Format("{item}"),
+                id="select_effectiveness",
+                items=list(range(1, 11)),  # Числа от 1 до 10
+                item_id_getter=lambda x: x,
+                on_click=on_target_effectiveness_selected,
+                type_factory=int,
+            )
+        ),
+        state=states.CreateDiaryCardSG.target_effectiveness,
+        getter=target_data_getter,
+        parse_mode="HTML",
+    ),
+    Window(
         Jinja(
             """
 {% if medicaments %}
@@ -267,10 +365,12 @@ create_diary_card_dialog = Dialog(
 <b>════════════════════════════</b>
 <b>Настроение:</b> {{ mood }}
 <b>Описание:</b> {{ description }}
-<b>🎯 Цели:</b>
+<b>🎯 Целевое поведение:</b>
 {% if targets %}
 {% for target in targets -%}
-• {{ target }}
+• {{ target.name }}
+  {% if target.action %}Действие: {{ target.action }}{% endif %}
+  {% if target.effectiveness %}Эффективность: {{ target.effectiveness }}/10{% endif %}
 {% endfor %}
 {% else %}
 - Не указаны

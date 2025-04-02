@@ -18,7 +18,7 @@ async def on_manage_targets(callback: CallbackQuery, button: Button, manager: Di
 
 main_menu_dialog = Dialog(
     Window(
-        Const("📋 <b>Главное меню DBT-дневника</b>"),
+        Const("📋 <b>Главное меню DBT-дневника:</b>"),
         Column(
             Button(
                 Const("📝 Заполнить новую карточку"),
@@ -42,5 +42,6 @@ main_menu_dialog = Dialog(
             # ),
         ),
         state=MainMenuSG.main,
+        parse_mode="HTML"
     )
 )
