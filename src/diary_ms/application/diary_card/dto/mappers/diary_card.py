@@ -27,8 +27,8 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                     id=t.id.value,
                     user_id=t.user_id.value,
                     urge=t.urge.value,
-                    action=cs.action.value,
-                    effectiveness=cs.effectiveness.value,
+                    action=cs.action.value if cs.action else None,
+                    effectiveness=cs.effectiveness.value if cs.effectiveness else None,
                 )
                 for t in dm.targets
                 if t.id.value

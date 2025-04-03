@@ -1,5 +1,5 @@
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
@@ -13,7 +13,7 @@ class CopingStrategy:
     target_id: TargetId
     diary_card_id: DiaryCardId
     action: CopingAction = CopingAction(None)
-    id: CopingStrategyId = CopingStrategyId(uuid.uuid4())
+    id: CopingStrategyId = field(default_factory=lambda: CopingStrategyId(uuid.uuid4()))
     effectiveness: CopingEffectiveness = CopingEffectiveness(None)
 
     def update_action(self, new_action: str) -> None:

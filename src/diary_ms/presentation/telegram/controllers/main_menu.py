@@ -42,6 +42,6 @@ main_menu_dialog = Dialog(
             # ),
         ),
         state=MainMenuSG.main,
-        parse_mode="HTML"
+        parse_mode="HTML",
     )
 )

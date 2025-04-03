@@ -20,6 +20,8 @@ class CreateDiaryCardSG(StatesGroup):
 
 class GetOwnDiaryCardsSG(StatesGroup):
     view = State()
+    detail_view = State()
+    confirm_delete = State()
 
 
 async def start_create_diary_card(

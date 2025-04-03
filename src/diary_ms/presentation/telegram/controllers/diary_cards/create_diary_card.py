@@ -2,12 +2,11 @@ import logging
 import operator
 from dataclasses import asdict
 from typing import Any
-from uuid import UUID
 
 from aiogram.types import CallbackQuery, InaccessibleMessage, Message
 from aiogram_dialog import Dialog, DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Multiselect, Next, Row, Select
+from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Group, Multiselect, Next, Row, Select
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -84,13 +83,16 @@ async def on_targets_selected(
 ):
     ms_targets = dialog_manager.find("ms_targets")
     selected_ids = ms_targets.get_checked() if ms_targets else []
-    targets = [t for t in dialog_manager.dialog_data["targets"] if str(t["id"]) in selected_ids]
-    dialog_manager.dialog_data["selected_targets"] = targets
-
+    if len(selected_ids) == 0:
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.target_effectiveness)
+    else:
+        targets = [t for t in dialog_manager.dialog_data["targets"] if str(t["id"]) in selected_ids]
+        dialog_manager.dialog_data["selected_targets"] = targets
 
 
 async def target_data_getter(dialog_manager: DialogManager, **kwargs):  # noqa: ARG001
     targets = dialog_manager.dialog_data["selected_targets"]
+
     current_target = targets[0]
     return {"target_name": current_target["urge"]}
 
@@ -115,13 +117,40 @@ async def on_target_effectiveness_selected(
     selected: int,  # Выбранное значение (1-10)
 ):
     targets = dialog_manager.dialog_data["selected_targets"]
-    targets[0]["effectiveness"] = selected
-
-    targets.pop(0)
+    target = targets.pop(0)
+    target["effectiveness"] = selected
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(target)
     if targets:
         await dialog_manager.switch_to(states.CreateDiaryCardSG.target_action)
     else:
         await dialog_manager.next()
+
+
+async def on_target_action_next_btn(
+    _: CallbackQuery,
+    __: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    targets = dialog_manager.dialog_data["selected_targets"]
+    target = targets.pop(0)
+    target["action"] = None
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(target)
+    if len(targets) > 0:
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
+    else:
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.target_effectiveness)
+
+
+async def on_target_effectiveness_next_btn(
+    _: CallbackQuery,
+    __: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    targets = dialog_manager.dialog_data["selected_targets"]
+    target = targets.pop(0)
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(target)
+    if len(targets) > 0:
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
 async def on_skills_next_btn(
@@ -193,10 +222,11 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
     e_ids = ms_emotions.get_checked() if ms_emotions else []
     emotions = [e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in e_ids]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
+    targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     return {
         "mood": mood_text,  # Отображаем текстовое описание
         "description": dialog_manager.dialog_data.get("description", "Не указано"),
-        "targets": dialog_manager.dialog_data.get("targets", []),
+        "target_copings": targets,
         "emotions": emotions,
         "medicaments": dialog_manager.dialog_data.get("medicaments", []),
         "skills": skills,
@@ -211,13 +241,14 @@ async def on_confirmation(
     emotions_ids = [e.get("id") for e in emotions]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
     skills_for_create = [CreateSkillUsageCommand(id=s["id"], situation=s.get("descriprtion")) for s in skills]
+    targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     targets_for_create = [
         CreateCopingStrategyCommand(
-            target_id=UUID(t["id"]),
+            target_id=t["id"],
             action=t.get("action"),
             effectiveness=t.get("effectiveness"),
         )
-        for t in dialog_manager.dialog_data["selected_targets"]
+        for t in targets
     ]
     await sender.send_command(
         CreateDiaryCardCommand(
@@ -291,15 +322,16 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.targets,
     ),
     Window(
-        Format("📌  Поведение: <b>{target_name}</b>\n\nОпишите действие:"),
+        Format("📌  Поведение: <b>{target_name}.</b>\nОпишите ситуацию и способ совладания с ней:"),
         TextInput(id="target_action_input", on_success=on_target_action_entered),
+        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_target_action_next_btn)),
         state=states.CreateDiaryCardSG.target_action,
         getter=target_data_getter,  # Получаем текущую цель
         parse_mode="HTML",
     ),
     Window(
-        Format("📌 Целевое поведение: <b>{target_name}</b>\n\nОцените эффективность:"),
-        Column(
+        Format("📌 Поведение: <b>{target_name}</b>\n\nОцените эффективность:"),
+        Group(
             Select(
                 Format("{item}"),
                 id="select_effectiveness",
@@ -307,8 +339,10 @@ create_diary_card_dialog = Dialog(
                 item_id_getter=lambda x: x,
                 on_click=on_target_effectiveness_selected,
                 type_factory=int,
-            )
+            ),
+            width=5,
         ),
+        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_target_effectiveness_next_btn)),
         state=states.CreateDiaryCardSG.target_effectiveness,
         getter=target_data_getter,
         parse_mode="HTML",
@@ -365,12 +399,13 @@ create_diary_card_dialog = Dialog(
 <b>════════════════════════════</b>
 <b>Настроение:</b> {{ mood }}
 <b>Описание:</b> {{ description }}
-<b>🎯 Целевое поведение:</b>
-{% if targets %}
-{% for target in targets -%}
-• {{ target.name }}
-  {% if target.action %}Действие: {{ target.action }}{% endif %}
-  {% if target.effectiveness %}Эффективность: {{ target.effectiveness }}/10{% endif %}
+<b>🎯 Проблемное поведение:</b>
+{% if target_copings %}
+{% for t in target_copings -%}
+• {{ t.urge }} {% if t.action %}
+✧ {{ t.action }}{% if t.effectiveness %} | {{ t.effectiveness }}/10{% endif %}
+{% endif %}
+
 {% endfor %}
 {% else %}
 - Не указаны
