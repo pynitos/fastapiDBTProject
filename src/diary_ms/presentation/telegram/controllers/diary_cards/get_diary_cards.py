@@ -3,15 +3,16 @@ from typing import Any
 
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
+from aiogram_dialog.widgets.common import ManagedScroll
 from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, ScrollingGroup, Select
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
-from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO
+from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO, OwnDiaryCardDTO
 from src.diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
 
 from . import states
@@ -36,14 +37,17 @@ async def on_delete_confirmed(callback: CallbackQuery, _: Button, manager: Dialo
 
 @inject
 async def get_cards_list(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
-    diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(Pagination(10, 0)))
+    scroll: ManagedScroll | None = dialog_manager.find("scroll_diary_cards")
+    page = await scroll.get_page() if scroll else 1
+    offset = page * PAGE_SIZE
+    diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(Pagination(PAGE_SIZE, offset)))
     return {"diary_cards": diary_cards}
 
 
 @inject
 async def get_card_details(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
     card_id = dialog_manager.dialog_data["selected_card_id"]
-    card = await sender.send_query(GetOwnDiaryCardDTO(id=card_id))
+    card: OwnDiaryCardDTO = await sender.send_query(GetOwnDiaryCardDTO(id=card_id))
     mood = MoodDisplay.from_level(card.mood)
     return {
         "item": {**asdict(card), "mood_emoji": mood.emoji, "mood_text": mood.text, "date_of_entry": card.date_of_entry}
@@ -60,9 +64,10 @@ list_window = Window(
             items="diary_cards",
             on_click=on_card_selected,
         ),
-        id="scroll_cards",
+        id="scroll_diary_cards",
         width=1,
-        height=5,
+        height=PAGE_SIZE,
+        hide_on_single_page=True,
     ),
     Cancel(Const("◀️ Назад")),
     state=states.GetOwnDiaryCardsSG.view,
@@ -74,19 +79,54 @@ detail_window = Window(
     Jinja(
         """
 📅 <b>{{ item.date_of_entry.strftime('%d.%m.%Y') }}</b>
-<b>Настроение:</b> {{ item.mood_text }} {{ item.mood_emoji }}
+🌡 <b>Настроение:</b> {{ item.mood_text }} {{ item.mood_emoji }}
 {% if item.description %}
-📝 <b>Описание:</b>
-{{ item.description }}
+📄 <b>Описание:</b> {{ item.description }}
 {% endif %}
-{% if item.targets %}
-🎯 <b>Целевое поведение:</b>
-{% for target in item.targets %}
-• {{ target.urge }}
-  {% if target.action %}→ {{ target.action }}{% endif %}
-  {% if target.effectiveness %} ⭐ {{ target.effectiveness }}/10{% endif %}
 
+🎯 <b>Целевое поведение:</b>
+{% if item.targets %}
+{% for target in item.targets -%}
+▸ {{ target.urge }}
+  {% if target.action %}
+  Поведение: <i>{{ target.action }}</i>
+  {% endif %}
+  {% if target.effectiveness %}
+  Эффективность: <i>{{ target.effectiveness }}/10</i>
+  {% endif %}
 {% endfor %}
+{% else %}
+▸ <i>не указано</i>
+{% endif %}
+
+😶‍🌫️ <b>Эмоции:</b>
+{% if item.emotions %}
+{% for emotion in item.emotions -%}
+▹ {{ emotion.name }}
+{% endfor %}
+{% else %}
+▹ <i>не указано</i>
+{% endif %}
+
+💊 <b>Медикаменты:</b>
+{% if item.medicaments %}
+{% for med in item.medicaments -%}
+▸ {{ med.name }} (<code>{{ med.dosage }}</code>)
+{% endfor %}
+{% else %}
+▸ <i>не указаны</i>
+{% endif %}
+
+🛠️ <b>Применённые навыки:</b>
+{% if item.skills %}
+{% for skill in item.skills -%}
+▸ {{ skill.name }}
+  {% if skill.situation %}
+  - {{ skill.situation }}
+  {% endif %}
+{% endfor %}
+{% else %}
+▸ <i>не указано</i>
 {% endif %}
 """
     ),

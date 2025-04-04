@@ -6,9 +6,9 @@ from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 
 
 class DiaryCardDTOMapper(Protocol):
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def dm_to_dto(dm: DiaryCard) -> OwnDiaryCardDTO:
+    def dm_to_dto(cls, dm: DiaryCard) -> OwnDiaryCardDTO:
         raise NotImplementedError
 
     @classmethod

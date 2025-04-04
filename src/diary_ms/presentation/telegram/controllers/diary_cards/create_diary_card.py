@@ -185,7 +185,7 @@ async def on_skill_description_entered(
 ) -> None:
     selected_skills: list[dict[str, Any]] = dialog_manager.dialog_data["selected_skills"]
     skill = selected_skills.pop(0)
-    skill["description"] = data
+    skill["situation"] = data
     dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
     await message.delete()
     dialog_manager.show_mode = ShowMode.EDIT
@@ -240,7 +240,7 @@ async def on_confirmation(
     emotions = dialog_manager.dialog_data.get("selected_emotions", [])
     emotions_ids = [e.get("id") for e in emotions]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
-    skills_for_create = [CreateSkillUsageCommand(id=s["id"], situation=s.get("descriprtion")) for s in skills]
+    skills_for_create = [CreateSkillUsageCommand(id=s["id"], situation=s.get("situation")) for s in skills]
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     targets_for_create = [
         CreateCopingStrategyCommand(
@@ -396,7 +396,7 @@ create_diary_card_dialog = Dialog(
         Jinja(
             """
 <b>📋 Проверьте введенные данные:</b>
-<b>════════════════════════════</b>
+<b>══════════════════════</b>
 <b>Настроение:</b> {{ mood }}
 <b>Описание:</b> {{ description }}
 <b>🎯 Проблемное поведение:</b>
@@ -430,7 +430,7 @@ create_diary_card_dialog = Dialog(
 {% if skills %}
 {% for skill in skills -%}
 
-• {{ skill.name }} {% if skill.description %} ✧ {{ skill.description }} {% endif %}
+• {{ skill.name }} {% if skill.situation %} ✧ {{ skill.situation }} {% endif %}
 
 {% endfor %}
 {% else %}

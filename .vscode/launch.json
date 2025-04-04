@@ -13,6 +13,19 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Telegram Bot",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/run_bot.py",
+            "console": "integratedTerminal",
+            "env": {
+                "LOG_LEVEL": "DEBUG"
+            },
+            "python": "${command:python.interpreterPath}",
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
             "name": "FastAPI",
             "type": "debugpy",
             "request": "launch",
