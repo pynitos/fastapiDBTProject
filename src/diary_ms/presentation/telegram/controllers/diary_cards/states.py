@@ -24,6 +24,18 @@ class GetOwnDiaryCardsSG(StatesGroup):
     confirm_delete = State()
 
 
+class MedicamentSG(StatesGroup):
+    list_medicaments = State()
+    view_medicament = State()
+    add_name = State()
+    add_dosage = State()
+    confirm_add = State()
+    edit_name = State()
+    edit_dosage = State()
+    confirm_edit = State()
+    confirm_delete = State()
+
+
 async def start_create_diary_card(
     dialog_manager: DialogManager,
     wishlist_id: DiaryCardId,

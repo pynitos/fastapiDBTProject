@@ -1,10 +1,10 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Button, Column
+from aiogram_dialog.widgets.kbd import Button, Column, Start
 from aiogram_dialog.widgets.text import Const
 
-from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG
+from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG, MedicamentSG
 
 
 class MainMenuSG(StatesGroup):
@@ -20,21 +20,17 @@ main_menu_dialog = Dialog(
     Window(
         Const("📋 <b>Главное меню DBT-дневника:</b>"),
         Column(
-            Button(
+            Start(
                 Const("📝 Заполнить новую карточку"),
                 id="create_card",
-                on_click=lambda _, __, m: m.start(CreateDiaryCardSG.mood),
+                state=CreateDiaryCardSG.mood,
             ),
-            Button(
+            Start(
                 Const("📖 Мои дневниковые карточки"),
                 id="view_cards",
-                on_click=lambda _, __, m: m.start(GetOwnDiaryCardsSG.view),
+                state=GetOwnDiaryCardsSG.view,
             ),
-            # Button(
-            #     Const("💊 Медикаменты"),
-            #     id="manage_meds",
-            #     on_click=lambda _, __, m: m.start(ManageMedsStates.menu)
-            # ),
+            Start(Const("💊 Медикаменты"), id="manage_meds", state=MedicamentSG.list_medicaments),
             # Button(
             #     Const("🎯 Цели"),  # Изменил "Задачи" на "Цели"
             #     id="manage_targets",

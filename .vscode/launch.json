@@ -13,7 +13,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Telegram Bot",
+            "name": "Tg Bot",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/run_bot.py",

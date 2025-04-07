@@ -66,6 +66,7 @@ async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **
     dialog_manager.dialog_data["emotions"] = emotions
     dialog_manager.dialog_data["skills"] = skills
     dialog_manager.dialog_data["targets"] = targets
+    dialog_manager.dialog_data["medicaments"] = medicaments
 
     return {
         "moods": moods,
@@ -221,6 +222,9 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
     ms_emotions = dialog_manager.find("ms_emotions")
     e_ids = ms_emotions.get_checked() if ms_emotions else []
     emotions = [e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in e_ids]
+    ms_medicaments = dialog_manager.find("ms_medicaments")
+    m_ids = ms_medicaments.get_checked() if ms_medicaments else []
+    medicaments = [m for m in dialog_manager.dialog_data["medicaments"] if str(m["id"]) in m_ids]
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     return {
@@ -228,7 +232,7 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
         "description": dialog_manager.dialog_data.get("description", "Не указано"),
         "target_copings": targets,
         "emotions": emotions,
-        "medicaments": dialog_manager.dialog_data.get("medicaments", []),
+        "medicaments": medicaments,
         "skills": skills,
     }
 
@@ -237,8 +241,10 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs) -> dict
 async def on_confirmation(
     callback: CallbackQuery, __: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
 ) -> None:
-    emotions = dialog_manager.dialog_data.get("selected_emotions", [])
-    emotions_ids = [e.get("id") for e in emotions]
+    ms_emotions = dialog_manager.find("ms_emotions")
+    emotions_ids = ms_emotions.get_checked() if ms_emotions else []
+    ms_medicaments = dialog_manager.find("ms_medicaments")
+    medicaments_ids = ms_medicaments.get_checked() if ms_medicaments else []
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
     skills_for_create = [CreateSkillUsageCommand(id=s["id"], situation=s.get("situation")) for s in skills]
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
@@ -256,7 +262,7 @@ async def on_confirmation(
             description=dialog_manager.dialog_data.get("description"),
             targets=targets_for_create,
             emotions=emotions_ids,
-            medicaments=dialog_manager.dialog_data.get("medicaments"),
+            medicaments=medicaments_ids,
             skills=skills_for_create,
         )
     )
@@ -362,7 +368,7 @@ create_diary_card_dialog = Dialog(
             Multiselect(
                 Format("✓ {item[name]} | {item[dosage]}"),
                 Format("{item[name]} | {item[dosage]}"),
-                id="ms_meds",
+                id="ms_medicaments",
                 item_id_getter=lambda x: str(x["id"]),
                 items="medicaments",
             ),
@@ -421,7 +427,7 @@ create_diary_card_dialog = Dialog(
 <b>💊 Медикаменты:</b>
 {% if medicaments %}
 {% for med in medicaments -%}
-• {{ med }}
+• {{ med.name }}
 {% endfor %}
 {% else %}
 - Не указаны
