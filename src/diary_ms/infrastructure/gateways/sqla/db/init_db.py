@@ -275,8 +275,8 @@ def get_default_skills() -> list[Skill]:
 def get_default_emotions() -> list[Emotion]:
     return [
         Emotion(
-            name=EmotionName("Радость"),
-            description=EmotionDescription("Чувство удовольствия и счастья, связанное с положительными событиями."),
+            name=EmotionName("Счастье"),
+            description=EmotionDescription("Чувство удовольствия и радости, связанное с положительными событиями."),
         ),
         Emotion(
             name=EmotionName("Грусть"),
@@ -293,10 +293,6 @@ def get_default_emotions() -> list[Emotion]:
             description=EmotionDescription(
                 "Чувство тревоги или беспокойства, вызванное возможной угрозой или опасностью."
             ),
-        ),
-        Emotion(
-            name=EmotionName("Удивление"),
-            description=EmotionDescription("Чувство, возникающее в ответ на неожиданное событие или ситуацию."),
         ),
         Emotion(
             name=EmotionName("Отвращение"),
@@ -323,28 +319,12 @@ def get_default_emotions() -> list[Emotion]:
             description=EmotionDescription("Чувство умиротворения и отсутствия тревоги."),
         ),
         Emotion(
-            name=EmotionName("Разочарование"),
-            description=EmotionDescription("Чувство неудовлетворенности из-за несбывшихся ожиданий."),
-        ),
-        Emotion(
-            name=EmotionName("Надежда"),
-            description=EmotionDescription("Чувство оптимизма и ожидания положительного исхода."),
-        ),
-        Emotion(
             name=EmotionName("Зависть"),
             description=EmotionDescription("Чувство недовольства из-за чужого успеха или преимущества."),
         ),
         Emotion(
             name=EmotionName("Ревность"),
             description=EmotionDescription("Чувство беспокойства или страха потерять внимание или любовь кого-то."),
-        ),
-        Emotion(
-            name=EmotionName("Гордость"),
-            description=EmotionDescription("Чувство удовлетворения своими достижениями или качествами."),
-        ),
-        Emotion(
-            name=EmotionName("Смущение"),
-            description=EmotionDescription("Чувство неловкости из-за неловкой или неуместной ситуации."),
         ),
         Emotion(
             name=EmotionName("Благодарность"),
