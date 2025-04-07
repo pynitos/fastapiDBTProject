@@ -11,6 +11,7 @@ from dishka.integrations.aiogram_dialog import inject
 from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.medicament.dto.commands.create_medicament import CreateMedicamentCommand
+from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
 from src.diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentCommand
 from src.diary_ms.application.medicament.dto.medicament import GetOwnMedicamentDTO, GetOwnMedicamentsDTO
 from src.diary_ms.presentation.telegram.common.constants import CANCEL_BTN_TXT
@@ -23,35 +24,36 @@ async def on_medicament_selected(_: CallbackQuery, __: Any, manager: DialogManag
     await manager.switch_to(MedicamentSG.view_medicament)
 
 
-async def on_delete_clicked(callback: CallbackQuery, button: Button, manager: DialogManager):
+async def on_delete_clicked(callback: CallbackQuery, _: Button, manager: DialogManager):
     await manager.switch_to(MedicamentSG.confirm_delete)
 
 
-async def on_delete_confirmed(callback: CallbackQuery, button: Button, manager: DialogManager):
+@inject
+async def on_delete_confirmed(callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]):
     medicament_id = manager.dialog_data["medicament_id"]
-    # Здесь вызываем use case для удаления
+    await sender.send_command(DeleteMedicamentCommand(medicament_id))
     await callback.answer("Медикамент удален")
     await manager.done()
 
 
-async def on_add_name_entered(message: Message, widget: ManagedTextInput, 
+async def on_add_name_entered(_: Message, __: ManagedTextInput, 
                             manager: DialogManager, name: str):
     manager.dialog_data["add_name"] = name
     await manager.next()
 
-async def on_add_dosage_entered(message: Message, widget: ManagedTextInput, 
+async def on_add_dosage_entered(_: Message, __: ManagedTextInput, 
                               manager: DialogManager, dosage: str):
     manager.dialog_data["add_dosage"] = dosage
     await manager.next()
 
 
-async def on_edit_name_entered(message: Message, widget: ManagedTextInput, 
+async def on_edit_name_entered(_: Message, __: ManagedTextInput, 
                                manager: DialogManager, dosage: str):
     manager.dialog_data["edit_name"] = dosage
     await manager.next()
 
 
-async def on_edit_dosage_entered(message: Message, widget: ManagedTextInput, 
+async def on_edit_dosage_entered(_: Message, __: ManagedTextInput, 
                                manager: DialogManager, dosage: str):
     manager.dialog_data["edit_dosage"] = dosage
     await manager.next()
@@ -70,12 +72,12 @@ async def on_add_confirmed(callback: CallbackQuery, button: Button,
     await manager.done()
 
 
+@inject
 async def on_edit_confirmed(callback: CallbackQuery, button: Button, 
-                          manager: DialogManager):
-    # Вызов use case для обновления
-    await manager.middleware_data['mediator'].send_command(
+                          manager: DialogManager, sender: FromDishka[Sender]):
+    await sender.send_command(
         UpdateMedicamentCommand(
-            medicament_id=manager.dialog_data["medicament_id"],
+            id=manager.dialog_data["medicament_id"],
             name=manager.dialog_data["name"],
             dosage=manager.dialog_data["dosage"]
         )
@@ -112,6 +114,7 @@ list_window = Window(
         id="scroll_meds",
         width=1,
         height=5,
+        hide_on_single_page=True,
     ),
     SwitchTo(Const("➕ Добавить"), id="btn_add", state=MedicamentSG.add_name),
     Cancel(Const("◀️ Назад")),
