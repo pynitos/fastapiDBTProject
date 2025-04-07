@@ -392,7 +392,7 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.skills,
     ),
     Window(
-        Format("Опишите то, как вы прменили навык: {skill_name}"),
+        Format("Опишите то, как вы применили навык: {skill_name}"),
         Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_skill_description_next_btn)),
         TextInput[str](id="skill_input_id", on_success=on_skill_description_entered),
         state=states.CreateDiaryCardSG.skill_description,
