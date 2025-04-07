@@ -53,7 +53,7 @@ def get_default_skills() -> list[Skill]:
             ),
         ),
         Skill(
-            name=SkillName("Не-суждение"),
+            name=SkillName("Безоценочность"),
             category=SkillCategory("Навыки осознанности 'Как?'"),
             group=SkillGroup("Навыки осознанности"),
             type=SkillType.DBT,
@@ -62,7 +62,7 @@ def get_default_skills() -> list[Skill]:
             ),
         ),
         Skill(
-            name=SkillName("Одна вещь в момент времени"),
+            name=SkillName("Однонаправленность"),
             category=SkillCategory("Навыки осознанности 'Как?'"),
             group=SkillGroup("Навыки осознанности"),
             type=SkillType.DBT,
