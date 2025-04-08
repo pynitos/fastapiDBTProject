@@ -37,14 +37,13 @@ async def on_edit_dosage_entered(message: Message, __: ManagedTextInput, manager
 async def on_edit_confirmed(
     callback: CallbackQuery, _: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
 ):
-    print(dialog_manager.start_data)
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
     await sender.send_command(
         UpdateMedicamentCommand(
             id=dialog_manager.start_data["medicament_id"],
-            name=dialog_manager.dialog_data["name"],
-            dosage=dialog_manager.dialog_data["dosage"],
+            name=dialog_manager.dialog_data.get("name"),
+            dosage=dialog_manager.dialog_data.get("dosage"),
         )
     )
     await callback.answer("Медикамент обновлен")

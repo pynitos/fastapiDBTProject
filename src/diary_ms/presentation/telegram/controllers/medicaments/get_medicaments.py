@@ -8,7 +8,7 @@ from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.dto.pagination import Pagination
+from src.diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
 from src.diary_ms.application.medicament.dto.medicament import (
@@ -73,7 +73,7 @@ list_medicaments_dialog = Dialog(
             ),
             id="scroll_meds",
             width=1,
-            height=5,
+            height=PAGE_SIZE,
             hide_on_single_page=True,
         ),
         Start(Const("➕ Добавить"), id="btn_add", state=CreateMedicamentSG.name),
