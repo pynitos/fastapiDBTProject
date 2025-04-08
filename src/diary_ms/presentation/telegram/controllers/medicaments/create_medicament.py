@@ -60,7 +60,6 @@ create_medicament_dialog = Dialog(
         ),
         Row(
             Button(Const(CONFIRM_BTN_TXT), id="btn_confirm", on_click=on_add_confirmed),
-            SwitchTo(Const(EDIT_BTN_TXT), id="btn_edit", state=CreateMedicamentSG.name),
             Cancel(Const(CANCEL_BTN_TXT)),
         ),
         state=CreateMedicamentSG.preview,
