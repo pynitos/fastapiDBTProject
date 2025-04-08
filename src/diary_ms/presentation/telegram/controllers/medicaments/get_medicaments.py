@@ -3,7 +3,7 @@ from uuid import UUID
 
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Back, Button, Row, ScrollingGroup, Select, Start
+from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row, ScrollingGroup, Select, Start
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -25,7 +25,6 @@ from src.diary_ms.presentation.telegram.common.constants import (
     REMOVE_BTN_TXT,
     YES_BTN_TXT,
 )
-from src.diary_ms.presentation.telegram.controllers.main_menu import MainMenuSG
 
 from .states import (
     CreateMedicamentSG,
@@ -78,7 +77,7 @@ list_medicaments_dialog = Dialog(
             hide_on_single_page=True,
         ),
         Start(Const("➕ Добавить"), id="btn_add", state=CreateMedicamentSG.name),
-        Start(Const(BACK_BTN_TXT), id="back_in_main_menu", state=MainMenuSG.view),
+        Cancel(Const(BACK_BTN_TXT)),
         state=GetOwnMedicamentsSG.view,
         getter=get_medicaments,
     )
