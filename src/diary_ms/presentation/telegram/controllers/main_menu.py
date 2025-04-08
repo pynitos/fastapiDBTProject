@@ -1,16 +1,12 @@
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.kbd import Button, Column, Start
 from aiogram_dialog.widgets.text import Const
 
 from src.diary_ms.presentation.telegram.controllers.medicaments.states import GetOwnMedicamentsSG
+from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
 
 from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG
-
-
-class MainMenuSG(StatesGroup):
-    main = State()
 
 
 async def on_manage_targets(callback: CallbackQuery, button: Button, manager: DialogManager):

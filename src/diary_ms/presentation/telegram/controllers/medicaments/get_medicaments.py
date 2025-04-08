@@ -30,7 +30,7 @@ from .states import (
     CreateMedicamentSG,
     GetOwnMedicamentSG,
     GetOwnMedicamentsSG,
-    UpdateMedicamentSG,
+    start_update_medicament,
     start_view_medicament,
 )
 
@@ -87,7 +87,14 @@ list_medicaments_dialog = Dialog(
 # -------------------------------
 # View Medicament Dialog
 # -------------------------------
-async def on_delete_clicked(callback: CallbackQuery, _: Button, manager: DialogManager):
+async def on_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager):
+    if not isinstance(dialog_manager.start_data, dict):
+        raise AppError
+    medicament_id: UUID = dialog_manager.start_data["medicament_id"]
+    await start_update_medicament(dialog_manager, medicament_id)
+
+
+async def on_delete_clicked(_: CallbackQuery, __: Button, manager: DialogManager):
     await manager.switch_to(GetOwnMedicamentSG.confirm_delete)
 
 
@@ -111,7 +118,7 @@ view_medicament_dialog = Dialog(
 """
         ),
         Row(
-            Start(Const(EDIT_BTN_TXT), id="btn_edit", state=UpdateMedicamentSG.name),
+            Button(Const(EDIT_BTN_TXT), id="btn_edit", on_click=on_update_clicked),
             Button(Const(REMOVE_BTN_TXT), id="btn_delete", on_click=on_delete_clicked),
         ),
         Cancel(Const(BACK_TO_LIST_BTN_TXT)),

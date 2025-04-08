@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram_dialog import DialogManager, StartMode
 
-from .main_menu import MainMenuSG
+from .states import MainMenuSG
 
 start_router = Router()
 
