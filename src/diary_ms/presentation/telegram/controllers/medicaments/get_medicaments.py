@@ -114,7 +114,7 @@ view_medicament_dialog = Dialog(
             Start(Const(EDIT_BTN_TXT), id="btn_edit", state=UpdateMedicamentSG.name),
             Button(Const(REMOVE_BTN_TXT), id="btn_delete", on_click=on_delete_clicked),
         ),
-        Start(Const(BACK_TO_LIST_BTN_TXT), id="back_to_list", state=GetOwnMedicamentsSG.view),
+        Cancel(Const(BACK_TO_LIST_BTN_TXT)),
         state=GetOwnMedicamentSG.view,
         getter=get_current_medicament,
         parse_mode="HTML",
