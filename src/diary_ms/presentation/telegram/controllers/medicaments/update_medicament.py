@@ -44,7 +44,6 @@ update_medicament_dialog = Dialog(
     Window(
         Const("Введите новое название:"),
         TextInput(id="input_name", on_success=on_edit_name_entered),
-        Back(Const("◀️ Назад")),
         Cancel(Const("❌ Отмена")),
         state=UpdateMedicamentSG.name,
     ),
@@ -52,7 +51,6 @@ update_medicament_dialog = Dialog(
         Const("Введите новую дозировку:"),
         TextInput(id="input_dosage", on_success=on_edit_dosage_entered),
         Back(Const("◀️ Назад")),
-        Cancel(Const("❌ Отмена")),
         state=UpdateMedicamentSG.dosage,
     ),
     Window(
@@ -65,7 +63,6 @@ update_medicament_dialog = Dialog(
         ),
         Row(
             Button(Const(CONFIRM_BTN_TXT), id="btn_confirm", on_click=on_edit_confirmed),
-            SwitchTo(Const(EDIT_BTN_TXT), id="btn_edit", state=UpdateMedicamentSG.name),
             Cancel(Const(CANCEL_BTN_TXT)),
         ),
         state=UpdateMedicamentSG.preview,
