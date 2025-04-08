@@ -366,7 +366,7 @@ create_diary_card_dialog = Dialog(
         ),
         Column(
             Multiselect(
-                Format("✓ {item[name]} | {item[dosage]}"),
+                Format("✓ {item[name]} ({item[dosage]})"),
                 Format("{item[name]} | {item[dosage]}"),
                 id="ms_medicaments",
                 item_id_getter=lambda x: str(x["id"]),

@@ -4,7 +4,9 @@ from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.kbd import Button, Column, Start
 from aiogram_dialog.widgets.text import Const
 
-from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG, MedicamentSG
+from src.diary_ms.presentation.telegram.controllers.medicaments.states import GetOwnMedicamentsSG
+
+from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG
 
 
 class MainMenuSG(StatesGroup):
@@ -30,7 +32,7 @@ main_menu_dialog = Dialog(
                 id="view_cards",
                 state=GetOwnDiaryCardsSG.view,
             ),
-            Start(Const("💊 Медикаменты"), id="manage_meds", state=MedicamentSG.list_medicaments),
+            Start(Const("💊 Медикаменты"), id="manage_meds", state=GetOwnMedicamentsSG.view),
             # Button(
             #     Const("🎯 Цели"),  # Изменил "Задачи" на "Цели"
             #     id="manage_targets",

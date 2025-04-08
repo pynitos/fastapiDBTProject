@@ -11,8 +11,8 @@ from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, ta
 from src.diary_ms.presentation.telegram.common.provider import TgProvider
 from src.diary_ms.presentation.telegram.controllers.diary_cards.create_diary_card import create_diary_card_dialog
 from src.diary_ms.presentation.telegram.controllers.diary_cards.get_diary_cards import own_diary_cards_dialog
-from src.diary_ms.presentation.telegram.controllers.diary_cards.medicaments import medicament_dialog
 from src.diary_ms.presentation.telegram.controllers.main_menu import main_menu_dialog
+from src.diary_ms.presentation.telegram.controllers.medicaments import medicament_router
 from src.diary_ms.presentation.telegram.controllers.start import start_router
 
 from .config import BaseConfig, BotConfig, WebConfig, load_bot_config, web_config
@@ -36,7 +36,7 @@ def get_dispatcher(_: BotConfig) -> Dispatcher:
     dp.include_router(main_menu_dialog)
     dp.include_router(create_diary_card_dialog)
     dp.include_router(own_diary_cards_dialog)
-    dp.include_router(medicament_dialog)
+    dp.include_router(medicament_router)
     setup_dishka(container=container, router=dp, auto_inject=True)
     setup_dialogs(dp)
     logger.info("DP done.")
