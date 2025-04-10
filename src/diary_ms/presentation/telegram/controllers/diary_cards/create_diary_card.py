@@ -6,10 +6,23 @@ from typing import Any
 from aiogram.types import CallbackQuery, InaccessibleMessage, Message
 from aiogram_dialog import Dialog, DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.input import ManagedTextInput, TextInput
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Column, Group, Multiselect, Next, Row, Select
+from aiogram_dialog.widgets.kbd import (
+    Back,
+    Button,
+    Cancel,
+    Column,
+    Group,
+    Multiselect,
+    Next,
+    Row,
+    Select,
+    Start,
+    SwitchTo,
+)
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
+from magic_filter import F
 
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
@@ -19,11 +32,13 @@ from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
 )
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
 from src.diary_ms.presentation.telegram.common.constants import (
+    ADD_BTN_TXT,
     BACK_BTN_TXT,
     CANCEL_BTN_TXT,
     CONFIRM_BTN_TXT,
     NEXT_BTN_TXT,
 )
+from src.diary_ms.presentation.telegram.controllers.medicaments.states import CreateMedicamentSG
 
 from . import states
 
@@ -373,7 +388,11 @@ create_diary_card_dialog = Dialog(
                 items="medicaments",
             ),
         ),
-        back_next_row,
+        Start(Const(ADD_BTN_TXT), id="add_medicament", state=CreateMedicamentSG.name, when=~F["medicaments"]),
+        Row(
+            SwitchTo(Const(BACK_BTN_TXT), id="back_to_targets", state=states.CreateDiaryCardSG.targets),
+            Next(Const(NEXT_BTN_TXT), on_click=on_skills_next_btn),
+        ),
         state=states.CreateDiaryCardSG.medicaments,
         parse_mode="HTML",
     ),

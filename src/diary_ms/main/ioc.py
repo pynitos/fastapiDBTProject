@@ -169,7 +169,7 @@ from src.diary_ms.application.target_behavior.dto.commands.update_target import 
     UpdateTargetAdminCommand,
     UpdateTargetCommand,
 )
-from src.diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetDTO, GetOwnTargetsDTO
+from src.diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetQuery, GetOwnTargetsQuery
 from src.diary_ms.application.target_behavior.interactors.commands.create_target import CreateTarget
 from src.diary_ms.application.target_behavior.interactors.commands.delete_target import DeleteTarget
 from src.diary_ms.application.target_behavior.interactors.commands.update_target import UpdateTarget
@@ -485,8 +485,8 @@ class InteractorsProvider(Provider):
         registry.register_command_handler(CreateTargetCommand, CreateTarget)
         registry.register_command_handler(UpdateTargetCommand, UpdateTarget)
         registry.register_command_handler(DeleteTargetCommand, DeleteTarget)
-        registry.register_query_handler(GetOwnTargetDTO, GetOwnTarget)
-        registry.register_query_handler(GetOwnTargetsDTO, GetOwnTargets)
+        registry.register_query_handler(GetOwnTargetQuery, GetOwnTarget)
+        registry.register_query_handler(GetOwnTargetsQuery, GetOwnTargets)
 
         registry.register_command_handler(CreateTargetAdminCommand, CreateTargetAdminHandler)
         registry.register_command_handler(UpdateTargetAdminCommand, UpdateTargetAdminHandler)

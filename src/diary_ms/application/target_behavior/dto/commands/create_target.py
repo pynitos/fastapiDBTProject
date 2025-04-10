@@ -7,7 +7,7 @@ from src.diary_ms.application.common.dto.command import Command
 @dataclass
 class CreateTargetCommand(Command[None]):
     urge: str
-    action: str
+    action: str | None = None
     user_id: UUID | None = None
     id: UUID | None = None
 

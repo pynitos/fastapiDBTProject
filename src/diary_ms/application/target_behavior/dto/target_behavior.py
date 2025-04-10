@@ -14,10 +14,10 @@ class OwnTargetDTO(DTO):
 
 
 @dataclass
-class GetOwnTargetDTO(Query[OwnTargetDTO]):
+class GetOwnTargetQuery(Query[OwnTargetDTO]):
     id: UUID
 
 
 @dataclass
-class GetOwnTargetsDTO(Query[list[OwnTargetDTO]]):
+class GetOwnTargetsQuery(Query[list[OwnTargetDTO]]):
     pagination: Pagination

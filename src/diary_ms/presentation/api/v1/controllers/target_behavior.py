@@ -9,8 +9,8 @@ from src.diary_ms.application.target_behavior.dto.commands.create_target import 
 from src.diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetCommand
 from src.diary_ms.application.target_behavior.dto.commands.update_target import UpdateTargetCommand
 from src.diary_ms.application.target_behavior.dto.target_behavior import (
-    GetOwnTargetDTO,
-    GetOwnTargetsDTO,
+    GetOwnTargetQuery,
+    GetOwnTargetsQuery,
     OwnTargetDTO,
 )
 from src.diary_ms.presentation.api.deps import SenderDep
@@ -35,7 +35,7 @@ async def get_targets(
     limit: int = 10,
     offset: int = 0,
 ) -> list[OwnTargetDTO]:
-    targets = await sender.send_query(GetOwnTargetsDTO(pagination=Pagination(limit=limit, offset=offset)))
+    targets = await sender.send_query(GetOwnTargetsQuery(pagination=Pagination(limit=limit, offset=offset)))
     return targets
 
 
@@ -44,7 +44,7 @@ async def get_own_target_by_id(
     id: UUID,
     sender: SenderDep,
 ) -> OwnTargetDTO:
-    target: OwnTargetDTO = await sender.send_query(GetOwnTargetDTO(id))
+    target: OwnTargetDTO = await sender.send_query(GetOwnTargetQuery(id))
     return target
 
 

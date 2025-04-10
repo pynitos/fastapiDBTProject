@@ -343,20 +343,50 @@ def get_default_targets() -> list[Target]:
     targets = [
         Target(
             user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Импульсивное поведение"),
-            action=CopingAction("Использовать навык STOP для остановки импульсивных действий."),
+            urge=TargetUrge("Кризисное суицидальное поведение"),
+            action=CopingAction("Использовать навыки стрессоустойчивости, обратиться за помощью."),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Селфхарм"),
+            action=CopingAction("Использовать навыки стрессоустойчивости: ПЕРЕЖИТЬ, СТОП, ТРУД."),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Суицидальные мысли"),
+            action=CopingAction("Использовать навык проверки фактов для анализа мыслей."),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Препятствующее терапии поведение"),
+            action=CopingAction("Использовать навыки эмоциональной регуляции"),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Поведение, ухудшающее качество жизни"),
+            action=CopingAction("Применить навыки решения проблем"),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Алгоколизм или наркомания"),
+            action=CopingAction("Использовать навыки диалектического отказа."),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Опасные половые связи"),
+            action=CopingAction("Использовать навыки стрессоустойчивости и межличностной эффективности."),
             is_default=TargetIsDefault(True),
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Эмоциональное переедание"),
             action=CopingAction("Применить навык осознанности к текущим эмоциям и выбрать альтернативное действие."),
-            is_default=TargetIsDefault(True),
-        ),
-        Target(
-            user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Саморазрушительные мысли"),
-            action=CopingAction("Использовать навык проверки фактов для анализа мыслей."),
             is_default=TargetIsDefault(True),
         ),
         Target(
@@ -381,24 +411,6 @@ def get_default_targets() -> list[Target]:
             user_id=UserId(ADMIN_USER_ID),
             urge=TargetUrge("Конфликты в отношениях"),
             action=CopingAction("Применить навык DEAR MAN для эффективного общения."),
-            is_default=TargetIsDefault(True),
-        ),
-        Target(
-            user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Чувство вины"),
-            action=CopingAction("Использовать навык проверки фактов и радикального принятия."),
-            is_default=TargetIsDefault(True),
-        ),
-        Target(
-            user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Тревога перед будущим"),
-            action=CopingAction("Применить навык ACCEPTS для отвлечения и успокоения."),
-            is_default=TargetIsDefault(True),
-        ),
-        Target(
-            user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Чувство одиночества"),
-            action=CopingAction("Использовать навык GIVE для построения позитивных отношений."),
             is_default=TargetIsDefault(True),
         ),
     ]

@@ -34,10 +34,9 @@ from .states import (
     start_view_medicament,
 )
 
-
-# -------------------------------
 # Common getters and handlers
-# -------------------------------
+
+
 @inject
 async def get_medicaments(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):
     medicaments: list[OwnMedicamentDTO] = await sender.send_query(GetOwnMedicamentsDTO(pagination=Pagination()))
@@ -53,9 +52,9 @@ async def get_current_medicament(dialog_manager: DialogManager, sender: FromDish
     return {"medicament": medicament}
 
 
-# -------------------------------
-# List Medicaments Dialog
-# -------------------------------
+""" List Medicaments Dialog """
+
+
 async def on_medicament_selected(_: CallbackQuery, __: Any, dialog_manager: DialogManager, medicament_id: str):
     await start_view_medicament(dialog_manager, UUID(medicament_id))
 
@@ -84,9 +83,9 @@ list_medicaments_dialog = Dialog(
 )
 
 
-# -------------------------------
-# View Medicament Dialog
-# -------------------------------
+"""View Medicament Dialog"""
+
+
 async def on_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager):
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
@@ -118,8 +117,8 @@ view_medicament_dialog = Dialog(
 """
         ),
         Row(
-            Button(Const(EDIT_BTN_TXT), id="btn_edit", on_click=on_update_clicked),
             Button(Const(REMOVE_BTN_TXT), id="btn_delete", on_click=on_delete_clicked),
+            Button(Const(EDIT_BTN_TXT), id="btn_edit", on_click=on_update_clicked),
         ),
         Cancel(Const(BACK_TO_LIST_BTN_TXT)),
         state=GetOwnMedicamentSG.view,

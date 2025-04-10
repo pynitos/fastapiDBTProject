@@ -13,6 +13,7 @@ from src.diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardDTO, GetOwnDiaryCardsDTO, OwnDiaryCardDTO
+from src.diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, CANCEL_BTN_TXT, REMOVE_BTN_TXT
 from src.diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
 
 from . import states
@@ -69,7 +70,7 @@ list_window = Window(
         height=PAGE_SIZE,
         hide_on_single_page=True,
     ),
-    Cancel(Const("◀️ Назад")),
+    Cancel(Const(BACK_BTN_TXT)),
     state=states.GetOwnDiaryCardsSG.view,
     getter=get_cards_list,
 )
@@ -130,7 +131,7 @@ detail_window = Window(
 {% endif %}
 """
     ),
-    Column(Button(Const("❌ Удалить"), id="btn_delete", on_click=on_delete_clicked), Back(Const("◀️ К списку"))),
+    Column(Button(Const(REMOVE_BTN_TXT), id="btn_delete", on_click=on_delete_clicked), Back(Const("◀️ К списку"))),
     state=states.GetOwnDiaryCardsSG.detail_view,
     getter=get_card_details,
     parse_mode="HTML",
@@ -140,7 +141,8 @@ detail_window = Window(
 confirm_delete_window = Window(
     Const("Вы уверены, что хотите удалить эту запись?"),
     Column(
-        Button(Const("✅ Да, удалить"), id="btn_confirm_delete", on_click=on_delete_confirmed), Back(Const("◀️ Отмена"))
+        Button(Const("✅ Да, удалить"), id="btn_confirm_delete", on_click=on_delete_confirmed),
+        Back(Const(CANCEL_BTN_TXT)),
     ),
     state=states.GetOwnDiaryCardsSG.confirm_delete,
 )
