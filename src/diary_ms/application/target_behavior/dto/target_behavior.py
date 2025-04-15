@@ -19,5 +19,10 @@ class GetOwnTargetQuery(Query[OwnTargetDTO]):
 
 
 @dataclass
+class GetOwnAndDefaultTargetsQuery(Query[list[OwnTargetDTO]]):
+    pagination: Pagination
+
+
+@dataclass
 class GetOwnTargetsQuery(Query[list[OwnTargetDTO]]):
     pagination: Pagination

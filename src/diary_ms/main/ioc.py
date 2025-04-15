@@ -169,10 +169,17 @@ from src.diary_ms.application.target_behavior.dto.commands.update_target import 
     UpdateTargetAdminCommand,
     UpdateTargetCommand,
 )
-from src.diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetQuery, GetOwnTargetsQuery
+from src.diary_ms.application.target_behavior.dto.target_behavior import (
+    GetOwnAndDefaultTargetsQuery,
+    GetOwnTargetQuery,
+    GetOwnTargetsQuery,
+)
 from src.diary_ms.application.target_behavior.interactors.commands.create_target import CreateTarget
 from src.diary_ms.application.target_behavior.interactors.commands.delete_target import DeleteTarget
 from src.diary_ms.application.target_behavior.interactors.commands.update_target import UpdateTarget
+from src.diary_ms.application.target_behavior.interactors.queries.get_own_and_default_targets import (
+    GetOwnAndDefaultTargets,
+)
 from src.diary_ms.application.target_behavior.interactors.queries.get_own_target_by_id import GetOwnTarget
 from src.diary_ms.application.target_behavior.interactors.queries.get_own_targets import GetOwnTargets
 from src.diary_ms.application.target_behavior.interfaces.gateway import (
@@ -423,6 +430,7 @@ class InteractorsProvider(Provider):
         GetSkillAdminHandler,
         GetSkillsAdminHandler,
         GetOwnTargets,
+        GetOwnAndDefaultTargets,
         GetOwnTarget,
         GetTargetAdminHandler,
         GetTargetsAdminHandler,
@@ -480,14 +488,13 @@ class InteractorsProvider(Provider):
         registry.register_command_handler(DeleteMedicamentAdminCommand, DeleteMedicamentAdminHandler)
         registry.register_query_handler(GetMedicamentsAdminDTO, GetMedicamentsAdminHandler)
         registry.register_query_handler(GetMedicamentAdminDTO, GetMedicamentAdminHandler)
-
         # Targets
         registry.register_command_handler(CreateTargetCommand, CreateTarget)
         registry.register_command_handler(UpdateTargetCommand, UpdateTarget)
         registry.register_command_handler(DeleteTargetCommand, DeleteTarget)
         registry.register_query_handler(GetOwnTargetQuery, GetOwnTarget)
         registry.register_query_handler(GetOwnTargetsQuery, GetOwnTargets)
-
+        registry.register_query_handler(GetOwnAndDefaultTargetsQuery, GetOwnAndDefaultTargets)
         registry.register_command_handler(CreateTargetAdminCommand, CreateTargetAdminHandler)
         registry.register_command_handler(UpdateTargetAdminCommand, UpdateTargetAdminHandler)
         registry.register_command_handler(DeleteTargetAdminCommand, DeleteTargetAdminHandler)

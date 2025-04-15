@@ -18,6 +18,7 @@ from src.diary_ms.application.medicament.dto.medicament import (
 )
 from src.diary_ms.domain.common.exceptions.base import AppError
 from src.diary_ms.presentation.telegram.common.constants import (
+    ADD_BTN_TXT,
     BACK_BTN_TXT,
     BACK_TO_LIST_BTN_TXT,
     EDIT_BTN_TXT,
@@ -75,7 +76,7 @@ list_medicaments_dialog = Dialog(
             height=PAGE_SIZE,
             hide_on_single_page=True,
         ),
-        Start(Const("➕ Добавить"), id="btn_add", state=CreateMedicamentSG.name),
+        Start(Const(ADD_BTN_TXT), id="btn_add_med", state=CreateMedicamentSG.name),
         Cancel(Const(BACK_BTN_TXT)),
         state=GetOwnMedicamentsSG.view,
         getter=get_medicaments,

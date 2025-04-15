@@ -10,9 +10,10 @@ start_router = Router()
 
 @start_router.message(CommandStart())
 async def start(
-    _: Message,
+    message: Message,
     dialog_manager: DialogManager,
 ) -> None:
+    await message.delete()
     await dialog_manager.start(
         MainMenuSG.main,
         mode=StartMode.RESET_STACK,

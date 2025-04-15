@@ -1,18 +1,12 @@
-from aiogram.types import CallbackQuery
-from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Button, Column, Start
+from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.kbd import Column, Start
 from aiogram_dialog.widgets.text import Const
 
 from src.diary_ms.presentation.telegram.controllers.medicaments.states import GetOwnMedicamentsSG
 from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
+from src.diary_ms.presentation.telegram.controllers.targets.states import GetTargetsSG
 
 from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG
-
-
-async def on_manage_targets(callback: CallbackQuery, button: Button, manager: DialogManager):
-    # await manager.start(ManageTargetsStates.menu)
-    pass
-
 
 main_menu_dialog = Dialog(
     Window(
@@ -29,11 +23,11 @@ main_menu_dialog = Dialog(
                 state=GetOwnDiaryCardsSG.view,
             ),
             Start(Const("💊 Медикаменты"), id="manage_meds", state=GetOwnMedicamentsSG.view),
-            # Button(
-            #     Const("🎯 Цели"),  # Изменил "Задачи" на "Цели"
-            #     id="manage_targets",
-            #     on_click=on_manage_targets
-            # ),
+            Start(
+                Const("🎯 Целевое поведение"),
+                id="manage_targets",
+                state=GetTargetsSG.view,
+            ),
         ),
         state=MainMenuSG.main,
         parse_mode="HTML",

@@ -2,8 +2,8 @@
 from aiogram import Router
 
 from .create_target import create_target_dialog
-from .get_target import get_target_dialog
 from .get_targets import get_targets_dialog
+from .view_target import get_target_dialog
 
 targets_router = Router()
 targets_router.include_router(create_target_dialog)

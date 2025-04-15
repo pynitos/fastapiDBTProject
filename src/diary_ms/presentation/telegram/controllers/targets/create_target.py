@@ -14,7 +14,7 @@ from src.diary_ms.presentation.telegram.common.constants import CANCEL_BTN_TXT, 
 from src.diary_ms.presentation.telegram.common.constants.targets import TARGET_ACTION_PROMPT, TARGET_URGE_PROMPT
 from src.diary_ms.presentation.telegram.common.widgets.back_next import back_next_row
 
-from .states import TargetCreateSG
+from .states import CreateTargetSG
 
 
 @inject
@@ -43,14 +43,14 @@ create_urge_window = Window(
     Const(TARGET_URGE_PROMPT),
     TextInput(id="input_urge", on_success=on_urge_entered),
     Cancel(Const(CANCEL_BTN_TXT)),
-    state=TargetCreateSG.urge,
+    state=CreateTargetSG.urge,
 )
 
 create_action_window = Window(
     Const(TARGET_ACTION_PROMPT),
     TextInput(id="input_action", on_success=on_action_entered),
     back_next_row(),
-    state=TargetCreateSG.action,
+    state=CreateTargetSG.action,
 )
 
 
@@ -81,7 +81,7 @@ create_confirm_window = Window(
     ),
     Button(Const(CONFIRM_BTN_TXT), id="btn_confirm", on_click=on_create_confirmed),
     Cancel(Const(CANCEL_BTN_TXT)),
-    state=TargetCreateSG.confirm,
+    state=CreateTargetSG.confirm,
     parse_mode="HTML",
 )
 

@@ -1,4 +1,4 @@
-from sqlalchemy import ScalarResult, Select, or_, select
+from sqlalchemy import ScalarResult, Select, and_, or_, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.target_behavior.exceptions.target_behavior import (
@@ -49,7 +49,40 @@ class TargetGateway(
         result_list: list[Target] = list(result.all())
         return result_list
 
+    async def get_all_own(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[Target]:
+        if not user_id.value:
+            raise UserIdNotProvidedError
+        stmt: Select[tuple[Target]] = (
+            select(self._db_model)
+            .where(
+                self._db_model.user_id == user_id,  # type: ignore
+            )
+            .offset(offset)
+            .limit(limit)
+        )
+        result: ScalarResult[Target] = await self._session.scalars(stmt)
+        result_list: list[Target] = list(result.all())
+        return result_list
+
     async def get_by_id(self, id: TargetId, user_id: UserId) -> Target | None:
+        if not id.value:
+            raise TargetIdNotProvidedError
+        if not user_id.value:
+            raise UserIdNotProvidedError
+        stmt: Select[tuple[Target]] = select(self._db_model).where(
+            or_(
+                self._db_model.is_default == TargetIsDefault(True),  # type: ignore
+                and_(
+                    self._db_model.id == id,  # type: ignore
+                    self._db_model.user_id == user_id,  # type: ignore
+                ),
+            )
+        )
+        result: ScalarResult[Target] = await self._session.scalars(stmt)
+        entity: Target | None = result.first()
+        return entity
+
+    async def get_own_by_id(self, id: TargetId, user_id: UserId) -> Target | None:
         if not id.value:
             raise TargetIdNotProvidedError
         if not user_id.value:
@@ -66,7 +99,7 @@ class TargetGateway(
         self._session.add(entity)
 
     async def delete(self, id: TargetId, user_id: UserId) -> None:
-        entity: Target | None = await self.get_by_id(id, user_id)
+        entity: Target | None = await self.get_own_by_id(id, user_id)
         if not entity:
             raise TargetNotFoundError(id)
         await self._session.delete(entity)
