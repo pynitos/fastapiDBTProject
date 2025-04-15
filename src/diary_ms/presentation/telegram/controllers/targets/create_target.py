@@ -11,7 +11,7 @@ from dishka.integrations.aiogram_dialog import inject
 from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.target_behavior.dto.commands.create_target import CreateTargetCommand
 from src.diary_ms.presentation.telegram.common.constants import CANCEL_BTN_TXT, CONFIRM_BTN_TXT
-from src.diary_ms.presentation.telegram.common.constants.targets import TARGET_ACTION_PROMPT, TARGET_URGE_PROMPT
+from src.diary_ms.presentation.telegram.common.constants.targets import TARGET_COPING_STRATEGY_PROMPT, TARGET_URGE_PROMPT
 from src.diary_ms.presentation.telegram.common.widgets.back_next import back_next_row
 
 from .states import CreateTargetSG
@@ -47,7 +47,7 @@ create_urge_window = Window(
 )
 
 create_action_window = Window(
-    Const(TARGET_ACTION_PROMPT),
+    Const(TARGET_COPING_STRATEGY_PROMPT),
     TextInput(id="input_action", on_success=on_action_entered),
     back_next_row(),
     state=CreateTargetSG.action,

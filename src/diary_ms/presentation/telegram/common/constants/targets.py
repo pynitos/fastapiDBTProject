@@ -1,5 +1,5 @@
 TARGET_URGE_PROMPT = "Опишите проблемное поведение:"
-TARGET_ACTION_PROMPT = "Какое действие предприняли?"
+TARGET_COPING_STRATEGY_PROMPT = "Опишите стратегию совладения:"
 TARGET_DELETE_CONFIRM_MSG = "Вы уверены, что хотите удалить эту цель?"
 TARGET_DELETED_MSG = "Цель удалена."
 TARGET_HEADER = "🎯 Целевое поведение"
