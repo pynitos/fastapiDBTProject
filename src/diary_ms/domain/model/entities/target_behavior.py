@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from typing import Self
+from uuid import uuid4
+
+from attr import field
 
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
@@ -13,9 +16,9 @@ from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetU
 
 @dataclass
 class Target(BaseEntity):
-    id: TargetId
     user_id: UserId
     urge: TargetUrge
+    id: TargetId = TargetId(None)
     action: CopingAction = CopingAction()
     coping_strategy: CopingStrategy | None = None
     is_default: TargetIsDefault = TargetIsDefault(False)

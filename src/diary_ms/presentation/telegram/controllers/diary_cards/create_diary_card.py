@@ -105,7 +105,7 @@ async def on_targets_selected(
         dialog_manager.dialog_data["selected_targets"] = targets
 
 
-async def target_data_getter(dialog_manager: DialogManager, **kwargs: Any) -> None:  # noqa: ARG001
+async def target_data_getter(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
     targets = dialog_manager.dialog_data["selected_targets"]
 
     current_target = targets[0]
@@ -342,15 +342,15 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.targets,
     ),
     Window(
-        Format("📌  Поведение: <b>{target_name}.</b>\nОпишите ситуацию и способ совладания с ней:"),
+        Format("📌  Проблемное поведение: <b>{target_name}.</b>\n\nОпишите ситуацию и способ совладания с ней:"),
         TextInput(id="target_action_input", on_success=on_target_action_entered),
         Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_target_action_next_btn)),
         state=states.CreateDiaryCardSG.target_action,
-        getter=target_data_getter,  # Получаем текущую цель
+        getter=target_data_getter,
         parse_mode="HTML",
     ),
     Window(
-        Format("📌 Поведение: <b>{target_name}</b>\n\nОцените эффективность:"),
+        Format("📌 Поведение: <b>{target_name}</b>\n\nОцените эффективность копинг-стратегии, если применили ёё."),
         Group(
             Select(
                 Format("{item}"),
@@ -390,7 +390,7 @@ create_diary_card_dialog = Dialog(
         Start(Const(ADD_BTN_TXT), id="add_medicament", state=CreateMedicamentSG.name, when=~F["medicaments"]),
         Row(
             SwitchTo(Const(BACK_BTN_TXT), id="back_to_targets", state=states.CreateDiaryCardSG.targets),
-            Next(Const(NEXT_BTN_TXT), on_click=on_skills_next_btn),
+            Next(Const(NEXT_BTN_TXT)),
         ),
         state=states.CreateDiaryCardSG.medicaments,
         parse_mode="HTML",
@@ -420,9 +420,11 @@ create_diary_card_dialog = Dialog(
         Jinja(
             """
 <b>📋 Проверьте введенные данные:</b>
-<b>═══════════════</b>
+
 <b>Настроение:</b> {{ mood }}
+{% if description %}
 <b>Описание:</b> {{ description }}
+{% endif %}
 <b>🎯 Проблемное поведение:</b>
 {% if target_copings %}
 {% for t in target_copings -%}

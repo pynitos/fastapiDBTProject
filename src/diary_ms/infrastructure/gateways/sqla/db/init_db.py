@@ -326,14 +326,6 @@ def get_default_emotions() -> list[Emotion]:
             name=EmotionName("Ревность"),
             description=EmotionDescription("Чувство беспокойства или страха потерять внимание или любовь кого-то."),
         ),
-        Emotion(
-            name=EmotionName("Благодарность"),
-            description=EmotionDescription("Чувство признательности за что-то хорошее, что произошло."),
-        ),
-        Emotion(
-            name=EmotionName("Одиночество"),
-            description=EmotionDescription("Чувство изоляции или отсутствия связи с другими."),
-        ),
     ]
 
 
