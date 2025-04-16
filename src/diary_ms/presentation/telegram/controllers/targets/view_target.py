@@ -46,9 +46,7 @@ async def on_target_update_clicked(_: CallbackQuery, __: Button, dialog_manager:
 view_target_window = Window(
     Jinja(
         """
-<b>{{ target.header }}:</b>
-
-🚨 <b>Проблемное поведение:</b> {{ target.urge }}
+<b>{{ target.header }}:</b> {{ target.urge }}
 
 🛡️ <b>Копинг-стратегия:</b> {{ target.action }}
 """
