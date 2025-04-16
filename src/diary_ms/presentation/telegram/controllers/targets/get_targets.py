@@ -26,7 +26,7 @@ from src.diary_ms.presentation.telegram.controllers.targets.states import (
 @inject
 async def get_targets_data(
     sender: FromDishka[Sender],
-    **kwargs: Any,
+    **kwargs: Any,  # noqa: ARG001
 ) -> dict[str, Any]:
     targets: list[OwnTargetDTO] = await sender.send_query(GetOwnTargetsQuery(pagination=Pagination()))
     return {"targets": targets}
@@ -36,9 +36,9 @@ async def on_target_selected(
     _: CallbackQuery,
     __: Any,
     dialog_manager: DialogManager,
-    target_id: UUID,
+    target_id: str,
 ) -> None:
-    await start_view_target(dialog_manager, target_id)
+    await start_view_target(dialog_manager, UUID(target_id))
 
 
 list_window = Window(
@@ -47,8 +47,7 @@ list_window = Window(
         Select(
             Format("{item.urge}"),
             id="s_targets",
-            item_id_getter=lambda x: x.id,
-            type_factory=UUID,
+            item_id_getter=lambda item: str(item.id),
             items="targets",
             on_click=on_target_selected,
         ),

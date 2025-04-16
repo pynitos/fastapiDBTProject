@@ -37,7 +37,7 @@ async def on_delete_confirmed(callback: CallbackQuery, _: Button, manager: Dialo
 
 
 @inject
-async def get_cards_list(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
+async def get_cards_list(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:  # noqa: ARG001
     scroll: ManagedScroll | None = dialog_manager.find("scroll_diary_cards")
     page = await scroll.get_page() if scroll else 1
     offset = page * PAGE_SIZE
@@ -46,7 +46,7 @@ async def get_cards_list(dialog_manager: DialogManager, sender: FromDishka[Sende
 
 
 @inject
-async def get_card_details(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:
+async def get_card_details(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs) -> dict[str, Any]:  # noqa: ARG001
     card_id = dialog_manager.dialog_data["selected_card_id"]
     card: OwnDiaryCardDTO = await sender.send_query(GetOwnDiaryCardDTO(id=card_id))
     mood = MoodDisplay.from_level(card.mood)

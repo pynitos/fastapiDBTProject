@@ -1,4 +1,4 @@
-from sqlalchemy import ScalarResult, Select, and_, or_, select
+from sqlalchemy import ScalarResult, Select, or_, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.target_behavior.exceptions.target_behavior import (
@@ -70,13 +70,11 @@ class TargetGateway(
         if not user_id.value:
             raise UserIdNotProvidedError
         stmt: Select[tuple[Target]] = select(self._db_model).where(
+            self._db_model.id == id,  # type: ignore
             or_(
                 self._db_model.is_default == TargetIsDefault(True),  # type: ignore
-                and_(
-                    self._db_model.id == id,  # type: ignore
-                    self._db_model.user_id == user_id,  # type: ignore
-                ),
-            )
+                self._db_model.user_id == user_id,  # type: ignore
+            ),
         )
         result: ScalarResult[Target] = await self._session.scalars(stmt)
         entity: Target | None = result.first()

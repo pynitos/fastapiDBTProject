@@ -13,12 +13,12 @@ from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetU
 
 @dataclass
 class Target(BaseEntity):
+    id: TargetId
     user_id: UserId
     urge: TargetUrge
     action: CopingAction = CopingAction()
     coping_strategy: CopingStrategy | None = None
     is_default: TargetIsDefault = TargetIsDefault(False)
-    id: TargetId = TargetId(None)
 
     @classmethod
     def create(

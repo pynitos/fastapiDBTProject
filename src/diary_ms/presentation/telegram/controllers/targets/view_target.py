@@ -1,7 +1,7 @@
 from typing import Any
 
 from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Back, SwitchTo
+from aiogram_dialog.widgets.kbd import Cancel, SwitchTo
 from aiogram_dialog.widgets.text import Const, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -19,7 +19,7 @@ from .states import ViewTargetSG
 async def get_target_data(
     dialog_manager: DialogManager,
     sender: FromDishka[Sender],
-    **kwargs: Any,
+    **kwargs: Any,  # noqa: ARG001
 ) -> dict[str, Any]:
     target = await sender.send_query(GetOwnTargetQuery(id=dialog_manager.start_data["target_id"]))
     return {
@@ -42,7 +42,7 @@ view_target_window = Window(
 """
     ),
     SwitchTo(Const(REMOVE_BTN_TXT), id="btn_delete", state=ViewTargetSG.confirm_delete),
-    Back(Const(BACK_TO_LIST_BTN_TXT)),
+    Cancel(Const(BACK_TO_LIST_BTN_TXT)),
     state=ViewTargetSG.view,
     getter=get_target_data,
     parse_mode="HTML",

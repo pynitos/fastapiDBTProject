@@ -1,6 +1,7 @@
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.exceptions import TelegramNetworkError
 from aiogram_dialog import setup_dialogs
 from dishka import AsyncContainer, make_async_container
 from dishka.integrations.aiogram import setup_dishka
@@ -47,4 +48,7 @@ def get_dispatcher(_: BotConfig) -> Dispatcher:
 async def bot_main():
     logger.info("start")
     bot = Bot(config.bot_token)
-    await get_dispatcher(config).start_polling(bot)
+    try:
+        await get_dispatcher(config).start_polling(bot)
+    except TelegramNetworkError:
+        logger.error("TelegramNetworkError: отсутствует соединение с сервером телеграм или с интернетом")

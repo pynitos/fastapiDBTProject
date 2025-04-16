@@ -39,13 +39,13 @@ from .states import (
 
 
 @inject
-async def get_medicaments(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):
+async def get_medicaments(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):  # noqa: ARG001
     medicaments: list[OwnMedicamentDTO] = await sender.send_query(GetOwnMedicamentsDTO(pagination=Pagination()))
     return {"medicaments": medicaments}
 
 
 @inject
-async def get_current_medicament(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):
+async def get_current_medicament(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):  # noqa: ARG001
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
     medicament_id: UUID = dialog_manager.start_data["medicament_id"]
