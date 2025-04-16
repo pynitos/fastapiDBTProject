@@ -80,30 +80,32 @@ detail_window = Window(
     Jinja(
         """
 📅 <b>{{ item.date_of_entry.strftime('%d.%m.%Y') }}</b>
-🌡 <b>Настроение:</b> {{ item.mood_text }} {{ item.mood_emoji }}
+
+🌡 <b>Настроение:</b> {{ item.mood_emoji }} ({{ item.mood_text }})
 {% if item.description %}
-📄 <b>Описание:</b> {{ item.description }}
+
+📄 <b>Описание дня:</b>
+{{ item.description }}
 {% endif %}
 
 🎯 <b>Целевое поведение:</b>
 {% if item.targets %}
 {% for target in item.targets -%}
-▸ {{ target.urge }}
-  {% if target.action %}
-  Поведение: <i>{{ target.action }}</i>
-  {% endif %}
-  {% if target.effectiveness %}
-  Эффективность: <i>{{ target.effectiveness }}/10</i>
-  {% endif %}
+▸ {{ target.urge }}{% if target.action %}: <i>{{ target.action }}</i>
+{% endif %}
+{% if target.effectiveness %}
+↳ Эффективность: <i>{{ target.effectiveness }}/10</i>
+{% endif %}
 {% endfor %}
 {% else %}
-▸ <i>не указано</i>
+▹ <i>не указано</i>
 {% endif %}
 
-😶‍🌫️ <b>Эмоции:</b>
+
+🌊 <b>Эмоции:</b>
 {% if item.emotions %}
 {% for emotion in item.emotions -%}
-▹ {{ emotion.name }}
+▸ {{ emotion.name }}
 {% endfor %}
 {% else %}
 ▹ <i>не указано</i>
@@ -121,13 +123,11 @@ detail_window = Window(
 🛠️ <b>Применённые навыки:</b>
 {% if item.skills %}
 {% for skill in item.skills -%}
-▸ {{ skill.name }}
-  {% if skill.situation %}
-  - {{ skill.situation }}
-  {% endif %}
+▸ {{ skill.name }}{% if skill.situation %}: <i>{{ skill.situation }}</i>
+{% endif %}
 {% endfor %}
 {% else %}
-▸ <i>не указано</i>
+▹ <i>не указано</i>
 {% endif %}
 """
     ),

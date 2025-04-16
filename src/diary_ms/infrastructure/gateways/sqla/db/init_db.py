@@ -335,7 +335,7 @@ def get_default_targets() -> list[Target]:
     targets = [
         Target(
             user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Кризисное суицидальное поведение"),
+            urge=TargetUrge("Суицидальное поведение"),
             action=CopingAction("Использовать навыки стрессоустойчивости, обратиться за помощью."),
             is_default=TargetIsDefault(True),
         ),
@@ -353,14 +353,13 @@ def get_default_targets() -> list[Target]:
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Препятствующее терапии поведение"),
-            action=CopingAction("Использовать навыки эмоциональной регуляции"),
-            is_default=TargetIsDefault(True),
-        ),
-        Target(
-            user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Поведение, ухудшающее качество жизни"),
-            action=CopingAction("Применить навыки решения проблем"),
+            urge=TargetUrge("Препятствие терапии"),
+            action=CopingAction("""
+                                Использовать навык осознанности к своим эмоциям,
+                                анализа поведенческой цепочки,
+                                навык межличностной эффективности ДРУГ
+                                """
+                                ),
             is_default=TargetIsDefault(True),
         ),
         Target(

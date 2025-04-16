@@ -37,6 +37,7 @@ from src.diary_ms.presentation.telegram.common.constants import (
     CANCEL_BTN_TXT,
     CONFIRM_BTN_TXT,
     NEXT_BTN_TXT,
+    REMOVE_BTN_TXT,
 )
 from src.diary_ms.presentation.telegram.controllers.medicaments.states import CreateMedicamentSG
 
@@ -342,7 +343,7 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.targets,
     ),
     Window(
-        Format("📌  Проблемное поведение: <b>{target_name}.</b>\n\nОпишите ситуацию и способ совладания с ней:"),
+        Format("📌  <b>Проблемное поведение:</b> {target_name}.\n\nОпишите ситуацию и способ совладания с ней:"),
         TextInput(id="target_action_input", on_success=on_target_action_entered),
         Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_target_action_next_btn)),
         state=states.CreateDiaryCardSG.target_action,
@@ -350,7 +351,7 @@ create_diary_card_dialog = Dialog(
         parse_mode="HTML",
     ),
     Window(
-        Format("📌 Поведение: <b>{target_name}</b>\n\nОцените эффективность копинг-стратегии, если применили ёё."),
+        Format("📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность копинг-стратегии, если применили ёё"),
         Group(
             Select(
                 Format("{item}"),
@@ -422,8 +423,10 @@ create_diary_card_dialog = Dialog(
 <b>📋 Проверьте введенные данные:</b>
 
 <b>Настроение:</b> {{ mood }}
+
 {% if description %}
 <b>Описание:</b> {{ description }}
+
 {% endif %}
 <b>🎯 Проблемное поведение:</b>
 {% if target_copings %}
@@ -436,6 +439,7 @@ create_diary_card_dialog = Dialog(
 {% else %}
 - Не указаны
 {% endif %}
+
 <b>😊 Эмоции:</b>
 {% if emotions %}
 {% for emotion in emotions -%}
@@ -444,6 +448,7 @@ create_diary_card_dialog = Dialog(
 {% else %}
 - Не указаны
 {% endif %}
+
 <b>💊 Медикаменты:</b>
 {% if medicaments %}
 {% for med in medicaments -%}
@@ -465,7 +470,7 @@ create_diary_card_dialog = Dialog(
             """
         ),
         Button(Const(CONFIRM_BTN_TXT), on_click=on_confirmation, id="confirm"),
-        Cancel(Const("✖️ Удалить")),
+        Cancel(Const(REMOVE_BTN_TXT)),
         getter=get_confirmation_data,
         state=states.CreateDiaryCardSG.CONFIRMATION,
         parse_mode="HTML",
