@@ -308,7 +308,7 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.mood,
     ),
     Window(
-        Const("Опишите ваше состояние:"),
+        Const("Опишите ваш день:"),
         back_next_row,
         TextInput[str](id=DESCRIPTION_INPUT_ID, on_success=on_description_entered),
         state=states.CreateDiaryCardSG.description,
