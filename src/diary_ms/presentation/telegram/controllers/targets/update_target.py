@@ -73,6 +73,7 @@ update_target_dialog = Dialog(
 <b>Подтвердите изменения:</b>
 
 🚨 <b>Проблемное поведение:</b> {{ dialog_data["urge"] }}
+
 🛡️ <b>Копинг-стратегия:</b> {{ dialog_data["action"] }}
 """
         ),

@@ -191,6 +191,7 @@ from src.diary_ms.application.target_behavior.interfaces.gateway import (
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
+from src.diary_ms.domain.services.target_admin import TargetAdminService
 from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
 from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
 from src.diary_ms.infrastructure.brokers.interface import Broker
@@ -380,6 +381,10 @@ class AdaptersProvider(Provider):
 
 class InteractorsProvider(Provider):
     scope = Scope.REQUEST
+
+    domain_services = provide_all(
+        TargetAdminService,
+    )
 
     mappers = provide_all(
         WithParents[DiaryCardDTOMapperImpl],  # type: ignore

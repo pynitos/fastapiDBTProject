@@ -12,6 +12,7 @@ from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.act
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
+from src.diary_ms.domain.services.target_admin import TargetAdminService
 
 
 class CreateTargetAdminHandler(CommandHandler[CreateTargetAdminCommand, None]):
@@ -21,22 +22,24 @@ class CreateTargetAdminHandler(CommandHandler[CreateTargetAdminCommand, None]):
         id_provider: AdminIdProvider,
         transaction_manager: TransactionManager,
         publisher: Publisher,
+        service: TargetAdminService,
     ) -> None:
         self._db_gateway = db_gateway
         self._id_provider = id_provider
         self._transaction_manager = transaction_manager
         self._publisher = publisher
+        self._service = service
 
     async def __call__(self, command: CreateTargetAdminCommand) -> None:
         user_id: UserId = self._id_provider.get_admin_user_id()
         command.user_id = user_id.value
         command.is_default = True
-        medicament: Target = Target.admin_create(
+        target: Target = self._service.create_target(
             id=TargetId(uuid4()),
             user_id=user_id,
             urge=TargetUrge(command.urge),
             action=CopingAction(command.action),
             is_default=TargetIsDefault(command.is_default),
         )
-        await self._db_gateway.create(medicament)
+        await self._db_gateway.create(target)
         await self._transaction_manager.commit()

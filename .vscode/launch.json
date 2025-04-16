@@ -31,7 +31,7 @@
             "request": "launch",
             "module": "fastapi",
             "args": [
-                "dev",
+                "run",
                 "./src/diary_ms/main/web.py",
             ],
         },

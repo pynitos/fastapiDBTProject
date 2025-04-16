@@ -82,7 +82,9 @@ create_confirm_window = Window(
     Jinja(
         """
 <b>Подтвердите создание цели:</b>
+
 🚨 <b>Проблемное поведение:</b> {{ dialog_data["urge"] }}
+
 🛡️ <b>Копинг-стратегия:</b> {{ dialog_data["action"] }}
 """
     ),

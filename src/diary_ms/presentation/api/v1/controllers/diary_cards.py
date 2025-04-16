@@ -51,8 +51,10 @@ async def get_diary_cards(
     sender: SenderDep,
     limit: int = 10,
     offset: int = 0,
-) -> list[OwnDiaryCardDTO] | dict:
-    diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset)))
+) -> list[OwnDiaryCardDTO]:
+    diary_cards: list[OwnDiaryCardDTO] = await sender.send_query(
+        GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset))
+    )
     return diary_cards
 
 

@@ -45,7 +45,7 @@ def get_dispatcher(_: BotConfig) -> Dispatcher:
     return dp
 
 
-async def bot_main():
+async def bot_main() -> None:
     logger.info("start")
     bot = Bot(config.bot_token)
     try:

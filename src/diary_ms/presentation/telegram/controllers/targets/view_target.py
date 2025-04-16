@@ -24,6 +24,8 @@ async def get_target_data(
     sender: FromDishka[Sender],
     **kwargs: Any,  # noqa: ARG001
 ) -> dict[str, Any]:
+    if not isinstance(dialog_manager.start_data, dict):
+        raise AppError
     target = await sender.send_query(GetOwnTargetQuery(id=dialog_manager.start_data["target_id"]))
     return {
         "target": {
@@ -34,7 +36,7 @@ async def get_target_data(
     }
 
 
-async def on_target_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager):
+async def on_target_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager) -> None:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
     t_id: UUID = dialog_manager.start_data["target_id"]
@@ -46,9 +48,9 @@ view_target_window = Window(
         """
 <b>{{ target.header }}:</b>
 
-<b>Поведение:</b> {{ target.urge }}
+🚨 <b>Проблемное поведение:</b> {{ target.urge }}
 
-<b>Копинг-стратегия:</b> {{ target.action }}
+🛡️ <b>Копинг-стратегия:</b> {{ target.action }}
 """
     ),
     Row(
