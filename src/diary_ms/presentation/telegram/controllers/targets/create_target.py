@@ -82,8 +82,8 @@ create_confirm_window = Window(
     Jinja(
         """
 <b>Подтвердите создание цели:</b>
-<b>Поведение:</b> {{ dialog_data["urge"] }}
-<b>Действие:</b> {{ dialog_data["action"] }}
+🚨 <b>Проблемное поведение:</b> {{ dialog_data["urge"] }}
+🛡️ <b>Копинг-стратегия:</b> {{ dialog_data["action"] }}
 """
     ),
     Button(Const(CONFIRM_BTN_TXT), id="btn_confirm", on_click=on_create_confirmed),

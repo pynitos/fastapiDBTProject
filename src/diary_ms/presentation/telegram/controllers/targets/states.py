@@ -20,7 +20,6 @@ class CreateTargetSG(StatesGroup):
 
 
 class UpdateTargetSG(StatesGroup):
-    select = State()
     urge = State()
     action = State()
     confirm = State()
@@ -36,6 +35,18 @@ async def start_view_target(
 ):
     await dialog_manager.start(
         ViewTargetSG.view,
+        data={
+            "target_id": target_id,
+        },
+    )
+
+
+async def start_update_target(
+    dialog_manager: DialogManager,
+    target_id: UUID,
+):
+    await dialog_manager.start(
+        UpdateTargetSG.urge,
         data={
             "target_id": target_id,
         },

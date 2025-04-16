@@ -3,7 +3,7 @@ from uuid import UUID
 
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row, ScrollingGroup, Select, Start
+from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row, ScrollingGroup, Select, Start, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -94,10 +94,6 @@ async def on_update_clicked(_: CallbackQuery, __: Button, dialog_manager: Dialog
     await start_update_medicament(dialog_manager, medicament_id)
 
 
-async def on_delete_clicked(_: CallbackQuery, __: Button, manager: DialogManager):
-    await manager.switch_to(GetOwnMedicamentSG.confirm_delete)
-
-
 @inject
 async def on_delete_confirmed(callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]):
     if not isinstance(manager.start_data, dict):
@@ -118,7 +114,7 @@ view_medicament_dialog = Dialog(
 """
         ),
         Row(
-            Button(Const(REMOVE_BTN_TXT), id="btn_delete", on_click=on_delete_clicked),
+            SwitchTo(Const(REMOVE_BTN_TXT), id="btn_delete", state=GetOwnMedicamentSG.confirm_delete),
             Button(Const(EDIT_BTN_TXT), id="btn_edit", on_click=on_update_clicked),
         ),
         Cancel(Const(BACK_TO_LIST_BTN_TXT)),
