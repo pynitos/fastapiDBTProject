@@ -2,14 +2,14 @@ from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.base import ResultDTO
 from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class TargetDTO(DTO):
+class TargetDTO(ResultDTO):
     id: UUID
     user_id: UUID
     urge: str
@@ -18,22 +18,22 @@ class TargetDTO(DTO):
 
 
 @dataclass
-class EmotionDTO(DTO):
+class EmotionDTO(ResultDTO):
     id: UUID
     name: str
     description: str | None
 
 
 @dataclass
-class MedicamentDTO(DTO):
+class MedicamentDTO(ResultDTO):
     id: UUID
     user_id: UUID
     name: str
-    dosage: str
+    dosage: str | None
 
 
 @dataclass
-class SkillDTO(DTO):
+class SkillDTO(ResultDTO):
     id: UUID
     category: str | None
     group: str | None
@@ -42,7 +42,7 @@ class SkillDTO(DTO):
 
 
 @dataclass
-class OwnDiaryCardDTO(DTO):
+class OwnDiaryCardDTO(ResultDTO):
     id: UUID
     user_id: UUID
     mood: int

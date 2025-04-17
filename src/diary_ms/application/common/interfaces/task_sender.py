@@ -5,7 +5,9 @@ from typing import Any, Protocol
 
 class TaskSender(Protocol):
     @abstractmethod
-    async def send_task(self, task_name: str, schedule_time: str | datetime | None = None, *args, **kwargs) -> str:
+    async def send_task(
+        self, task_name: str, schedule_time: str | datetime | None = None, *args: Any, **kwargs: Any
+    ) -> str:
         raise NotImplementedError
 
     @abstractmethod

@@ -32,7 +32,7 @@ class DeleteTargetSG(StatesGroup):
 async def start_view_target(
     dialog_manager: DialogManager,
     target_id: UUID,
-):
+) -> None:
     await dialog_manager.start(
         ViewTargetSG.view,
         data={
@@ -44,7 +44,7 @@ async def start_view_target(
 async def start_update_target(
     dialog_manager: DialogManager,
     target_id: UUID,
-):
+) -> None:
     await dialog_manager.start(
         UpdateTargetSG.urge,
         data={

@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.base import ResultDTO
 from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class SkillAdminDTO(DTO):
+class SkillAdminDTO(ResultDTO):
     id: UUID
     name: str
     category: str | None = None

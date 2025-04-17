@@ -18,14 +18,14 @@ from src.diary_ms.presentation.telegram.common.constants import (
 from .states import UpdateTargetSG
 
 
-async def on_urge_entered(message: Message, _: ManagedTextInput, manager: DialogManager, urge: str):
+async def on_urge_entered(message: Message, _: ManagedTextInput[str], manager: DialogManager, urge: str) -> None:
     manager.dialog_data["urge"] = urge
     manager.show_mode = ShowMode.EDIT
     await message.delete()
     await manager.next()
 
 
-async def on_action_entered(message: Message, _: ManagedTextInput, manager: DialogManager, action: str):
+async def on_action_entered(message: Message, _: ManagedTextInput[str], manager: DialogManager, action: str) -> None:
     manager.dialog_data["action"] = action
     manager.show_mode = ShowMode.EDIT
     await message.delete()
@@ -33,7 +33,9 @@ async def on_action_entered(message: Message, _: ManagedTextInput, manager: Dial
 
 
 @inject
-async def on_update_confirmed(callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]):
+async def on_update_confirmed(
+    callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]
+) -> None:
     if not isinstance(manager.start_data, dict):
         raise AppError
 

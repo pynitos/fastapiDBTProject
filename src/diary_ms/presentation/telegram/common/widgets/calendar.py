@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Any
 
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Calendar, CalendarScope
@@ -38,7 +39,7 @@ MONTH: dict[int, str] = {
 
 
 class WeekDay(Text):
-    async def _render_text(self, data: dict, manager: DialogManager) -> str:
+    async def _render_text(self, data: dict[str, Any], manager: DialogManager) -> str:
         selected_date: date = data["date"]
 
         week_day: int = selected_date.weekday()
@@ -52,7 +53,7 @@ class DaysOff(Text):
         self.mark = "🟥"
         self.other = other
 
-    async def _render_text(self, data, manager: DialogManager) -> str:
+    async def _render_text(self, data: dict[str, Any], manager: DialogManager) -> str:
         current_date: date = data["date"]
 
         regular_days_off: list[int] = manager.dialog_data.get("regular_days_off", [])
@@ -70,7 +71,7 @@ class DaysOff(Text):
 
 
 class Month(Text):
-    async def _render_text(self, data, manager: DialogManager) -> str:
+    async def _render_text(self, data: dict[str, Any], manager: DialogManager) -> str:
         selected_date: date = data["date"]
 
         selected_month = selected_date.month

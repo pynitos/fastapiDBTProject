@@ -17,14 +17,16 @@ from src.diary_ms.presentation.telegram.common.constants import (
 from .states import CreateMedicamentSG
 
 
-async def on_add_name_entered(message: Message, __: ManagedTextInput, manager: DialogManager, name: str):
+async def on_add_name_entered(message: Message, __: ManagedTextInput[str], manager: DialogManager, name: str) -> None:
     manager.dialog_data["name"] = name
     manager.show_mode = ShowMode.EDIT
     await message.delete()
     await manager.next()
 
 
-async def on_add_dosage_entered(message: Message, __: ManagedTextInput, manager: DialogManager, dosage: str):
+async def on_add_dosage_entered(
+    message: Message, __: ManagedTextInput[str], manager: DialogManager, dosage: str
+) -> None:
     manager.dialog_data["dosage"] = dosage
     manager.show_mode = ShowMode.EDIT
     await message.delete()
@@ -32,7 +34,9 @@ async def on_add_dosage_entered(message: Message, __: ManagedTextInput, manager:
 
 
 @inject
-async def on_add_confirmed(callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]):
+async def on_add_confirmed(
+    callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]
+) -> None:
     await sender.send_command(
         CreateMedicamentCommand(name=manager.dialog_data["name"], dosage=manager.dialog_data["dosage"])
     )

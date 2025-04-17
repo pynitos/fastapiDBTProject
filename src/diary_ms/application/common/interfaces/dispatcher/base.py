@@ -1,7 +1,7 @@
 from collections.abc import Iterable, Sequence
 from typing import Any, Protocol
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.base import ResultDTO
 from src.diary_ms.application.common.dto.command import Command, CRes
 from src.diary_ms.application.common.dto.query import QRes, Query
 from src.diary_ms.application.common.interfaces.handlers.command import (
@@ -47,7 +47,7 @@ class Sender(Protocol):
 
 
 class Publisher(Protocol):
-    async def publish(self, events: Event | Sequence[Event]) -> Iterable[DTO]:
+    async def publish(self, events: Event | Sequence[Event]) -> Iterable[ResultDTO]:
         raise NotImplementedError
 
 

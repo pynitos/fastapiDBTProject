@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 from typing import Self
-from uuid import uuid4
-
-from attr import field
 
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
 from src.diary_ms.domain.common.model.entities.base import BaseEntity

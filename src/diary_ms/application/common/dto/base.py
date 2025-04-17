@@ -1,5 +1,5 @@
 from abc import ABC
 
 
-class DTO(ABC):  # noqa: B024
+class ResultDTO(ABC):  # noqa: B024
     pass

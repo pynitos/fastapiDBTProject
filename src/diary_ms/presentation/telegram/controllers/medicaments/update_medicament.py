@@ -19,14 +19,16 @@ from src.diary_ms.presentation.telegram.common.widgets.back_next import back_nex
 from .states import UpdateMedicamentSG
 
 
-async def on_edit_name_entered(message: Message, __: ManagedTextInput, manager: DialogManager, name: str):
+async def on_edit_name_entered(message: Message, __: ManagedTextInput[str], manager: DialogManager, name: str) -> None:
     manager.dialog_data["name"] = name
     manager.show_mode = ShowMode.EDIT
     await message.delete()
     await manager.next()
 
 
-async def on_edit_dosage_entered(message: Message, __: ManagedTextInput, manager: DialogManager, dosage: str):
+async def on_edit_dosage_entered(
+    message: Message, __: ManagedTextInput[str], manager: DialogManager, dosage: str
+) -> None:
     manager.dialog_data["dosage"] = dosage
     manager.show_mode = ShowMode.EDIT
     await message.delete()
@@ -36,7 +38,7 @@ async def on_edit_dosage_entered(message: Message, __: ManagedTextInput, manager
 @inject
 async def on_edit_confirmed(
     callback: CallbackQuery, _: Button, dialog_manager: DialogManager, sender: FromDishka[Sender]
-):
+) -> None:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
     await sender.send_command(

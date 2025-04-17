@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from datetime import date
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.base import ResultDTO
 
 
 @dataclass
-class DiaryCardsReportDTO(DTO):
+class DiaryCardsReportDTO(ResultDTO):
     start_date: date
     end_date: date
     total_entries: int

@@ -128,7 +128,7 @@ async def on_target_action_entered(
 
 async def on_target_effectiveness_selected(
     _: CallbackQuery,
-    __: Select,
+    __: Select[int],
     dialog_manager: DialogManager,
     selected: int,
 ) -> None:
@@ -351,7 +351,9 @@ create_diary_card_dialog = Dialog(
         parse_mode="HTML",
     ),
     Window(
-        Format("📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность копинг-стратегии, если применили ёё"),
+        Format(
+            "📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность копинг-стратегии, если применили ёё"
+        ),
         Group(
             Select(
                 Format("{item}"),

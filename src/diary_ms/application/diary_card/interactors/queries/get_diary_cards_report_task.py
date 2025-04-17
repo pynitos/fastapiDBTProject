@@ -9,7 +9,7 @@ from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardRead
 
 
 @dataclass
-class GetDiaryCardsReportTaskQuery(Query):
+class GetDiaryCardsReportTaskQuery(Query[DiaryCardsReportDTO]):
     task_id: str
 
 
@@ -21,4 +21,5 @@ class GetDiaryCardsReportTaskHandler(QueryHandler[GetDiaryCardsReportTaskQuery, 
 
     async def __call__(self, query: GetDiaryCardsReportTaskQuery) -> DiaryCardsReportDTO:
         self._id_provider.get_current_user_id()
-        return await self._task_sender.get_result(query.task_id)
+        report: DiaryCardsReportDTO = await self._task_sender.get_result(query.task_id)
+        return report

@@ -13,21 +13,20 @@ class TaskDispatcher(TaskSender):
         self._broker = broker
         self._schedule_sourse = schedule_sourse
 
-    async def send_task(self, task_name: str, schedule_time: str | datetime | None = None, *args, **kwargs) -> str:
-        decorated_task: AsyncTaskiqDecoratedTask | None = self._broker.find_task(task_name)
+    async def send_task(
+        self, task_name: str, schedule_time: str | datetime | None = None, *args: Any, **kwargs: Any
+    ) -> str:
+        decorated_task: AsyncTaskiqDecoratedTask[Any, Any] | None = self._broker.find_task(task_name)
         if not decorated_task:
             raise InfraError
+        schedule: CreatedSchedule[Any]
         if isinstance(schedule_time, str):
-            schedule: CreatedSchedule = await decorated_task.schedule_by_cron(
-                self._schedule_sourse, schedule_time, *args, **kwargs
-            )
+            schedule = await decorated_task.schedule_by_cron(self._schedule_sourse, schedule_time, *args, **kwargs)
             return schedule.schedule_id
         elif isinstance(schedule_time, datetime):
-            schedule: CreatedSchedule = await decorated_task.schedule_by_time(
-                self._schedule_sourse, schedule_time, *args, **kwargs
-            )
+            schedule = await decorated_task.schedule_by_time(self._schedule_sourse, schedule_time, *args, **kwargs)
             return schedule.schedule_id
-        task: AsyncTaskiqTask = await decorated_task.kiq(*args, **kwargs)
+        task: AsyncTaskiqTask[Any] = await decorated_task.kiq(*args, **kwargs)
         return task.task_id
 
     async def get_result(self, task_id: str) -> Any:

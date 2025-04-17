@@ -4,7 +4,7 @@ from typing import Any, TypeVar
 
 from dishka import AsyncContainer
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.base import ResultDTO
 from src.diary_ms.application.common.dto.command import Command
 from src.diary_ms.application.common.dto.query import Query
 from src.diary_ms.application.common.exceptions.base import HandlerNotFoundError
@@ -37,7 +37,7 @@ class DishkaResolver(Resolver):
 
 class RegistryImpl(Registry):
     command_handlers: dict[type[Command[Any]], type[CommandHandler[Any, Any]]]
-    query_handlers: dict[type[Query[DTO]], type[QueryHandler[Query[DTO], DTO]]]
+    query_handlers: dict[type[Query[ResultDTO]], type[QueryHandler[Query[ResultDTO], ResultDTO]]]
     event_listeners: list[EventListener]
 
     def __init__(self) -> None:
@@ -77,7 +77,7 @@ class DispatcherImpl(Dispatcher):
         handler: QueryHandler[Query[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(query)
 
-    async def publish(self, events: Event | Sequence[Event]) -> Iterable[DTO]:
+    async def publish(self, events: Event | Sequence[Event]) -> Iterable[ResultDTO]:
         if not isinstance(events, Sequence):
             events = [events]
         result: list[Any] = []

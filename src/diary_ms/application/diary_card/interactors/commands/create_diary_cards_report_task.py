@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.diary_ms.application.common.dto.base import DTO
+from src.diary_ms.application.common.dto.base import ResultDTO
 from src.diary_ms.application.common.dto.command import Command
 from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
@@ -10,7 +10,7 @@ from src.diary_ms.domain.model.entities.user_id import UserId
 
 
 @dataclass
-class CreateDiaryCardsReportTaskDTO(DTO):
+class CreateDiaryCardsReportTaskDTO(ResultDTO):
     task_id: str
 
 

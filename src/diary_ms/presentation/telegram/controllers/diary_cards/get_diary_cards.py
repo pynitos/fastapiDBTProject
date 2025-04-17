@@ -19,17 +19,19 @@ from src.diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
 from . import states
 
 
-async def on_card_selected(_: CallbackQuery, __: Select, manager: DialogManager, item_id: str):
+async def on_card_selected(_: CallbackQuery, __: Select[str], manager: DialogManager, item_id: str) -> None:
     manager.dialog_data["selected_card_id"] = item_id
     await manager.switch_to(states.GetOwnDiaryCardsSG.detail_view)
 
 
-async def on_delete_clicked(_: CallbackQuery, __: Button, manager: DialogManager):
+async def on_delete_clicked(_: CallbackQuery, __: Button, manager: DialogManager) -> None:
     await manager.switch_to(states.GetOwnDiaryCardsSG.confirm_delete)
 
 
 @inject
-async def on_delete_confirmed(callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]):
+async def on_delete_confirmed(
+    callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]
+) -> None:
     diary_card_id = manager.dialog_data["selected_card_id"]
     await sender.send_command(DeleteDiaryCardCommand(id=diary_card_id))
     await callback.answer("Запись удалена!")

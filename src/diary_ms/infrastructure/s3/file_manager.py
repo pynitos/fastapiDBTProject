@@ -1,4 +1,5 @@
 from io import BytesIO
+from typing import Any
 
 from boto3 import client
 from botocore.client import BaseClient
@@ -27,7 +28,7 @@ class S3FileManager(FileManager):
         with BytesIO(payload) as file_obj:
             self._client.upload_fileobj(file_obj, self._bucket, path)
 
-    def get_by_file_id(self, file_path: str) -> bytes | None:
+    def get_by_file_id(self, file_path: str) -> Any | None:
         data = self._client.get_object(Bucket=self._bucket, Key=file_path)
 
         if not data:

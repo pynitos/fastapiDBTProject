@@ -8,6 +8,7 @@ from src.diary_ms.application.diary_card.dto.commands.update_diary_card import U
 from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardUpdater
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
 from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
@@ -15,6 +16,7 @@ from src.diary_ms.domain.model.value_objects.diary_card.description import DCDes
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
+from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 logger = logging.getLogger()
 
@@ -50,7 +52,11 @@ class UpdateDiaryCard(CommandHandler[UpdateDiaryCardCommand, None]):
                 mood=DCMood(command.mood) if command.mood else None,
                 description=DCDescription(command.description) if command.description else None,
                 date_of_entry=DCDateOfEntry(command.date_of_entry) if command.date_of_entry else None,
-                targets=command.targets,
+                targets=[
+                    CopingStrategy(diary_card_id=old_diary_card.id, target_id=TargetId(id)) for id in command.targets
+                ]
+                if command.targets
+                else None,
                 emotions=command.emotions,
                 medicaments=command.medicaments,
                 skills=skill_assotiations,

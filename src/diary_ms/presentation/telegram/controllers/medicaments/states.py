@@ -27,7 +27,7 @@ class GetOwnMedicamentSG(StatesGroup):
 
 async def start_create_medicament(
     dialog_manager: DialogManager,
-):
+) -> None:
     await dialog_manager.start(
         CreateMedicamentSG.name,
     )
@@ -36,7 +36,7 @@ async def start_create_medicament(
 async def start_update_medicament(
     dialog_manager: DialogManager,
     medicament_id: UUID,
-):
+) -> None:
     await dialog_manager.start(
         UpdateMedicamentSG.name,
         data={"medicament_id": medicament_id},
@@ -46,7 +46,7 @@ async def start_update_medicament(
 async def start_view_medicament(
     dialog_manager: DialogManager,
     medicament_id: UUID,
-):
+) -> None:
     await dialog_manager.start(
         GetOwnMedicamentSG.view,
         data={

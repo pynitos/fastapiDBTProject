@@ -30,10 +30,10 @@ class BaseConfig:
     BROKER_URI: str
     REDIS_URI: str
 
-    def post_init(self):
+    def post_init(self) -> None:
         self._validate()
 
-    def _validate(self):
+    def _validate(self) -> None:
         pass
 
 
@@ -51,7 +51,7 @@ class WebConfig(BaseConfig):
     PROJECT_NAME: str = "Diary card API"
     SENTRY_DSN: str | None = None
 
-    def _validate(self):
+    def _validate(self) -> None:
         parse_cors(self.BACKEND_CORS_ORIGINS)
 
     @property

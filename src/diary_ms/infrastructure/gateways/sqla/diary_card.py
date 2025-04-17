@@ -65,9 +65,9 @@ class DiaryCardGateway(
             )
         if entity.skill_usages:
             for s in entity.skill_usages:
-                id: str = str(s.skill_id.value)
-                if not await self._session.get(Skill, id):
-                    raise GatewayError(f"Skill with id: {id} not found.", 404)
+                skill_id: str = str(s.skill_id.value)
+                if not await self._session.get(Skill, skill_id):
+                    raise GatewayError(f"Skill with id: {skill_id} not found.", 404)
 
     async def create(self, entity: DiaryCard) -> None:
         await self._set_entity_relationships(entity)

@@ -64,7 +64,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 strict = true
-exclude = ["venv", ".venv", "migrations", "django", "src.user_ms"]
+exclude = ["venv", ".venv", "migrations", "django", "reportlab", "src.user_ms"]
 plugins = ['pydantic.mypy']
 
 
@@ -72,6 +72,10 @@ plugins = ['pydantic.mypy']
 module = [
     "taskiq_faststream",
     "taskiq_fastapi",
+    "botocore.config",
+    "botocore.client",
+    "boto3",
+    "reportlab.*"
 ]
 ignore_missing_imports = true
 

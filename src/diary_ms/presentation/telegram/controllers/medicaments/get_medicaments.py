@@ -39,13 +39,17 @@ from .states import (
 
 
 @inject
-async def get_medicaments(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):  # noqa: ARG001
+async def get_medicaments(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
     medicaments: list[OwnMedicamentDTO] = await sender.send_query(GetOwnMedicamentsDTO(pagination=Pagination()))
     return {"medicaments": medicaments}
 
 
 @inject
-async def get_current_medicament(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs):  # noqa: ARG001
+async def get_current_medicament(
+    dialog_manager: DialogManager,
+    sender: FromDishka[Sender],
+    **kwargs: Any,  # noqa: ARG001
+) -> dict[str, Any]:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
     medicament_id: UUID = dialog_manager.start_data["medicament_id"]
@@ -56,7 +60,7 @@ async def get_current_medicament(dialog_manager: DialogManager, sender: FromDish
 """ List Medicaments Dialog """
 
 
-async def on_medicament_selected(_: CallbackQuery, __: Any, dialog_manager: DialogManager, medicament_id: str):
+async def on_medicament_selected(_: CallbackQuery, __: Any, dialog_manager: DialogManager, medicament_id: str) -> None:
     await start_view_medicament(dialog_manager, UUID(medicament_id))
 
 
@@ -87,7 +91,7 @@ list_medicaments_dialog = Dialog(
 """View Medicament Dialog"""
 
 
-async def on_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager):
+async def on_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager) -> None:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
     medicament_id: UUID = dialog_manager.start_data["medicament_id"]
@@ -95,7 +99,9 @@ async def on_update_clicked(_: CallbackQuery, __: Button, dialog_manager: Dialog
 
 
 @inject
-async def on_delete_confirmed(callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]):
+async def on_delete_confirmed(
+    callback: CallbackQuery, _: Button, manager: DialogManager, sender: FromDishka[Sender]
+) -> None:
     if not isinstance(manager.start_data, dict):
         raise AppError
     medicament_id: UUID = manager.start_data["medicament_id"]

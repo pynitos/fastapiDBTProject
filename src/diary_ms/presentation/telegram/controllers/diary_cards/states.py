@@ -27,7 +27,7 @@ class GetOwnDiaryCardsSG(StatesGroup):
 async def start_create_diary_card(
     dialog_manager: DialogManager,
     wishlist_id: DiaryCardId,
-):
+) -> None:
     await dialog_manager.start(
         CreateDiaryCardSG.mood,
         data={"wishlist_id": wishlist_id.value},
@@ -36,7 +36,7 @@ async def start_create_diary_card(
 
 async def start_get_diary_cards(
     dialog_manager: DialogManager,
-):
+) -> None:
     await dialog_manager.start(
         GetOwnDiaryCardsSG.view,
     )
