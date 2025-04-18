@@ -12,6 +12,7 @@ from aiogram_dialog.widgets.kbd import (
     Cancel,
     Column,
     Group,
+    ManagedMultiselect,
     Multiselect,
     Next,
     Row,
@@ -92,24 +93,34 @@ async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **
     }
 
 
+async def on_target_selected(
+    _: CallbackQuery,
+    select: ManagedMultiselect[str],
+    dialog_manager: DialogManager,
+    data: str,
+) -> None:
+    if not select.is_checked(data):
+        dialog_manager.dialog_data["current_target"] = [
+            t for t in dialog_manager.dialog_data["targets"] if str(t["id"]) == data
+        ][0]
+        await dialog_manager.next()
+    else:
+        targets = dialog_manager.dialog_data.setdefault("targets_for_confirm", [])
+        dialog_manager.dialog_data["targets_for_confirm"] = [t for t in targets if t["id"] != data]
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
+
+
 async def on_targets_selected(
     _: CallbackQuery,
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    ms_targets = dialog_manager.find("ms_targets")
-    selected_ids = ms_targets.get_checked() if ms_targets else []
-    if len(selected_ids) == 0:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.target_effectiveness)
-    else:
-        targets = [t for t in dialog_manager.dialog_data["targets"] if str(t["id"]) in selected_ids]
-        dialog_manager.dialog_data["selected_targets"] = targets
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", [])
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.target_effectiveness)
 
 
 async def target_data_getter(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
-    targets = dialog_manager.dialog_data["selected_targets"]
-
-    current_target = targets[0]
+    current_target = dialog_manager.dialog_data["current_target"]
     return {"target_name": current_target["urge"]}
 
 
@@ -119,8 +130,8 @@ async def on_target_action_entered(
     dialog_manager: DialogManager,
     action: str,
 ) -> None:
-    targets = dialog_manager.dialog_data["selected_targets"]
-    targets[0]["action"] = action  # Сохраняем action для текущей цели
+    current_target = dialog_manager.dialog_data["current_target"]
+    current_target["action"] = action  # Сохраняем action для текущей цели
     dialog_manager.show_mode = ShowMode.EDIT
     await message.delete()
     await dialog_manager.next()
@@ -132,14 +143,10 @@ async def on_target_effectiveness_selected(
     dialog_manager: DialogManager,
     selected: int,
 ) -> None:
-    targets = dialog_manager.dialog_data["selected_targets"]
-    target = targets.pop(0)
-    target["effectiveness"] = selected
-    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(target)
-    if targets:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.target_action)
-    else:
-        await dialog_manager.next()
+    current_target = dialog_manager.dialog_data["current_target"]
+    current_target["effectiveness"] = selected
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(current_target)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
 async def on_target_action_next_btn(
@@ -147,14 +154,10 @@ async def on_target_action_next_btn(
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    targets = dialog_manager.dialog_data["selected_targets"]
-    target = targets.pop(0)
-    target["action"] = None
-    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(target)
-    if len(targets) > 0:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
-    else:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.target_effectiveness)
+    current_target = dialog_manager.dialog_data["current_target"]
+    current_target["action"] = None
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(current_target)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
 async def on_target_effectiveness_next_btn(
@@ -162,11 +165,9 @@ async def on_target_effectiveness_next_btn(
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    targets = dialog_manager.dialog_data["selected_targets"]
-    target = targets.pop(0)
-    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(target)
-    if len(targets) > 0:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
+    current_target = dialog_manager.dialog_data["current_target"]
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(current_target)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
 async def on_skills_next_btn(
@@ -337,6 +338,7 @@ create_diary_card_dialog = Dialog(
                 id="ms_targets",
                 item_id_getter=lambda x: str(x["id"]),
                 items="targets",
+                on_click=on_target_selected,
             )
         ),
         Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_targets_selected)),
@@ -345,7 +347,10 @@ create_diary_card_dialog = Dialog(
     Window(
         Format("📌  <b>Проблемное поведение:</b> {target_name}.\n\nОпишите ситуацию и способ совладания с ней:"),
         TextInput(id="target_action_input", on_success=on_target_action_entered),
-        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_target_action_next_btn)),
+        Row(
+            Back(Const(BACK_BTN_TXT)),
+            Button(Const(NEXT_BTN_TXT), id="target_action_next_btn", on_click=on_target_action_next_btn),
+        ),
         state=states.CreateDiaryCardSG.target_action,
         getter=target_data_getter,
         parse_mode="HTML",
@@ -365,7 +370,10 @@ create_diary_card_dialog = Dialog(
             ),
             width=5,
         ),
-        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_target_effectiveness_next_btn)),
+        Row(
+            Back(Const(BACK_BTN_TXT)),
+            Button(Const(NEXT_BTN_TXT), id="target_eff_next_btn", on_click=on_target_effectiveness_next_btn),
+        ),
         state=states.CreateDiaryCardSG.target_effectiveness,
         getter=target_data_getter,
         parse_mode="HTML",

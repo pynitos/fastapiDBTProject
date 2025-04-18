@@ -98,12 +98,12 @@ detail_window = Window(
 {% if target.effectiveness %}
 ↳ Эффективность: <i>{{ target.effectiveness }}/10</i>
 {% endif %}
+
 {% endfor %}
 {% else %}
 ▹ <i>не указано</i>
+
 {% endif %}
-
-
 🌊 <b>Эмоции:</b>
 {% if item.emotions %}
 {% for emotion in item.emotions -%}
