@@ -93,8 +93,8 @@ detail_window = Window(
 🎯 <b>Целевое поведение:</b>
 {% if item.targets %}
 {% for target in item.targets -%}
-▸ {{ target.urge }}{% if target.action %}: <i>{{ target.action }}</i>{% endif %}\n
-{% if target.effectiveness %}  ↳ Эффективность: <i>{{ target.effectiveness }}/10</i>{% endif %}\n
+▸ {{ target.urge }}{% if target.action %}: <i>{{ target.action }}</i>\n{% endif %}
+{% if target.effectiveness %}↳ Эффективность: <i>{{ target.effectiveness }}/10</i>{% endif %}\n
 {% endfor %}
 {% else %}
 ▹ <i>не указано</i>
@@ -122,7 +122,7 @@ detail_window = Window(
 {% if item.skills %}
 {% for skill in item.skills -%}
 ▸ {{ skill.name }}{% if skill.situation %}: <i>{{ skill.situation }}</i>
-{% endif %}
+{% endif %}\n
 {% endfor %}
 {% else %}
 ▹ <i>не указано</i>

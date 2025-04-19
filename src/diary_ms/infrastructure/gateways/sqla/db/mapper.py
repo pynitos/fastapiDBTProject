@@ -3,10 +3,10 @@ from sqlalchemy.orm import composite, registry, relationship
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
-from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
 from src.diary_ms.domain.model.entities.skill import Skill
+from src.diary_ms.domain.model.entities.skill_application import SkillApplication
 from src.diary_ms.domain.model.entities.target_behavior import Target
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
@@ -18,10 +18,11 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
 from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
+from src.diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
 from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
-from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
+from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.effectiveness import CopingEffectiveness
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.id import CopingStrategyId
@@ -62,20 +63,25 @@ def init_mapper() -> None:
             "coping_strategies": relationship("CopingStrategy", lazy="selectin"),
             "medicaments": relationship("Medicament", secondary="diary_card_medicament", lazy="selectin"),
             "skills": relationship("Skill", secondary="diary_card_skill", lazy="selectin", viewonly=True),
-            "skill_usages": relationship("SkillUsage", lazy="selectin"),
+            "skill_usages": relationship("SkillApplication", lazy="selectin"),
         },
     )
 
     mapper_registry.map_imperatively(
-        SkillUsage,
+        SkillApplication,
         diary_card_skill_assotiation,
         properties={
             "diary_card_id": composite(lambda value: DiaryCardId(value), diary_card_skill_assotiation.c.diary_card_id),
             "__diary_card_id": diary_card_skill_assotiation.c.diary_card_id,
             "skill_id": composite(lambda value: SkillId(value), diary_card_skill_assotiation.c.skill_id),
             "__skill_id": diary_card_skill_assotiation.c.skill_id,
-            "situation": composite(lambda value: SkillSituation(value), diary_card_skill_assotiation.c.situation),
-            "__situation": diary_card_skill_assotiation.c.situation,
+            "usage": composite(lambda value: SkillUsage(value), diary_card_skill_assotiation.c.usage),
+            "__usage": diary_card_skill_assotiation.c.usage,
+            "effectiveness": composite(
+                lambda value: SkillEffectiveness(value) if value is not None else None,
+                diary_card_skill_assotiation.c.effectiveness,
+            ),
+            "__effectiveness": diary_card_skill_assotiation.c.effectiveness,
         },
     )
 
@@ -93,7 +99,7 @@ def init_mapper() -> None:
             "__name": skills_table.c.name,
             "description": composite(lambda value: SkillDescription(value), skills_table.c.description),
             "__description": skills_table.c.description,
-            "diary_card_assotiations": relationship("SkillUsage", cascade="all, delete-orphan", lazy="selectin"),
+            "diary_card_assotiations": relationship("SkillApplication", cascade="all, delete-orphan", lazy="selectin"),
         },
     )
     mapper_registry.map_imperatively(

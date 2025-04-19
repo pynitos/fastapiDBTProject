@@ -38,7 +38,8 @@ class SkillDTO(ResultDTO):
     category: str | None
     group: str | None
     name: str
-    situation: str | None
+    usage: str | None
+    effectiveness: int | None
 
 
 @dataclass

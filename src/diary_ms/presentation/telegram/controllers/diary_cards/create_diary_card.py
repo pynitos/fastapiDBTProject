@@ -29,7 +29,7 @@ from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
     CreateCopingStrategyCommand,
     CreateDiaryCardCommand,
-    CreateSkillUsageCommand,
+    CreateSkillApplicationCommand,
 )
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
 from src.diary_ms.presentation.telegram.common.constants import (
@@ -262,7 +262,7 @@ async def on_confirmation(
     ms_medicaments = dialog_manager.find("ms_medicaments")
     medicaments_ids = ms_medicaments.get_checked() if ms_medicaments else []
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
-    skills_for_create = [CreateSkillUsageCommand(id=s["id"], situation=s.get("situation")) for s in skills]
+    skills_for_create = [CreateSkillApplicationCommand(id=s["id"], skill_usage=s.get("situation")) for s in skills]
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     targets_for_create = [
         CreateCopingStrategyCommand(

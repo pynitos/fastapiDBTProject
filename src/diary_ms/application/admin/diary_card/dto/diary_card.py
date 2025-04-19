@@ -34,10 +34,12 @@ class MedicamentAdminDTO(ResultDTO):
 
 @dataclass
 class SkillAdminDTO(ResultDTO):
+    id: UUID
     category: str | None
     group: str | None
     name: str
-    situation: str | None
+    usage: str | None
+    effectiveness: int | None
 
 
 @dataclass

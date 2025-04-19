@@ -14,9 +14,10 @@ class CreateCopingStrategyCommand:
 
 
 @dataclass
-class CreateSkillUsageCommand:
+class CreateSkillApplicationCommand:
     id: UUID
-    situation: str | None = None
+    skill_usage: str | None = None
+    effectiveness: int | None = None
 
 
 @dataclass
@@ -30,6 +31,6 @@ class CreateDiaryCardCommand(Command[None]):
     targets: list[CreateCopingStrategyCommand] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
-    skills: list[CreateSkillUsageCommand] | None = None
+    skills: list[CreateSkillApplicationCommand] | None = None
 
     skills_type: SkillType = SkillType.DBT

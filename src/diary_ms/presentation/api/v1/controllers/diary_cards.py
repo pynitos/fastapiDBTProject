@@ -9,7 +9,7 @@ from src.diary_ms.application.common.dto.pagination import Pagination
 from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
     CreateCopingStrategyCommand,
     CreateDiaryCardCommand,
-    CreateSkillUsageCommand,
+    CreateSkillApplicationCommand,
 )
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
@@ -80,8 +80,11 @@ async def create_diary_card(
     schema: CreateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
-    skills: list[CreateSkillUsageCommand] | None = (
-        [CreateSkillUsageCommand(id=s.skill_id, situation=s.situation) for s in schema.skills]
+    skills: list[CreateSkillApplicationCommand] | None = (
+        [
+            CreateSkillApplicationCommand(id=s.skill_id, skill_usage=s.usage, effectiveness=s.effectiveness)
+            for s in schema.skills
+        ]
         if schema.skills
         else None
     )
@@ -112,7 +115,11 @@ async def update_diary_card(
     schema: UpdateDiaryCardReq,
     sender: SenderDep,
 ) -> None:
-    skills = [UpdateDiaryCardCommand.Skill(s.skill_id, s.situation) for s in schema.skills] if schema.skills else None
+    skills = (
+        [UpdateDiaryCardCommand.Skill(s.skill_id, s.usage, s.effectiveness) for s in schema.skills]
+        if schema.skills
+        else None
+    )
     command = UpdateDiaryCardCommand(
         id=id,
         mood=schema.mood,

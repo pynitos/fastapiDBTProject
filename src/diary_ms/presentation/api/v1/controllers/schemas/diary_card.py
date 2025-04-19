@@ -24,7 +24,8 @@ class DiaryCardReq(BaseModel):
 
 class DiaryCardSkillReq(BaseModel):
     skill_id: UUID
-    situation: str | None = None
+    usage: str | None = None
+    effectiveness: int | None = None
 
 
 class DiaryCardTargetReq(BaseModel):

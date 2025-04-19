@@ -9,13 +9,14 @@ from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardUpda
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
-from src.diary_ms.domain.model.entities.diary_card_skill import SkillUsage
+from src.diary_ms.domain.model.entities.skill_application import SkillApplication
 from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
 from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from src.diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.situation import SkillSituation
+from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 logger = logging.getLogger()
@@ -38,10 +39,13 @@ class UpdateDiaryCard(CommandHandler[UpdateDiaryCardCommand, None]):
         if old_diary_card:
             if old_diary_card.user_id != user_id:
                 raise AuthorizationError()
-            skill_assotiations = (
+            skill_applications = (
                 [
-                    SkillUsage(
-                        diary_card_id=old_diary_card.id, skill_id=SkillId(s.id), situation=SkillSituation(s.situation)
+                    SkillApplication(
+                        diary_card_id=old_diary_card.id,
+                        skill_id=SkillId(s.id),
+                        usage=SkillUsage(s.usage),
+                        effectiveness=SkillEffectiveness(s.effectiveness),
                     )
                     for s in command.skills
                 ]
@@ -59,7 +63,7 @@ class UpdateDiaryCard(CommandHandler[UpdateDiaryCardCommand, None]):
                 else None,
                 emotions=command.emotions,
                 medicaments=command.medicaments,
-                skills=skill_assotiations,
+                skills=skill_applications,
                 skill_type=command.skills_type,
             )
             await self.db_gateway.update(updated_diary_card)

@@ -27,27 +27,22 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         if not dm.id.value:
             raise AppError("Diary Card Id Not Provided!")
 
-        try:
             # Validate required fields
-            required_fields = [dm.user_id.value, dm.mood.value, dm.date_of_entry.value, dm.type]
-            if None in required_fields:
-                raise AppError("Required fields are missing in DiaryCard")
-
-            return OwnDiaryCardDTO(
-                id=dm.id.value,
-                user_id=dm.user_id.value,
-                mood=dm.mood.value,
-                description=dm.description.value if dm.description else None,
-                date_of_entry=dm.date_of_entry.value,
-                type=dm.type,
-                targets=cls._map_targets(dm),
-                emotions=cls._map_emotions(dm.emotions) if dm.emotions else None,
-                medicaments=cls._map_medicaments(dm.medicaments) if dm.medicaments else None,
-                skills=cls._map_skills(dm) if dm.skills and dm.skill_usages else None,
-            )
-
-        except (ValueError, AttributeError) as e:
-            raise AppError(f"Mapping error: {str(e)}") from e
+        required_fields = [dm.user_id.value, dm.mood.value, dm.date_of_entry.value, dm.type]
+        if None in required_fields:
+            raise AppError("Required fields are missing in DiaryCard")
+        return OwnDiaryCardDTO(
+            id=dm.id.value,
+            user_id=dm.user_id.value,
+            mood=dm.mood.value,
+            description=dm.description.value if dm.description else None,
+            date_of_entry=dm.date_of_entry.value,
+            type=dm.type,
+            targets=cls._map_targets(dm),
+            emotions=cls._map_emotions(dm.emotions) if dm.emotions else None,
+            medicaments=cls._map_medicaments(dm.medicaments) if dm.medicaments else None,
+            skills=cls._map_skills(dm) if dm.skills and dm.skill_usages else None,
+        )
 
     @classmethod
     def _map_targets(cls, dm: DiaryCard) -> list[TargetDTO] | None:
@@ -119,11 +114,15 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                 category=skill.category.value,
                 group=skill.group.value,
                 name=skill.name.value,
-                situation=next(
+                usage=next(
+                    (su.usage.value for su in dm.skill_usages if su.skill_id.value == skill.id.value and su.usage),
+                    None,
+                ),
+                effectiveness=next(
                     (
-                        su.situation.value
+                        su.effectiveness.value
                         for su in dm.skill_usages
-                        if su.skill_id.value == skill.id.value and su.situation
+                        if su.skill_id.value == skill.id.value and su.effectiveness
                     ),
                     None,
                 ),

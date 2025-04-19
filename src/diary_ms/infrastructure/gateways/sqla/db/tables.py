@@ -26,7 +26,8 @@ diary_card_skill_assotiation = Table(
     Column("id", UUID(as_uuid=True), primary_key=True, default=uuid4),
     Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id", ondelete="CASCADE")),
     Column("skill_id", UUID(as_uuid=True), ForeignKey("skills.id", ondelete="CASCADE")),
-    Column("situation", String(200), default=None, nullable=True),
+    Column("usage", String(200), default=None, nullable=True),
+    Column("effectiveness", SmallInteger, default=None, nullable=True),
 )
 
 diary_card_target_assotiation = Table(

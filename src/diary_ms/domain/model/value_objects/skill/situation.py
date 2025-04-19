@@ -12,6 +12,6 @@ class WrongSkillSituationValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class SkillSituation(ValueObject[str | None]):
+class SkillUsage(ValueObject[str | None]):
     def _validate(self) -> None:
         pass

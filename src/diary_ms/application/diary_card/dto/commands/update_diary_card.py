@@ -11,7 +11,8 @@ class UpdateDiaryCardCommand(Command[None]):
     @dataclass
     class Skill:
         id: UUID
-        situation: str | None = None
+        usage: str | None = None
+        effectiveness: int | None = None
 
     id: UUID
     mood: int | None = None

@@ -9,7 +9,6 @@ from src.diary_ms.domain.common.exceptions.base import AppError
 from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.skill import Skill
 
 
 class DiaryCardAdminDTOMapper:
@@ -43,7 +42,7 @@ class DiaryCardAdminDTOMapper:
                 targets=cls._map_targets(dm),
                 emotions=cls._map_emotions(dm.emotions) if dm.emotions else None,
                 medicaments=cls._map_medicaments(dm.medicaments) if dm.medicaments else None,
-                skills=cls._map_skills(dm.skills) if dm.skills else None,
+                skills=cls._map_skills(dm) if dm.skills and dm.skill_usages else None,
             )
 
         except (ValueError, AttributeError) as e:
@@ -116,20 +115,30 @@ class DiaryCardAdminDTOMapper:
         ]
 
     @classmethod
-    def _map_skills(cls, skills: list[Skill]) -> list[SkillAdminDTO] | None:
-        """Maps skills for admin view"""
-        if not skills:
-            return None
-
+    def _map_skills(cls, dm: DiaryCard) -> list[SkillAdminDTO]:
+        """Maps skills with usage situations"""
+        skill_map = {s.id.value: s for s in dm.skills if s.id.value}
         return [
             SkillAdminDTO(
-                category=s.category.value if s.category else None,
-                group=s.group.value if s.group else None,
-                name=s.name.value,
-                situation=s.situation.value if s.situation else None,
+                id=skill.id.value,
+                category=skill.category.value,
+                group=skill.group.value,
+                name=skill.name.value,
+                usage=next(
+                    (su.usage.value for su in dm.skill_usages if su.skill_id.value == skill.id.value and su.usage),
+                    None,
+                ),
+                effectiveness=next(
+                    (
+                        su.effectiveness.value
+                        for su in dm.skill_usages
+                        if su.skill_id.value == skill.id.value and su.usage
+                    ),
+                    None,
+                ),
             )
-            for s in skills
-            if s.name.value
+            for skill in dm.skills
+            if skill.id.value and skill.id.value in skill_map
         ]
 
     @classmethod
