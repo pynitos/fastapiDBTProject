@@ -40,6 +40,7 @@ from src.diary_ms.presentation.telegram.common.constants import (
     NEXT_BTN_TXT,
     REMOVE_BTN_TXT,
 )
+from src.diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
 from src.diary_ms.presentation.telegram.controllers.medicaments.states import CreateMedicamentSG
 
 from . import states
@@ -110,7 +111,7 @@ async def on_target_selected(
         await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
-async def on_targets_selected(
+async def on_targets_next_btn(
     _: CallbackQuery,
     __: Button,
     dialog_manager: DialogManager,
@@ -119,7 +120,7 @@ async def on_targets_selected(
     await dialog_manager.switch_to(states.CreateDiaryCardSG.target_effectiveness)
 
 
-async def target_data_getter(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
+async def target_name_getter(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
     current_target = dialog_manager.dialog_data["current_target"]
     return {"target_name": current_target["urge"]}
 
@@ -175,53 +176,77 @@ async def on_skills_next_btn(
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    ms_skill = dialog_manager.find("ms_skills")
-    checked_ids = ms_skill.get_checked() if ms_skill else []
-    if len(checked_ids) == 0:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_description)
+    dialog_manager.dialog_data.setdefault("skills_for_confirm", [])
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_effectiveness)
 
 
 async def skill_name_getter(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
-    if "selected_skills" not in dialog_manager.dialog_data:
-        ms_skills = dialog_manager.find("ms_skills")
-        s_ids = ms_skills.get_checked() if ms_skills else []
-        dialog_manager.dialog_data["selected_skills"] = [
-            s for s in dialog_manager.dialog_data["skills"] if str(s["id"]) in s_ids
-        ]
-
-    selected_skills = dialog_manager.dialog_data["selected_skills"]
-    skill_name = selected_skills[0]["name"]
-    return {"skill_name": skill_name}
+    current_skill = dialog_manager.dialog_data["current_skill"]
+    return {"skill_name": current_skill["name"]}
 
 
-async def on_skill_description_entered(
+async def on_skill_selected(
+    _: CallbackQuery,
+    select: ManagedMultiselect[str],
+    dialog_manager: DialogManager,
+    data: str,
+) -> None:
+    if not select.is_checked(data):
+        dialog_manager.dialog_data["current_skill"] = [
+            s for s in dialog_manager.dialog_data["skills"] if str(s["id"]) == data
+        ][0]
+        await dialog_manager.next()
+    else:
+        skills = dialog_manager.dialog_data.setdefault("skills_for_confirm", [])
+        dialog_manager.dialog_data["targets_for_confirm"] = [t for t in skills if t["id"] != data]
+        await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
+
+
+async def on_skill_usage_entered(
     message: Message,
     _: ManagedTextInput[str],
     dialog_manager: DialogManager,
     data: str,
 ) -> None:
-    selected_skills: list[dict[str, Any]] = dialog_manager.dialog_data["selected_skills"]
-    skill = selected_skills.pop(0)
-    skill["situation"] = data
-    dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
-    await message.delete()
+    current_skill = dialog_manager.dialog_data["current_skill"]
+    current_skill["usage"] = data
     dialog_manager.show_mode = ShowMode.EDIT
-    if len(selected_skills) > 0:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.skill_description)
-    else:
-        await dialog_manager.next()
+    await message.delete()
+    await dialog_manager.next()
 
 
-async def on_skill_description_next_btn(
+async def on_skill_usage_next_btn(
     _: CallbackQuery,
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
-    selected_skills: list[dict[str, Any]] = dialog_manager.dialog_data["selected_skills"]
-    skill = selected_skills.pop(0)
-    dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(skill)
-    if len(selected_skills) > 0:
-        await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
+    current_skill = dialog_manager.dialog_data["current_skill"]
+    current_skill["usage"] = None
+    dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(current_skill)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
+
+
+async def on_skill_effectiveness_selected(
+    _: CallbackQuery,
+    __: Select[int],
+    dialog_manager: DialogManager,
+    selected: int,
+) -> None:
+    current_skill = dialog_manager.dialog_data["current_skill"]
+    current_skill["effectiveness"] = selected
+    dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(current_skill)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
+
+
+async def on_skill_effectiveness_next_btn(
+    _: CallbackQuery,
+    __: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    current_skill = dialog_manager.dialog_data["current_skill"]
+    dialog_manager.dialog_data.setdefault("skills_for_confirm", []).append(current_skill)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
+
 
 
 async def get_confirmation_data(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
@@ -233,8 +258,9 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs: Any) ->
         4: "Хорошее",
         5: "Отличное",
     }
-    mood = dialog_manager.dialog_data.get("mood", "Не указано")
-    mood_text = mood_mapping.get(mood, "Не указано")
+    mood = MoodDisplay.from_level(
+        dialog_manager.dialog_data.get("mood", "Не указано")
+        )
     ms_emotions = dialog_manager.find("ms_emotions")
     e_ids = ms_emotions.get_checked() if ms_emotions else []
     emotions = [e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in e_ids]
@@ -244,7 +270,7 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs: Any) ->
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     return {
-        "mood": mood_text,  # Отображаем текстовое описание
+        "mood": mood.text,
         "description": dialog_manager.dialog_data.get("description", "Не указано"),
         "target_copings": targets,
         "emotions": emotions,
@@ -262,7 +288,7 @@ async def on_confirmation(
     ms_medicaments = dialog_manager.find("ms_medicaments")
     medicaments_ids = ms_medicaments.get_checked() if ms_medicaments else []
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
-    skills_for_create = [CreateSkillApplicationCommand(id=s["id"], skill_usage=s.get("situation")) for s in skills]
+    skills_for_create = [CreateSkillApplicationCommand(id=s["id"], skill_usage=s.get("usage"), effectiveness=s.get("effectiveness")) for s in skills]
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     targets_for_create = [
         CreateCopingStrategyCommand(
@@ -341,41 +367,41 @@ create_diary_card_dialog = Dialog(
                 on_click=on_target_selected,
             )
         ),
-        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_targets_selected)),
+        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_targets_next_btn)),
         state=states.CreateDiaryCardSG.targets,
     ),
     Window(
-        Format("📌  <b>Проблемное поведение:</b> {target_name}.\n\nОпишите ситуацию и способ совладания с ней:"),
+        Format("📌  <b>Проблемное поведение:</b> {target_name}.\n\nОпишите ситуацию и применённые навыки:"),
         TextInput(id="target_action_input", on_success=on_target_action_entered),
         Row(
             Back(Const(BACK_BTN_TXT)),
             Button(Const(NEXT_BTN_TXT), id="target_action_next_btn", on_click=on_target_action_next_btn),
         ),
         state=states.CreateDiaryCardSG.target_action,
-        getter=target_data_getter,
+        getter=target_name_getter,
         parse_mode="HTML",
     ),
     Window(
         Format(
-            "📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность копинг-стратегии, если применили ёё"
+            "📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность применения навыков"
         ),
         Group(
             Select(
                 Format("{item}"),
                 id="select_effectiveness",
-                items=list(range(1, 11)),  # Числа от 1 до 10
+                items=list(range(0, 8)),  # Числа от 0 до 7
                 item_id_getter=lambda x: x,
                 on_click=on_target_effectiveness_selected,
                 type_factory=int,
             ),
-            width=5,
+            width=4,
         ),
         Row(
             Back(Const(BACK_BTN_TXT)),
             Button(Const(NEXT_BTN_TXT), id="target_eff_next_btn", on_click=on_target_effectiveness_next_btn),
         ),
         state=states.CreateDiaryCardSG.target_effectiveness,
-        getter=target_data_getter,
+        getter=target_name_getter,
         parse_mode="HTML",
     ),
     Window(
@@ -415,6 +441,7 @@ create_diary_card_dialog = Dialog(
                 id="ms_skills",
                 item_id_getter=lambda x: str(x["id"]),
                 items="skills",
+                on_click=on_skill_selected,
             )
         ),
         Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_skills_next_btn)),
@@ -422,10 +449,33 @@ create_diary_card_dialog = Dialog(
     ),
     Window(
         Format("Опишите то, как вы применили навык: {skill_name}"),
-        Row(Back(Const(BACK_BTN_TXT)), Next(Const(NEXT_BTN_TXT), on_click=on_skill_description_next_btn)),
-        TextInput[str](id="skill_input_id", on_success=on_skill_description_entered),
-        state=states.CreateDiaryCardSG.skill_description,
+        Row(Back(Const(BACK_BTN_TXT)), Button(Const(NEXT_BTN_TXT), id="skill_usage_next_btn", on_click=on_skill_usage_next_btn)),
+        TextInput[str](id="skill_input_id", on_success=on_skill_usage_entered),
+        state=states.CreateDiaryCardSG.skill_usage,
         getter=skill_name_getter,
+    ),
+    Window(
+        Format(
+            "📌 Оцените эффективность применения навыка {skill_name}"
+        ),
+        Group(
+            Select(
+                Format("{item}"),
+                id="select_skill_effectiveness",
+                items=list(range(0, 8)),  # Числа от 0 до 7
+                item_id_getter=lambda x: x,
+                on_click=on_skill_effectiveness_selected,
+                type_factory=int,
+            ),
+            width=4,
+        ),
+        Row(
+            Back(Const(BACK_BTN_TXT)),
+            Button(Const(NEXT_BTN_TXT), id="skill_eff_next_btn", on_click=on_skill_effectiveness_next_btn),
+        ),
+        state=states.CreateDiaryCardSG.skill_effectiveness,
+        getter=skill_name_getter,
+        parse_mode="HTML",
     ),
     Window(
         Jinja(
@@ -442,7 +492,7 @@ create_diary_card_dialog = Dialog(
 {% if target_copings %}
 {% for t in target_copings -%}
 • {{ t.urge }} {% if t.action %}
-✧ {{ t.action }}{% if t.effectiveness %} | {{ t.effectiveness }}/10{% endif %}
+✧ {{ t.action }}{% if t.effectiveness %} | {{ t.effectiveness }}/7{% endif %}
 {% endif %}
 
 {% endfor %}
@@ -469,9 +519,10 @@ create_diary_card_dialog = Dialog(
 {% endif %}
 <b>🛠 Навыки:</b>
 {% if skills %}
-{% for skill in skills -%}
-
-• {{ skill.name }} {% if skill.situation %} ✧ {{ skill.situation }} {% endif %}
+{% for s in skills -%}
+• {{ s.name }} {% if s.usage %}
+✧ {{ s.usage }}{% if s.effectiveness %} | {{ s.effectiveness }}/7{% endif %}
+{% endif %}
 
 {% endfor %}
 {% else %}

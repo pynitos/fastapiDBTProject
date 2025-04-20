@@ -43,7 +43,7 @@ async def get_cards_list(dialog_manager: DialogManager, sender: FromDishka[Sende
     scroll: ManagedScroll | None = dialog_manager.find("scroll_diary_cards")
     page = await scroll.get_page() if scroll else 1
     offset = page * PAGE_SIZE
-    diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(Pagination(PAGE_SIZE, offset)))
+    diary_cards = await sender.send_query(GetOwnDiaryCardsDTO(Pagination(PAGE_SIZE+1, offset)))
     return {"diary_cards": diary_cards}
 
 
@@ -70,7 +70,6 @@ list_window = Window(
         id="scroll_diary_cards",
         width=1,
         height=PAGE_SIZE,
-        hide_on_single_page=True,
     ),
     Cancel(Const(BACK_BTN_TXT)),
     state=states.GetOwnDiaryCardsSG.view,
@@ -121,8 +120,10 @@ detail_window = Window(
 🛠️ <b>Применённые навыки:</b>
 {% if item.skills %}
 {% for skill in item.skills -%}
-▸ {{ skill.name }}{% if skill.situation %}: <i>{{ skill.situation }}</i>
-{% endif %}\n
+▸ {{ skill.name }}{% if skill.usage %}: <i>{{ skill.usage }}</i>
+{% endif %}
+{% if skill.effectiveness %}↳ Эффективность: <i>{{ skill.effectiveness }}/7</i>
+{% endif %}
 {% endfor %}
 {% else %}
 ▹ <i>не указано</i>

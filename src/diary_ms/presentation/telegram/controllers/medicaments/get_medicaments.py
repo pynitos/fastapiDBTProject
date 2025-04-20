@@ -78,7 +78,6 @@ list_medicaments_dialog = Dialog(
             id="scroll_meds",
             width=1,
             height=PAGE_SIZE,
-            hide_on_single_page=True,
         ),
         Start(Const(ADD_BTN_TXT), id="btn_add_med", state=CreateMedicamentSG.name),
         Cancel(Const(BACK_BTN_TXT)),

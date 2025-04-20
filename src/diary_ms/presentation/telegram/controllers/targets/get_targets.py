@@ -54,7 +54,6 @@ list_window = Window(
         id="targets_sg",
         width=1,
         height=PAGE_SIZE,
-        hide_on_single_page=True,
     ),
     Start(Const(ADD_BTN_TXT), id="add_target_btn", state=CreateTargetSG.urge),
     Cancel(Const(BACK_BTN_TXT)),
