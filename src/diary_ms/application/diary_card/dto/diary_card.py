@@ -9,7 +9,7 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass
-class TargetDTO(ResultDTO):
+class TargetResultDTO(ResultDTO):
     id: UUID
     user_id: UUID
     urge: str
@@ -18,14 +18,14 @@ class TargetDTO(ResultDTO):
 
 
 @dataclass
-class EmotionDTO(ResultDTO):
+class EmotionResultDTO(ResultDTO):
     id: UUID
     name: str
     description: str | None
 
 
 @dataclass
-class MedicamentDTO(ResultDTO):
+class MedicamentResultDTO(ResultDTO):
     id: UUID
     user_id: UUID
     name: str
@@ -33,7 +33,7 @@ class MedicamentDTO(ResultDTO):
 
 
 @dataclass
-class SkillDTO(ResultDTO):
+class SkillResultDTO(ResultDTO):
     id: UUID
     category: str | None
     group: str | None
@@ -43,24 +43,30 @@ class SkillDTO(ResultDTO):
 
 
 @dataclass
-class OwnDiaryCardDTO(ResultDTO):
+class OwnDiaryCardResultDTO(ResultDTO):
     id: UUID
     user_id: UUID
     mood: int
     description: str | None = None
     date_of_entry: date | None = None
-    targets: list[TargetDTO] | None = None
-    emotions: list[EmotionDTO] | None = None
-    medicaments: list[MedicamentDTO] | None = None
-    skills: list[SkillDTO] | None = None
+    targets: list[TargetResultDTO] | None = None
+    emotions: list[EmotionResultDTO] | None = None
+    medicaments: list[MedicamentResultDTO] | None = None
+    skills: list[SkillResultDTO] | None = None
     type: SkillType = SkillType.DBT
 
 
 @dataclass
-class GetOwnDiaryCardsDTO(Query[list[OwnDiaryCardDTO]]):
+class OwnDiaryCardsResultDTO(ResultDTO):
+    diary_cards: list[OwnDiaryCardResultDTO]
+    total: int
+
+
+@dataclass
+class GetOwnDiaryCardsQuery(Query[OwnDiaryCardsResultDTO]):
     pagination: Pagination
 
 
 @dataclass
-class GetOwnDiaryCardDTO(Query[OwnDiaryCardDTO]):
+class GetOwnDiaryCardQuery(Query[OwnDiaryCardResultDTO]):
     id: UUID

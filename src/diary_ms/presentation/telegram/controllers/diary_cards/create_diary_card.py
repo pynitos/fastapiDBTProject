@@ -248,7 +248,6 @@ async def on_skill_effectiveness_next_btn(
     await dialog_manager.switch_to(states.CreateDiaryCardSG.skills)
 
 
-
 async def get_confirmation_data(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
     # Преобразуем число в текстовое описание для отображения
     mood_mapping = {
@@ -258,9 +257,7 @@ async def get_confirmation_data(dialog_manager: DialogManager, **kwargs: Any) ->
         4: "Хорошее",
         5: "Отличное",
     }
-    mood = MoodDisplay.from_level(
-        dialog_manager.dialog_data.get("mood", "Не указано")
-        )
+    mood = MoodDisplay.from_level(dialog_manager.dialog_data.get("mood", "Не указано"))
     ms_emotions = dialog_manager.find("ms_emotions")
     e_ids = ms_emotions.get_checked() if ms_emotions else []
     emotions = [e for e in dialog_manager.dialog_data["emotions"] if str(e["id"]) in e_ids]
@@ -288,7 +285,10 @@ async def on_confirmation(
     ms_medicaments = dialog_manager.find("ms_medicaments")
     medicaments_ids = ms_medicaments.get_checked() if ms_medicaments else []
     skills = dialog_manager.dialog_data.get("skills_for_confirm", [])
-    skills_for_create = [CreateSkillApplicationCommand(id=s["id"], skill_usage=s.get("usage"), effectiveness=s.get("effectiveness")) for s in skills]
+    skills_for_create = [
+        CreateSkillApplicationCommand(id=s["id"], skill_usage=s.get("usage"), effectiveness=s.get("effectiveness"))
+        for s in skills
+    ]
     targets = dialog_manager.dialog_data.get("targets_for_confirm", [])
     targets_for_create = [
         CreateCopingStrategyCommand(
@@ -382,9 +382,7 @@ create_diary_card_dialog = Dialog(
         parse_mode="HTML",
     ),
     Window(
-        Format(
-            "📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность применения навыков"
-        ),
+        Format("📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность применения навыков"),
         Group(
             Select(
                 Format("{item}"),
@@ -449,15 +447,16 @@ create_diary_card_dialog = Dialog(
     ),
     Window(
         Format("Опишите то, как вы применили навык: {skill_name}"),
-        Row(Back(Const(BACK_BTN_TXT)), Button(Const(NEXT_BTN_TXT), id="skill_usage_next_btn", on_click=on_skill_usage_next_btn)),
+        Row(
+            Back(Const(BACK_BTN_TXT)),
+            Button(Const(NEXT_BTN_TXT), id="skill_usage_next_btn", on_click=on_skill_usage_next_btn),
+        ),
         TextInput[str](id="skill_input_id", on_success=on_skill_usage_entered),
         state=states.CreateDiaryCardSG.skill_usage,
         getter=skill_name_getter,
     ),
     Window(
-        Format(
-            "📌 Оцените эффективность применения навыка {skill_name}"
-        ),
+        Format("📌 Оцените эффективность применения навыка {skill_name}"),
         Group(
             Select(
                 Format("{item}"),

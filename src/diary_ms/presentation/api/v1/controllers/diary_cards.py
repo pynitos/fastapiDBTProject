@@ -15,9 +15,10 @@ from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import D
 from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
 from src.diary_ms.application.diary_card.dto.diary_card import (
-    GetOwnDiaryCardDTO,
-    GetOwnDiaryCardsDTO,
-    OwnDiaryCardDTO,
+    GetOwnDiaryCardQuery,
+    GetOwnDiaryCardsQuery,
+    OwnDiaryCardResultDTO,
+    OwnDiaryCardsResultDTO,
 )
 from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
 from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
@@ -46,24 +47,24 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[OwnDiaryCardDTO])
-async def get_diary_cards(
+@router.get("/", response_model=OwnDiaryCardResultDTO)
+async def get_own_diary_cards(
     sender: SenderDep,
     limit: int = 10,
     offset: int = 0,
-) -> list[OwnDiaryCardDTO]:
-    diary_cards: list[OwnDiaryCardDTO] = await sender.send_query(
-        GetOwnDiaryCardsDTO(pagination=Pagination(limit=limit, offset=offset))
+) -> OwnDiaryCardsResultDTO:
+    diary_cards: OwnDiaryCardsResultDTO = await sender.send_query(
+        GetOwnDiaryCardsQuery(pagination=Pagination(limit=limit, offset=offset))
     )
     return diary_cards
 
 
-@router.get("/<id:UUID>", response_model=OwnDiaryCardDTO)
+@router.get("/<id:UUID>", response_model=OwnDiaryCardResultDTO)
 async def get_own_diary_card_by_id(
     id: UUID,
     sender: SenderDep,
-) -> OwnDiaryCardDTO:
-    diary_card: OwnDiaryCardDTO = await sender.send_query(GetOwnDiaryCardDTO(id))
+) -> OwnDiaryCardResultDTO:
+    diary_card: OwnDiaryCardResultDTO = await sender.send_query(GetOwnDiaryCardQuery(id))
     return diary_card
 
 

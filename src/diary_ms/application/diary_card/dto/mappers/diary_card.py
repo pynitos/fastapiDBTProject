@@ -1,9 +1,9 @@
 from src.diary_ms.application.diary_card.dto.diary_card import (
-    EmotionDTO,
-    MedicamentDTO,
-    OwnDiaryCardDTO,
-    SkillDTO,
-    TargetDTO,
+    EmotionResultDTO,
+    MedicamentResultDTO,
+    OwnDiaryCardResultDTO,
+    SkillResultDTO,
+    TargetResultDTO,
 )
 from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
 from src.diary_ms.domain.common.exceptions.base import AppError
@@ -14,7 +14,7 @@ from src.diary_ms.domain.model.entities.medicament import Medicament
 
 class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
     @classmethod
-    def dm_to_dto(cls, dm: DiaryCard) -> OwnDiaryCardDTO:
+    def dm_to_dto(cls, dm: DiaryCard) -> OwnDiaryCardResultDTO:
         """
         Converts DiaryCard domain model to DTO with validation
         Args:
@@ -31,7 +31,7 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         required_fields = [dm.user_id.value, dm.mood.value, dm.date_of_entry.value, dm.type]
         if None in required_fields:
             raise AppError("Required fields are missing in DiaryCard")
-        return OwnDiaryCardDTO(
+        return OwnDiaryCardResultDTO(
             id=dm.id.value,
             user_id=dm.user_id.value,
             mood=dm.mood.value,
@@ -45,14 +45,14 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         )
 
     @classmethod
-    def _map_targets(cls, dm: DiaryCard) -> list[TargetDTO] | None:
+    def _map_targets(cls, dm: DiaryCard) -> list[TargetResultDTO] | None:
         """Maps target behaviors with coping strategies"""
         if not dm.targets or not dm.coping_strategies:
             return None
 
         target_map = {t.id.value: t for t in dm.targets if t.id.value}
         return [
-            TargetDTO(
+            TargetResultDTO(
                 id=target.id.value,
                 user_id=target.user_id.value,
                 urge=target.urge.value,
@@ -78,10 +78,10 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         ]
 
     @classmethod
-    def _map_emotions(cls, emotions: list[Emotion]) -> list[EmotionDTO]:
+    def _map_emotions(cls, emotions: list[Emotion]) -> list[EmotionResultDTO]:
         """Maps emotions"""
         return [
-            EmotionDTO(
+            EmotionResultDTO(
                 id=e.id.value,
                 name=e.name.value,
                 description=e.description.value if e.description else None,
@@ -91,10 +91,10 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         ]
 
     @classmethod
-    def _map_medicaments(cls, medicaments: list[Medicament]) -> list[MedicamentDTO]:
+    def _map_medicaments(cls, medicaments: list[Medicament]) -> list[MedicamentResultDTO]:
         """Maps medications"""
         return [
-            MedicamentDTO(
+            MedicamentResultDTO(
                 id=m.id.value,
                 user_id=m.user_id.value,
                 name=m.name.value,
@@ -105,11 +105,11 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         ]
 
     @classmethod
-    def _map_skills(cls, dm: DiaryCard) -> list[SkillDTO]:
+    def _map_skills(cls, dm: DiaryCard) -> list[SkillResultDTO]:
         """Maps skills with usage situations"""
         skill_map = {s.id.value: s for s in dm.skills if s.id.value}
         return [
-            SkillDTO(
+            SkillResultDTO(
                 id=skill.id.value,
                 category=skill.category.value,
                 group=skill.group.value,
@@ -132,5 +132,5 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
         ]
 
     @classmethod
-    def dm_list_to_dto_list(cls, dm_list: list[DiaryCard]) -> list[OwnDiaryCardDTO]:
+    def dm_list_to_dto_list(cls, dm_list: list[DiaryCard]) -> list[OwnDiaryCardResultDTO]:
         return [cls.dm_to_dto(dm) for dm in dm_list]

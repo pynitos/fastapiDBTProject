@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from sqlalchemy import Row, ScalarResult, Select, func, select
+from sqlalchemy import Row, ScalarResult, Select, and_, func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.common.exceptions.base import GatewayError
@@ -84,6 +84,25 @@ class DiaryCardGateway(
         result: ScalarResult[DiaryCard] = await self._session.scalars(stmt)
         result_list: list[DiaryCard] = list(result.all())
         return result_list
+
+    async def get_total_count(
+        self, user_id: UserId, date_from: DCDateOfEntry | None = None, date_to: DCDateOfEntry | None = None
+    ) -> int:
+        if not user_id.value:
+            raise UserIdNotProvidedError
+        query = select(func.count()).select_from(DiaryCard)
+        conditions = []
+        if user_id.value:
+            conditions.append(diary_cards_table.c.user_id == user_id.value)
+        if date_from:
+            conditions.append(diary_cards_table.c.date_of_entry >= date_from.value)
+        if date_to:
+            conditions.append(diary_cards_table.c.date_of_entry <= date_to.value)
+        if conditions:
+            query = query.where(and_(*conditions))
+            result = await self._session.scalar(query)
+            return result or 0
+        return 0
 
     async def get_by_id(self, id: DiaryCardId, user_id: UserId) -> DiaryCard | None:
         if not id.value:

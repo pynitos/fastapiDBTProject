@@ -27,6 +27,12 @@ class DiaryCardReader(Protocol):
         raise NotImplementedError
 
     @abstractmethod
+    async def get_total_count(
+        self, user_id: UserId, date_from: DCDateOfEntry | None = None, date_to: DCDateOfEntry | None = None
+    ) -> int:
+        raise NotImplementedError
+
+    @abstractmethod
     async def generate_report_data(
         self,
         user_id: UserId,

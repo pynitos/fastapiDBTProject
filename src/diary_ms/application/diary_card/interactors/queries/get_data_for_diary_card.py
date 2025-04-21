@@ -3,7 +3,7 @@ import logging
 from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
 from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
-from src.diary_ms.application.diary_card.dto.diary_card import EmotionDTO
+from src.diary_ms.application.diary_card.dto.diary_card import EmotionResultDTO
 from src.diary_ms.application.diary_card.dto.mappers.emotion import EmotionDTOMapper
 from src.diary_ms.application.diary_card.dto.mappers.skill import SkillDTOMapper
 from src.diary_ms.application.diary_card.dto.skill import SkillDTO
@@ -48,7 +48,7 @@ class GetDataForDiaryCard(QueryHandler[GetDataForDiaryCardQuery, DataForDiaryCar
         skills: list[Skill] = await self._skill_gateway.get_all(type=query.skill_type, offset=0, limit=100)
         targets: list[Target] = await self._target_gateway.get_all(user_id=user_id, offset=0, limit=100)
         meds: list[Medicament] = await self._medicament_gateway.get_all(user_id=user_id, offset=0, limit=100)
-        emotions_dtos: list[EmotionDTO] = self._emotion_mapper.dm_list_to_dto_list(emotions)
+        emotions_dtos: list[EmotionResultDTO] = self._emotion_mapper.dm_list_to_dto_list(emotions)
         skills_dtos: list[SkillDTO] = self._skill_mapper.dm_list_to_dto_list(skills)
         targets_dtos: list[OwnTargetDTO] = self._target_mapper.dm_list_to_dto_list(targets)
         meds_dtos: list[OwnMedicamentDTO] = self._medicament_mapper.dm_list_to_dto_list(meds)
