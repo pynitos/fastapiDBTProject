@@ -41,7 +41,7 @@ async def on_update_confirmed(
 
     await sender.send_command(
         UpdateTargetCommand(
-            id=manager.start_data["target_id"],
+            target_id=manager.start_data["target_id"],
             urge=manager.dialog_data.get("urge"),
             action=manager.dialog_data.get("action"),
         )

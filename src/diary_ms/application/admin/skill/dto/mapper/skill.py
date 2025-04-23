@@ -10,11 +10,11 @@ class SkillAdminDTOMapper:
             raise AppError("Skill id not provided!")
         return SkillAdminDTO(
             id=dm.id.value,
-            category=dm.category.value,
-            group=dm.group.value,
+            category=dm.category.value if dm.category else None,
+            group=dm.group.value if dm.group else None,
             name=dm.name.value,
             type=dm.type,
-            description=dm.description.value,
+            description=dm.description.value if dm.description else None,
         )
 
     @classmethod

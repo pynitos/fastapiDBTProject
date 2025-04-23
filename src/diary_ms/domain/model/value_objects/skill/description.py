@@ -12,6 +12,6 @@ class WrongSkillDescriptionValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class SkillDescription(ValueObject[str | None]):
+class SkillDescription(ValueObject[str]):
     def _validate(self) -> None:
         pass

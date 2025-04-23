@@ -29,9 +29,9 @@ class CreateSkillAdminHandler(CommandHandler[CreateSkillAdminCommand, None]):
         skill: Skill = Skill.create(
             id=SkillId(uuid4()),
             name=SkillName(command.name),
-            category=SkillCategory(command.category),
+            category=SkillCategory(command.category) if command.category else None,
             group=SkillGroup(command.group),
-            description=SkillDescription(command.description),
+            description=SkillDescription(command.description) if command.description else None,
             skill_type=command.type,
         )
         await self.db_gateway.create(skill)

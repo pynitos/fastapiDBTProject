@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Self
 
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
@@ -14,7 +15,7 @@ class Medicament(BaseEntity):
     user_id: UserId
     name: MedicamentName
     dosage: MedicamentDosage
-    id: MedicamentId = MedicamentId(None)
+    id: MedicamentId = field(default_factory=lambda: MedicamentId(uuid.uuid4()))
 
     @classmethod
     def create(

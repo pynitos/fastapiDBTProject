@@ -28,7 +28,7 @@ class UpdateTarget(CommandHandler[UpdateTargetCommand, None]):
 
     async def __call__(self, command: UpdateTargetCommand) -> None:
         user_id: UserId = self._id_provider.get_current_user_id()
-        medicament_id: TargetId = TargetId(command.id)
+        medicament_id: TargetId = TargetId(command.target_id)
         old_target: Target | None = await self._db_gateway.get_by_id(medicament_id, user_id)
         if not old_target:
             raise TargetNotFoundError(medicament_id)
@@ -38,4 +38,4 @@ class UpdateTarget(CommandHandler[UpdateTargetCommand, None]):
         )
         await self._db_gateway.update(new_target)
         await self._transaction_manager.commit()
-        logger.debug(f"Diary card with id: {command.id} updated.")
+        logger.debug(f"Diary card with id: {command.target_id} updated.")

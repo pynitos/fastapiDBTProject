@@ -428,7 +428,8 @@ async def init_db() -> None:
         for target in targets:
             existing_target = await session.execute(
                 select(Target).where(
-                    (targets_table.c.urge == target.urge.value) & (targets_table.c.action == target.action.value)
+                    (targets_table.c.urge == target.urge.value)
+                    & (targets_table.c.action == target.action.value if target.action else None)
                 )
             )
             if not existing_target.scalar():

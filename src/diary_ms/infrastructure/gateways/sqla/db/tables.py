@@ -37,6 +37,7 @@ diary_card_target_assotiation = Table(
     Column("diary_card_id", UUID(as_uuid=True), ForeignKey("diary_cards.id", ondelete="CASCADE")),
     Column("target_id", UUID(as_uuid=True), ForeignKey("targets.id", ondelete="CASCADE")),
     Column("action", String(500), default=None, nullable=True),
+    Column("urge_intensity", SmallInteger, default=None, nullable=True),
     Column("effectiveness", SmallInteger, default=None, nullable=True),
 )
 

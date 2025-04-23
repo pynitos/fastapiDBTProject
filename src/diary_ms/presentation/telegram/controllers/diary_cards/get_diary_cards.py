@@ -59,7 +59,9 @@ async def get_diary_cards(dialog_manager: DialogManager, sender: FromDishka[Send
 
 @inject
 async def get_diary_card_details(
-    dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs: Any
+    dialog_manager: DialogManager,
+    sender: FromDishka[Sender],
+    **kwargs: Any,  # noqa: ARG001
 ) -> dict[str, Any]:  # noqa: ARG001
     card_id = dialog_manager.dialog_data["selected_card_id"]
     card: OwnDiaryCardResultDTO = await sender.send_query(GetOwnDiaryCardQuery(id=card_id))

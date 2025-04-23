@@ -30,6 +30,7 @@ class DiaryCardSkillReq(BaseModel):
 
 class DiaryCardTargetReq(BaseModel):
     target_id: UUID
+    urge_intensity: int | None = None
     action: str | None = None
     effectiveness: int | None = None
 
@@ -51,7 +52,7 @@ class UpdateDiaryCardReq(BaseModel):
     description: str | None = None
     date_of_entry: date | None = None
 
-    targets: list[UUID] | None = None
+    targets: list[DiaryCardTargetReq] | None = None
     emotions: list[UUID] | None = None
     medicaments: list[UUID] | None = None
     skills: list[DiaryCardSkillReq] | None = None

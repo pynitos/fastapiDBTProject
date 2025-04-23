@@ -121,8 +121,8 @@ class DiaryCardAdminDTOMapper:
         return [
             SkillAdminDTO(
                 id=skill.id.value,
-                category=skill.category.value,
-                group=skill.group.value,
+                category=skill.category.value if skill.category else None,
+                group=skill.group.value if skill.group else None,
                 name=skill.name.value,
                 usage=next(
                     (su.usage.value for su in dm.skill_usages if su.skill_id.value == skill.id.value and su.usage),
@@ -132,7 +132,7 @@ class DiaryCardAdminDTOMapper:
                     (
                         su.effectiveness.value
                         for su in dm.skill_usages
-                        if su.skill_id.value == skill.id.value and su.usage
+                        if su.skill_id.value == skill.id.value and su.effectiveness
                     ),
                     None,
                 ),

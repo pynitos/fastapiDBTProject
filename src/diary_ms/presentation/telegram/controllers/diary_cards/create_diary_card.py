@@ -249,14 +249,6 @@ async def on_skill_effectiveness_next_btn(
 
 
 async def get_confirmation_data(dialog_manager: DialogManager, **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
-    # Преобразуем число в текстовое описание для отображения
-    mood_mapping = {
-        1: "Очень плохое",
-        2: "Плохое",
-        3: "Нейтральное",
-        4: "Хорошее",
-        5: "Отличное",
-    }
     mood = MoodDisplay.from_level(dialog_manager.dialog_data.get("mood", "Не указано"))
     ms_emotions = dialog_manager.find("ms_emotions")
     e_ids = ms_emotions.get_checked() if ms_emotions else []

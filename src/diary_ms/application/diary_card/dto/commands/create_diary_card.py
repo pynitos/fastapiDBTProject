@@ -9,6 +9,7 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 @dataclass
 class CreateCopingStrategyCommand:
     target_id: UUID
+    urge_intensity: int | None = None
     action: str | None = None
     effectiveness: int | None = None
 

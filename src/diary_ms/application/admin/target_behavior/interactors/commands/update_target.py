@@ -27,7 +27,7 @@ class UpdateTargetAdminHandler(CommandHandler[UpdateTargetAdminCommand, None]):
 
     async def __call__(self, command: UpdateTargetAdminCommand) -> None:
         self._id_provider.get_admin_user_id()
-        id: TargetId = TargetId(command.id)
+        id: TargetId = TargetId(command.target_id)
         old_target: Target | None = await self._db_gateway.get_by_id(id)
         if not old_target:
             raise TargetNotFoundError(id)
@@ -37,4 +37,4 @@ class UpdateTargetAdminHandler(CommandHandler[UpdateTargetAdminCommand, None]):
         )
         await self._db_gateway.update(new_target)
         await self._transaction_manager.commit()
-        logger.debug(f"Target with id: {command.id} updated.")
+        logger.debug(f"Target with id: {command.target_id} updated.")

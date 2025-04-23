@@ -12,7 +12,11 @@ from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
     CreateSkillApplicationCommand,
 )
 from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
-from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
+from src.diary_ms.application.diary_card.dto.commands.update_diary_card import (
+    UpdateCopingStrategyCommand,
+    UpdateDiaryCardCommand,
+    UpdateSkillApplicationCommand,
+)
 from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
 from src.diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardQuery,
@@ -91,7 +95,9 @@ async def create_diary_card(
     )
     targets: list[CreateCopingStrategyCommand] | None = (
         [
-            CreateCopingStrategyCommand(target_id=t.target_id, action=t.action, effectiveness=t.effectiveness)
+            CreateCopingStrategyCommand(
+                target_id=t.target_id, urge_intensity=t.urge_intensity, action=t.action, effectiveness=t.effectiveness
+            )
             for t in schema.targets
         ]
         if schema.targets
@@ -117,8 +123,21 @@ async def update_diary_card(
     sender: SenderDep,
 ) -> None:
     skills = (
-        [UpdateDiaryCardCommand.Skill(s.skill_id, s.usage, s.effectiveness) for s in schema.skills]
+        [UpdateSkillApplicationCommand(s.skill_id, s.usage, s.effectiveness) for s in schema.skills]
         if schema.skills
+        else None
+    )
+    targets: list[UpdateCopingStrategyCommand] | None = (
+        [
+            UpdateCopingStrategyCommand(
+                target_id=cs.target_id,
+                urge_intensity=cs.urge_intensity,
+                action=cs.action,
+                effectiveness=cs.effectiveness,
+            )
+            for cs in schema.targets
+        ]
+        if schema.targets
         else None
     )
     command = UpdateDiaryCardCommand(
@@ -126,7 +145,7 @@ async def update_diary_card(
         mood=schema.mood,
         description=schema.description,
         date_of_entry=schema.date_of_entry,
-        targets=schema.targets,
+        targets=targets,
         emotions=schema.emotions,
         medicaments=schema.medicaments,
         skills=skills,

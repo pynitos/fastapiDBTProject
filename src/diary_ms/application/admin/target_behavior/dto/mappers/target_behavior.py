@@ -11,7 +11,7 @@ class TargetAdminDTOMapper:
         return TargetAdminDTO(
             id=dm.id.value,
             urge=dm.urge.value,
-            action=dm.action.value,
+            action=dm.action.value if dm.action else None,
         )
 
     @classmethod

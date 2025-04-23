@@ -11,7 +11,7 @@ class EmotionAdminDTOMapper:
         return EmotionAdminDTO(
             id=dm.id.value,
             name=dm.name.value,
-            description=dm.description.value,
+            description=dm.description.value if dm.description else None,
         )
 
     @classmethod

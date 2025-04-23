@@ -12,8 +12,6 @@ class WrongCopingActionValueError(ValueError, DomainValueError):
 
 
 @dataclass(frozen=True)
-class CopingAction(ValueObject[str | None]):
-    value: str | None = None
-
+class CopingAction(ValueObject[str]):
     def _validate(self) -> None:
         pass

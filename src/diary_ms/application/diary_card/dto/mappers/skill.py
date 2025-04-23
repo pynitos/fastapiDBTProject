@@ -10,8 +10,8 @@ class SkillDTOMapper:
             raise SkillIdNotProvidedError
         return SkillDTO(
             id=dm.id.value,
-            category=dm.category.value,
-            group=dm.group.value,
+            category=dm.category.value if dm.category else None,
+            group=dm.group.value if dm.group else None,
             name=dm.name.value,
         )
 

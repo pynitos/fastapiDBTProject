@@ -13,6 +13,7 @@ class TargetResultDTO(ResultDTO):
     id: UUID
     user_id: UUID
     urge: str
+    urge_intensity: str | None = None
     action: str | None = None
     effectiveness: int | None = None
 

@@ -24,8 +24,8 @@ from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.name import SkillName
 from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.effectiveness import CopingEffectiveness
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.id import CopingStrategyId
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.intensity import UrgeIntensity
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
@@ -140,8 +140,13 @@ def init_mapper() -> None:
             "__target_id": diary_card_target_assotiation.c.target_id,
             "action": composite(lambda value: CopingAction(value), diary_card_target_assotiation.c.action),
             "__action": diary_card_target_assotiation.c.action,
+            "urge_intensity": composite(
+                lambda value: UrgeIntensity(value) if value else None,
+                diary_card_target_assotiation.c.effectiveness,
+            ),
+            "__urge_intensity": diary_card_target_assotiation.c.urge_intensity,
             "effectiveness": composite(
-                lambda value: CopingEffectiveness(value) if value is not None else None,
+                lambda value: SkillEffectiveness(value) if value else None,
                 diary_card_target_assotiation.c.effectiveness,
             ),
             "__effectiveness": diary_card_target_assotiation.c.effectiveness,

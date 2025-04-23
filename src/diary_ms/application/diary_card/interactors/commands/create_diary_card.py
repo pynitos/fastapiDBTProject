@@ -18,7 +18,7 @@ from src.diary_ms.domain.model.value_objects.skill.effectiveness import SkillEff
 from src.diary_ms.domain.model.value_objects.skill.id import SkillId
 from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
 from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.effectiveness import CopingEffectiveness
+from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.intensity import UrgeIntensity
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 
@@ -43,8 +43,8 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
                 SkillApplication(
                     diary_card_id=DiaryCardId(id),
                     skill_id=SkillId(s.id),
-                    usage=SkillUsage(s.skill_usage),
-                    effectiveness=SkillEffectiveness(s.effectiveness),
+                    usage=SkillUsage(s.skill_usage) if s.skill_usage else None,
+                    effectiveness=SkillEffectiveness(s.effectiveness) if s.effectiveness else None,
                 )
                 for s in command.skills
             ]
@@ -56,8 +56,9 @@ class CreateDiaryCard(CommandHandler[CreateDiaryCardCommand, None]):
                 CopingStrategy(
                     diary_card_id=DiaryCardId(id),
                     target_id=TargetId(t.target_id),
-                    action=CopingAction(t.action),
-                    effectiveness=CopingEffectiveness(t.effectiveness),
+                    urge_intensity=UrgeIntensity(t.urge_intensity) if t.urge_intensity else None,
+                    action=CopingAction(t.action) if t.action else None,
+                    effectiveness=SkillEffectiveness(t.effectiveness) if t.effectiveness else None,
                 )
                 for t in command.targets
             ]

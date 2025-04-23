@@ -66,7 +66,7 @@ async def update_target(
     sender: SenderDep,
 ) -> None:
     command = UpdateTargetAdminCommand(
-        id=id,
+        target_id=id,
         urge=schema.urge,
         action=schema.action,
     )

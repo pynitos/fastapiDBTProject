@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
@@ -12,8 +13,8 @@ from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
 @dataclass
 class Emotion(BaseEntity):
     name: EmotionName
-    id: EmotionId = EmotionId(None)
-    description: EmotionDescription = EmotionDescription(value=None)
+    id: EmotionId = field(default_factory=lambda: EmotionId(uuid.uuid4()))
+    description: EmotionDescription | None = None
 
     @classmethod
     def create(cls, name: EmotionName, description: EmotionDescription) -> Self:

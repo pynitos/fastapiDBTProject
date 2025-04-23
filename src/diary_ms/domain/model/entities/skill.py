@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Self
 
 from src.diary_ms.domain.common.model.entities.base import BaseEntity
@@ -13,21 +14,21 @@ from src.diary_ms.domain.model.value_objects.skill.type import SkillType
 @dataclass
 class Skill(BaseEntity):
     name: SkillName
-    id: SkillId = SkillId(None)
-    category: SkillCategory = SkillCategory(None)
-    group: SkillGroup = SkillGroup(None)
+    id: SkillId = field(default_factory=lambda: SkillId(uuid.uuid4()))
+    category: SkillCategory | None = None
+    group: SkillGroup | None = None
     type: SkillType = SkillType.DBT
-    description: SkillDescription = SkillDescription(None)
+    description: SkillDescription | None = None
 
     @classmethod
     def create(
         cls,
         id: SkillId,
         name: SkillName,
-        category: SkillCategory,
-        group: SkillGroup,
-        description: SkillDescription,
-        skill_type: SkillType,
+        category: SkillCategory | None = None,
+        group: SkillGroup | None = None,
+        description: SkillDescription | None = None,
+        skill_type: SkillType = SkillType.DBT,
     ) -> Self:
         skill = cls(
             id=id,

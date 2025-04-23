@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import uuid
+from dataclasses import dataclass, field
 from typing import Self
 
 from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
@@ -15,8 +16,8 @@ from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetU
 class Target(BaseEntity):
     user_id: UserId
     urge: TargetUrge
-    id: TargetId = TargetId(None)
-    action: CopingAction = CopingAction()
+    id: TargetId = field(default_factory=lambda: TargetId(uuid.uuid4()))
+    action: CopingAction | None = None
     coping_strategy: CopingStrategy | None = None
     is_default: TargetIsDefault = TargetIsDefault(False)
 
@@ -26,7 +27,7 @@ class Target(BaseEntity):
         id: TargetId,
         user_id: UserId,
         urge: TargetUrge,
-        action: CopingAction,
+        action: CopingAction | None = None,
     ) -> Self:
         if not user_id.value:
             raise UserIdNotProvidedError

@@ -11,5 +11,5 @@ from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
 class SkillApplication(BaseEntity):
     diary_card_id: DiaryCardId
     skill_id: SkillId
-    usage: SkillUsage = SkillUsage(None)
-    effectiveness: SkillEffectiveness = SkillEffectiveness(None)
+    usage: SkillUsage | None = None
+    effectiveness: SkillEffectiveness | None = None

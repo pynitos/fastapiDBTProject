@@ -46,7 +46,6 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
 
     @classmethod
     def _map_targets(cls, dm: DiaryCard) -> list[TargetResultDTO] | None:
-        """Maps target behaviors with coping strategies"""
         if not dm.targets or not dm.coping_strategies:
             return None
 
@@ -92,7 +91,6 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
 
     @classmethod
     def _map_medicaments(cls, medicaments: list[Medicament]) -> list[MedicamentResultDTO]:
-        """Maps medications"""
         return [
             MedicamentResultDTO(
                 id=m.id.value,
@@ -106,13 +104,12 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
 
     @classmethod
     def _map_skills(cls, dm: DiaryCard) -> list[SkillResultDTO]:
-        """Maps skills with usage situations"""
         skill_map = {s.id.value: s for s in dm.skills if s.id.value}
         return [
             SkillResultDTO(
                 id=skill.id.value,
-                category=skill.category.value,
-                group=skill.group.value,
+                category=skill.category.value if skill.category else None,
+                group=skill.group.value if skill.group else None,
                 name=skill.name.value,
                 usage=next(
                     (su.usage.value for su in dm.skill_usages if su.skill_id.value == skill.id.value and su.usage),

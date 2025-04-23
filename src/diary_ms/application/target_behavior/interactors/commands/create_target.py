@@ -29,8 +29,11 @@ class CreateTarget(CommandHandler[CreateTargetCommand, None]):
     async def __call__(self, command: CreateTargetCommand) -> None:
         user_id: UserId = self._id_provider.get_current_user_id()
         command.user_id = user_id.value
-        medicament: Target = Target.create(
-            id=TargetId(uuid4()), user_id=user_id, urge=TargetUrge(command.urge), action=CopingAction(command.action)
+        target: Target = Target.create(
+            id=TargetId(uuid4()),
+            user_id=user_id,
+            urge=TargetUrge(command.urge),
+            action=CopingAction(command.action) if command.action else None,
         )
-        await self._db_gateway.create(medicament)
+        await self._db_gateway.create(target)
         await self._transaction_manager.commit()
