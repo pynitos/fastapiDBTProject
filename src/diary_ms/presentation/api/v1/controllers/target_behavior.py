@@ -11,7 +11,8 @@ from src.diary_ms.application.target_behavior.dto.commands.update_target import 
 from src.diary_ms.application.target_behavior.dto.target_behavior import (
     GetOwnAndDefaultTargetsQuery,
     GetOwnTargetQuery,
-    OwnTargetDTO,
+    OwnTargetResultDTO,
+    OwnTargetsResultDTO,
 )
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.target_behavior import (
@@ -29,22 +30,24 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[OwnTargetDTO])
+@router.get("/", response_model=OwnTargetsResultDTO)
 async def get_targets(
     sender: SenderDep,
     limit: int = 10,
     offset: int = 0,
-) -> list[OwnTargetDTO]:
-    targets = await sender.send_query(GetOwnAndDefaultTargetsQuery(pagination=Pagination(limit=limit, offset=offset)))
+) -> OwnTargetsResultDTO:
+    targets: OwnTargetsResultDTO = await sender.send_query(
+        GetOwnAndDefaultTargetsQuery(pagination=Pagination(limit=limit, offset=offset))
+    )
     return targets
 
 
-@router.get("/<id:UUID>", response_model=OwnTargetDTO)
+@router.get("/<id:UUID>", response_model=OwnTargetResultDTO)
 async def get_own_target_by_id(
     id: UUID,
     sender: SenderDep,
-) -> OwnTargetDTO:
-    target: OwnTargetDTO = await sender.send_query(GetOwnTargetQuery(id))
+) -> OwnTargetResultDTO:
+    target: OwnTargetResultDTO = await sender.send_query(GetOwnTargetQuery(id))
     return target
 
 

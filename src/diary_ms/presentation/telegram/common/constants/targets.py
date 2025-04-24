@@ -4,3 +4,4 @@ TARGET_DELETE_CONFIRM_MSG = "Вы уверены, что хотите удали
 TARGET_DELETED_MSG = "Цель удалена."
 TARGET_HEADER = "🎯 Целевое поведение"
 TARGET_LIST_HEADER = "🎯 Ваши поведенческие цели"
+TARGET_LIST_NOT_FOUND_HEADER = "🎯 У вам нет поведенческих целей"

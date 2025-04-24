@@ -12,7 +12,7 @@ from src.diary_ms.application.medicament.dto.mappers.medicament import Medicamen
 from src.diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
 from src.diary_ms.application.medicament.interfaces.gateway import MedicamentReader
 from src.diary_ms.application.target_behavior.dto.mappers.target_behavior import TargetDTOMapper
-from src.diary_ms.application.target_behavior.dto.target_behavior import OwnTargetDTO
+from src.diary_ms.application.target_behavior.dto.target_behavior import OwnTargetResultDTO
 from src.diary_ms.application.target_behavior.interfaces.gateway import TargetReader
 from src.diary_ms.domain.model.entities.emotion import Emotion
 from src.diary_ms.domain.model.entities.medicament import Medicament
@@ -50,7 +50,7 @@ class GetDataForDiaryCard(QueryHandler[GetDataForDiaryCardQuery, DataForDiaryCar
         meds: list[Medicament] = await self._medicament_gateway.get_all(user_id=user_id, offset=0, limit=100)
         emotions_dtos: list[EmotionResultDTO] = self._emotion_mapper.dm_list_to_dto_list(emotions)
         skills_dtos: list[SkillDTO] = self._skill_mapper.dm_list_to_dto_list(skills)
-        targets_dtos: list[OwnTargetDTO] = self._target_mapper.dm_list_to_dto_list(targets)
+        targets_dtos: list[OwnTargetResultDTO] = self._target_mapper.dm_list_to_dto_list(targets)
         meds_dtos: list[OwnMedicamentDTO] = self._medicament_mapper.dm_list_to_dto_list(meds)
         dto = DataForDiaryCardDTO(emotions_dtos, skills_dtos, targets_dtos, meds_dtos)
         return dto

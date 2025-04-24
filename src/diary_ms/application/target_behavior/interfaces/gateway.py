@@ -25,6 +25,10 @@ class TargetReader(Protocol):
     async def get_all_own(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[Target]:
         raise NotImplementedError
 
+    @abstractmethod
+    async def get_total_count(self, user_id: UserId) -> int:
+        raise NotImplementedError
+
 
 class TargetUpdater(Protocol):
     @abstractmethod

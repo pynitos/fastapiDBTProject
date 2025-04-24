@@ -1,4 +1,4 @@
-from sqlalchemy import ScalarResult, Select, or_, select
+from sqlalchemy import ScalarResult, Select, func, or_, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.diary_ms.application.target_behavior.exceptions.target_behavior import (
@@ -17,6 +17,8 @@ from src.diary_ms.domain.model.entities.user_id import UserId
 from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 
+from .db.tables import targets_table
+
 
 class TargetGateway(
     TargetReader,
@@ -30,6 +32,15 @@ class TargetGateway(
 
     async def create(self, entity: Target) -> None:
         self._session.add(entity)
+
+    async def get_total_count(self, user_id: UserId) -> int:
+        if not user_id.value:
+            raise UserIdNotProvidedError
+        query: Select[tuple[int]] = (
+            select(func.count()).select_from(Target).where(targets_table.c.user_id == user_id.value)
+        )
+        result: int | None = await self._session.scalar(query)
+        return result or 0
 
     async def get_all(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[Target]:
         if not user_id.value:
