@@ -12,6 +12,7 @@ from src.diary_ms.application.medicament.dto.medicament import (
     GetOwnMedicamentDTO,
     GetOwnMedicamentsDTO,
     OwnMedicamentDTO,
+    OwnMedicamentsDTO,
 )
 from src.diary_ms.presentation.api.deps import SenderDep
 from src.diary_ms.presentation.api.v1.controllers.schemas.medicament import (
@@ -29,13 +30,13 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=list[OwnMedicamentDTO])
+@router.get("/", response_model=OwnMedicamentsDTO)
 async def get_medicaments(
     sender: SenderDep,
     limit: int = 10,
     offset: int = 0,
-) -> list[OwnMedicamentDTO]:
-    medicaments: list[OwnMedicamentDTO] = await sender.send_query(
+) -> OwnMedicamentsDTO:
+    medicaments: OwnMedicamentsDTO = await sender.send_query(
         GetOwnMedicamentsDTO(pagination=Pagination(limit=limit, offset=offset))
     )
     return medicaments

@@ -21,6 +21,10 @@ class MedicamentReader(Protocol):
     async def get_all(self, user_id: UserId, offset: int = 0, limit: int = 10) -> list[Medicament]:
         raise NotImplementedError
 
+    @abstractmethod
+    async def get_total_count(self, user_id: UserId) -> int:
+        raise NotImplementedError
+
 
 class MedicamentUpdater(Protocol):
     @abstractmethod

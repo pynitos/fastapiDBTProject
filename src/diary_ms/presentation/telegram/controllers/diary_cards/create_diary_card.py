@@ -161,7 +161,18 @@ async def on_target_effectiveness_selected(
     await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
-async def on_intensity_action_next_btn(
+async def on_target_action_next_btn(
+    _: CallbackQuery,
+    __: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    current_target = dialog_manager.dialog_data["current_target"]
+    current_target["action"] = None
+    dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(current_target)
+    await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
+
+
+async def on_urge_intensity_next_btn(
     _: CallbackQuery,
     __: Button,
     dialog_manager: DialogManager,
@@ -388,7 +399,7 @@ create_diary_card_dialog = Dialog(
         ),
         Row(
             Back(Const(BACK_BTN_TXT)),
-            Button(Const(NEXT_BTN_TXT), id="target_intensity_next_btn", on_click=on_intensity_action_next_btn),
+            Button(Const(NEXT_BTN_TXT), id="target_intensity_next_btn", on_click=on_urge_intensity_next_btn),
         ),
         state=states.CreateDiaryCardSG.target_intensity,
         getter=target_name_getter,
@@ -399,7 +410,7 @@ create_diary_card_dialog = Dialog(
         TextInput(id="target_action_input", on_success=on_target_action_entered),
         Row(
             Back(Const(BACK_BTN_TXT)),
-            Button(Const(NEXT_BTN_TXT), id="target_action_next_btn", on_click=on_intensity_action_next_btn),
+            Button(Const(NEXT_BTN_TXT), id="target_action_next_btn", on_click=on_target_action_next_btn),
         ),
         state=states.CreateDiaryCardSG.target_action,
         getter=target_name_getter,

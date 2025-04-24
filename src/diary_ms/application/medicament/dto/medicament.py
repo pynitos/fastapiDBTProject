@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from uuid import UUID
 
 from src.diary_ms.application.common.dto.base import ResultDTO
@@ -15,10 +15,16 @@ class OwnMedicamentDTO(ResultDTO):
 
 
 @dataclass
+class OwnMedicamentsDTO(ResultDTO):
+    medicaments: list[OwnMedicamentDTO] = field(default_factory=list)
+    total: int = 0
+
+
+@dataclass
 class GetOwnMedicamentDTO(Query[OwnMedicamentDTO]):
     id: UUID
 
 
 @dataclass
-class GetOwnMedicamentsDTO(Query[list[OwnMedicamentDTO]]):
+class GetOwnMedicamentsDTO(Query[OwnMedicamentsDTO]):
     pagination: Pagination

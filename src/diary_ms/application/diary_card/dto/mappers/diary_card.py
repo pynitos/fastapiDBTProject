@@ -55,6 +55,14 @@ class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):
                 id=target.id.value,
                 user_id=target.user_id.value,
                 urge=target.urge.value,
+                urge_intensity=next(
+                    (
+                        cs.urge_intensity.value
+                        for cs in dm.coping_strategies
+                        if cs.target_id.value == target.id.value and cs.urge_intensity
+                    ),
+                    None,
+                ),
                 action=next(
                     (
                         cs.action.value

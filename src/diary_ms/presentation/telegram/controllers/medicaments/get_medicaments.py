@@ -1,9 +1,23 @@
 from typing import Any
 from uuid import UUID
 
+from aiogram import F
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
-from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Row, ScrollingGroup, Select, Start, SwitchTo
+from aiogram_dialog.widgets.common import ManagedScroll
+from aiogram_dialog.widgets.kbd import (
+    Back,
+    Button,
+    Cancel,
+    Column,
+    Group,
+    NumberedPager,
+    Row,
+    Select,
+    Start,
+    StubScroll,
+    SwitchTo,
+)
 from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
@@ -14,7 +28,7 @@ from src.diary_ms.application.medicament.dto.commands.delete_medicament import D
 from src.diary_ms.application.medicament.dto.medicament import (
     GetOwnMedicamentDTO,
     GetOwnMedicamentsDTO,
-    OwnMedicamentDTO,
+    OwnMedicamentsDTO,
 )
 from src.diary_ms.domain.common.exceptions.base import AppError
 from src.diary_ms.presentation.telegram.common.constants import (
@@ -35,13 +49,20 @@ from .states import (
     start_view_medicament,
 )
 
-# Common getters and handlers
+MEDICAMENTS_SCROLL_ID = "meds_scroll_id"
 
 
 @inject
 async def get_medicaments(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
-    medicaments: list[OwnMedicamentDTO] = await sender.send_query(GetOwnMedicamentsDTO(pagination=Pagination()))
-    return {"medicaments": medicaments}
+    scroll: ManagedScroll | None = dialog_manager.find(MEDICAMENTS_SCROLL_ID)
+    page: int = await scroll.get_page() if scroll else 1
+    offset: int = page * PAGE_SIZE
+    result: OwnMedicamentsDTO = await sender.send_query(GetOwnMedicamentsDTO(pagination=Pagination(offset=offset)))
+    return {
+        "medicaments": result.medicaments,
+        "total": result.total,
+        "pages": result.total // PAGE_SIZE + bool(result.total % PAGE_SIZE),
+    }
 
 
 @inject
@@ -66,8 +87,10 @@ async def on_medicament_selected(_: CallbackQuery, __: Any, dialog_manager: Dial
 
 list_medicaments_dialog = Dialog(
     Window(
-        Const("💊 Ваши медикаменты:"),
-        ScrollingGroup(
+        Const("💊 Ваши медикаменты:", when=F["total"]),
+        Const("💊 У вас ещё нет медикаментов.", when=~F["total"]),
+        StubScroll(id=MEDICAMENTS_SCROLL_ID, pages=F["pages"]),
+        Column(
             Select(
                 Format("{item.name} | {item.dosage}"),
                 id="s_medicaments",
@@ -75,9 +98,10 @@ list_medicaments_dialog = Dialog(
                 items="medicaments",
                 on_click=on_medicament_selected,
             ),
-            id="scroll_meds",
-            width=1,
-            height=PAGE_SIZE,
+        ),
+        Group(
+            NumberedPager(id="pager_targets", scroll=MEDICAMENTS_SCROLL_ID),
+            width=8,
         ),
         Start(Const(ADD_BTN_TXT), id="btn_add_med", state=CreateMedicamentSG.name),
         Cancel(Const(BACK_BTN_TXT)),
