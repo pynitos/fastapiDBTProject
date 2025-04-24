@@ -10,7 +10,7 @@ from src.diary_ms.application.common.dto.query import Query
 class OwnTargetDTO(ResultDTO):
     id: UUID
     urge: str
-    action: str | None
+    action: str | None = None
 
 
 @dataclass

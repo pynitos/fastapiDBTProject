@@ -110,7 +110,12 @@ detail_window = Window(
 {% if item.targets %}
 {% for target in item.targets -%}
 ▸ {{ target.urge }}{% if target.action %}: <i>{{ target.action }}</i>\n{% endif %}
-{% if target.effectiveness %}↳ Эффективность: <i>{{ target.effectiveness }}/10</i>{% endif %}\n
+{% if target.urge_intensity %}
+↳ Интенсивность: <i>{{ target.urge_intensity }}/5</i>
+{% endif %}
+{% if target.effectiveness %}
+↳ Эффективность: <i>{{ target.effectiveness }}/7</i>
+{% endif %}
 {% endfor %}
 {% else %}
 ▹ <i>не указано</i>

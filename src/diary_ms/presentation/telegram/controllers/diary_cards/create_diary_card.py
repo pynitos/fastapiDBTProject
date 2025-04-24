@@ -125,6 +125,17 @@ async def target_name_getter(dialog_manager: DialogManager, **kwargs: Any) -> di
     return {"target_name": current_target["urge"]}
 
 
+async def on_urge_intensity_selected(
+    _: CallbackQuery,
+    __: Select[int],
+    dialog_manager: DialogManager,
+    selected: int,
+) -> None:
+    current_target = dialog_manager.dialog_data["current_target"]
+    current_target["urge_intensity"] = selected
+    await dialog_manager.next()
+
+
 async def on_target_action_entered(
     message: Message,
     _: ManagedTextInput[str],
@@ -150,13 +161,12 @@ async def on_target_effectiveness_selected(
     await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
 
-async def on_target_action_next_btn(
+async def on_intensity_action_next_btn(
     _: CallbackQuery,
     __: Button,
     dialog_manager: DialogManager,
 ) -> None:
     current_target = dialog_manager.dialog_data["current_target"]
-    current_target["action"] = None
     dialog_manager.dialog_data.setdefault("targets_for_confirm", []).append(current_target)
     await dialog_manager.switch_to(states.CreateDiaryCardSG.targets)
 
@@ -285,6 +295,7 @@ async def on_confirmation(
     targets_for_create = [
         CreateCopingStrategyCommand(
             target_id=t["id"],
+            urge_intensity=t.get("urge_intensity"),
             action=t.get("action"),
             effectiveness=t.get("effectiveness"),
         )
@@ -348,7 +359,7 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.emotions,
     ),
     Window(
-        Const("🎯 Отметьте проблемное поведение:"),
+        Const("🎯 Отметьте контролируемое поведение:"),
         Column(
             Multiselect(
                 Format("✓ {item[urge]}"),
@@ -363,18 +374,39 @@ create_diary_card_dialog = Dialog(
         state=states.CreateDiaryCardSG.targets,
     ),
     Window(
-        Format("📌  <b>Проблемное поведение:</b> {target_name}.\n\nОпишите ситуацию и применённые навыки:"),
+        Format("📌 <b>Поведение:</b> {target_name}\n\nОцените интенсивность побуждения к совершению действия"),
+        Group(
+            Select(
+                Format("{item}"),
+                id="select_target_intensity",
+                items=list(range(0, 6)),  # from 0 to 5
+                item_id_getter=lambda x: x,
+                on_click=on_urge_intensity_selected,
+                type_factory=int,
+            ),
+            width=6,
+        ),
+        Row(
+            Back(Const(BACK_BTN_TXT)),
+            Button(Const(NEXT_BTN_TXT), id="target_intensity_next_btn", on_click=on_intensity_action_next_btn),
+        ),
+        state=states.CreateDiaryCardSG.target_intensity,
+        getter=target_name_getter,
+        parse_mode="HTML",
+    ),
+    Window(
+        Format("📌  <b>Поведение:</b> {target_name}.\n\nОпишите ситуацию и применённые навыки:"),
         TextInput(id="target_action_input", on_success=on_target_action_entered),
         Row(
             Back(Const(BACK_BTN_TXT)),
-            Button(Const(NEXT_BTN_TXT), id="target_action_next_btn", on_click=on_target_action_next_btn),
+            Button(Const(NEXT_BTN_TXT), id="target_action_next_btn", on_click=on_intensity_action_next_btn),
         ),
         state=states.CreateDiaryCardSG.target_action,
         getter=target_name_getter,
         parse_mode="HTML",
     ),
     Window(
-        Format("📌 <b>Проблемное поведение:</b> {target_name}\n\nОцените эффективность применения навыков"),
+        Format("📌 <b>Поведение:</b> {target_name}\n\nОцените эффективность применения навыков"),
         Group(
             Select(
                 Format("{item}"),
@@ -479,11 +511,17 @@ create_diary_card_dialog = Dialog(
 <b>Описание:</b> {{ description }}
 
 {% endif %}
-<b>🎯 Проблемное поведение:</b>
+<b>🎯 Контролируемое поведение:</b>
 {% if target_copings %}
 {% for t in target_copings -%}
 • {{ t.urge }} {% if t.action %}
-✧ {{ t.action }}{% if t.effectiveness %} | {{ t.effectiveness }}/7{% endif %}
+✧ {{ t.action }}
+{% if t.urge_intensity %}
+| Интенсивность:{{ t.urge_intensity }}/5
+{% endif %}
+{% if t.effectiveness %}
+| Эффективность: {{ t.effectiveness }}/7
+{% endif %}
 {% endif %}
 
 {% endfor %}
@@ -508,6 +546,7 @@ create_diary_card_dialog = Dialog(
 {% else %}
 - Не указаны
 {% endif %}
+
 <b>🛠 Навыки:</b>
 {% if skills %}
 {% for s in skills -%}
