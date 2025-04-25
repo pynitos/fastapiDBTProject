@@ -363,7 +363,19 @@ def get_default_targets() -> list[Target]:
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Алгоколизм или наркомания"),
+            urge=TargetUrge("Употребление наркотических веществ"),
+            action=CopingAction("Использовать навыки диалектического отказа."),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Употребление алкоголя"),
+            action=CopingAction("Использовать навыки диалектического отказа."),
+            is_default=TargetIsDefault(True),
+        ),
+        Target(
+            user_id=UserId(ADMIN_USER_ID),
+            urge=TargetUrge("Курение"),
             action=CopingAction("Использовать навыки диалектического отказа."),
             is_default=TargetIsDefault(True),
         ),
@@ -393,7 +405,7 @@ def get_default_targets() -> list[Target]:
         ),
         Target(
             user_id=UserId(ADMIN_USER_ID),
-            urge=TargetUrge("Прокрастинация"),
+            urge=TargetUrge("Откладывание на завтра"),
             action=CopingAction("Разбить задачу на мелкие шаги и использовать навык участия."),
             is_default=TargetIsDefault(True),
         ),
