@@ -2,6 +2,9 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.exceptions import TelegramNetworkError
+from aiogram.fsm.storage.base import BaseStorage, DefaultKeyBuilder
+from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
+from aiogram.fsm.storage.redis import RedisStorage
 from aiogram_dialog import setup_dialogs
 from dishka import AsyncContainer, make_async_container
 from dishka.integrations.aiogram import setup_dishka
@@ -31,24 +34,40 @@ container: AsyncContainer = make_async_container(
 )
 
 
-def get_dispatcher(_: BotConfig) -> Dispatcher:
-    dp = Dispatcher()
+def get_storage(
+    bot_config: BotConfig,
+) -> BaseStorage:
+    if bot_config.REDIS_URI:
+        logger.debug("Setup redis storage")
+        return RedisStorage.from_url(
+            url=bot_config.REDIS_URI,
+            key_builder=DefaultKeyBuilder(with_bot_id=True, with_destiny=True),
+        )
+    logger.debug("Setup memory storage")
+    return MemoryStorage()
+
+
+def get_dispatcher(_: BotConfig, storage: BaseStorage) -> Dispatcher:
+    dp = Dispatcher(events_isolation=SimpleEventIsolation(), storage=storage)
+    setup_dishka(container=container, router=dp, auto_inject=True)
+
     dp.include_router(start_router)
     dp.include_router(main_menu_dialog)
     dp.include_router(create_diary_card_dialog)
     dp.include_router(own_diary_cards_dialog)
     dp.include_router(medicaments_router)
     dp.include_router(targets_router)
-    setup_dishka(container=container, router=dp, auto_inject=True)
+
     setup_dialogs(dp)
-    logger.info("DP done.")
+    logger.debug("DP done.")
     return dp
 
 
 async def bot_main() -> None:
     logger.info("start")
     bot = Bot(config.bot_token)
+    storage = get_storage(config)
     try:
-        await get_dispatcher(config).start_polling(bot)
+        await get_dispatcher(config, storage).start_polling(bot)
     except TelegramNetworkError:
         logger.error("TelegramNetworkError: отсутствует соединение с сервером телеграм или с интернетом")

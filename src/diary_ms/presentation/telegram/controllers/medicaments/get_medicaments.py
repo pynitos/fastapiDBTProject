@@ -28,6 +28,7 @@ from src.diary_ms.application.medicament.dto.commands.delete_medicament import D
 from src.diary_ms.application.medicament.dto.medicament import (
     GetOwnMedicamentDTO,
     GetOwnMedicamentsDTO,
+    OwnMedicamentDTO,
     OwnMedicamentsDTO,
 )
 from src.diary_ms.domain.common.exceptions.base import AppError
@@ -73,16 +74,16 @@ async def get_current_medicament(
 ) -> dict[str, Any]:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
-    medicament_id: UUID = dialog_manager.start_data["medicament_id"]
-    medicament = await sender.send_query(GetOwnMedicamentDTO(id=medicament_id))
-    return {"medicament": medicament}
+    medicament_id: str = dialog_manager.start_data["medicament_id"]
+    medicament: OwnMedicamentDTO = await sender.send_query(GetOwnMedicamentDTO(id=UUID(medicament_id)))
+    return {"name": medicament.name, "dosage": medicament.dosage}
 
 
 """ List Medicaments Dialog """
 
 
 async def on_medicament_selected(_: CallbackQuery, __: Any, dialog_manager: DialogManager, medicament_id: str) -> None:
-    await start_view_medicament(dialog_manager, UUID(medicament_id))
+    await start_view_medicament(dialog_manager, medicament_id)
 
 
 list_medicaments_dialog = Dialog(
@@ -138,8 +139,8 @@ view_medicament_dialog = Dialog(
         Jinja(
             """
 <b>💊 Медикамент:</b>
-<b>Название:</b> {{ medicament.name }}
-<b>Дозировка:</b> {{ medicament.dosage }}
+<b>Название:</b> {{ name }}
+<b>Дозировка:</b> {{ dosage }}
 """
         ),
         Row(

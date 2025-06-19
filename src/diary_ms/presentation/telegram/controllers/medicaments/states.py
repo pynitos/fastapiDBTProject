@@ -45,7 +45,7 @@ async def start_update_medicament(
 
 async def start_view_medicament(
     dialog_manager: DialogManager,
-    medicament_id: UUID,
+    medicament_id: str,
 ) -> None:
     await dialog_manager.start(
         GetOwnMedicamentSG.view,

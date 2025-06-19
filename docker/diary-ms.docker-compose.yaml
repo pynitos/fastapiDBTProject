@@ -33,10 +33,11 @@ services:
     
   redis_backend:
       image: redis:latest
+      container_name: redis_backend
       restart: always
       env_file:
         - ../.env
-      entrypoint: redis-server --requirepass $${REDIS_PASSWORD}
+      entrypoint: redis-server --requirepass ${REDIS_PASSWORD}
       ports:
         - "6379:6379"
       volumes:
@@ -113,6 +114,28 @@ services:
     restart: always
     ports:
       - "8000:8000"
+    volumes:
+      - ../src/diary_ms/:/code/src/diary_ms/
+      - ../.env:/code/.env
+    networks:
+      - diary_backend_nw
+
+  tg-diary:
+    container_name: tg-diary
+    hostname: tg-diary
+    build:
+      target: dev_image
+      context: ..
+      dockerfile: ./docker/diary-tg.Dockerfile
+    env_file: ../.env
+    depends_on:
+      db-diary:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      redis_backend:
+        condition: service_started
+    restart: always
     volumes:
       - ../src/diary_ms/:/code/src/diary_ms/
       - ../.env:/code/.env
