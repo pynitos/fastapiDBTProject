@@ -1,5 +1,4 @@
 from typing import Any
-from uuid import UUID
 
 from aiogram import F
 from aiogram.types import CallbackQuery
@@ -50,7 +49,7 @@ async def on_target_selected(
     dialog_manager: DialogManager,
     target_id: str,
 ) -> None:
-    await start_view_target(dialog_manager, UUID(target_id))
+    await start_view_target(dialog_manager, target_id)
 
 
 list_window = Window(

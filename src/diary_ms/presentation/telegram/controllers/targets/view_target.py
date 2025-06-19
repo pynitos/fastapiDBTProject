@@ -26,7 +26,7 @@ async def get_target_data(
 ) -> dict[str, Any]:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
-    target = await sender.send_query(GetOwnTargetQuery(id=dialog_manager.start_data["target_id"]))
+    target = await sender.send_query(GetOwnTargetQuery(id=UUID(dialog_manager.start_data["target_id"])))
     return {
         "target": {
             "urge": target.urge,
@@ -39,7 +39,7 @@ async def get_target_data(
 async def on_target_update_clicked(_: CallbackQuery, __: Button, dialog_manager: DialogManager) -> None:
     if not isinstance(dialog_manager.start_data, dict):
         raise AppError
-    t_id: UUID = dialog_manager.start_data["target_id"]
+    t_id: str = dialog_manager.start_data["target_id"]
     await start_update_target(dialog_manager, t_id)
 
 

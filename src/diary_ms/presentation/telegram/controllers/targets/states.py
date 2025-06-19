@@ -1,4 +1,3 @@
-from uuid import UUID
 
 from aiogram.fsm.state import State, StatesGroup
 from aiogram_dialog import DialogManager
@@ -31,7 +30,7 @@ class DeleteTargetSG(StatesGroup):
 
 async def start_view_target(
     dialog_manager: DialogManager,
-    target_id: UUID,
+    target_id: str,
 ) -> None:
     await dialog_manager.start(
         ViewTargetSG.view,
@@ -43,7 +42,7 @@ async def start_view_target(
 
 async def start_update_target(
     dialog_manager: DialogManager,
-    target_id: UUID,
+    target_id: str,
 ) -> None:
     await dialog_manager.start(
         UpdateTargetSG.urge,

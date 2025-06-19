@@ -2,6 +2,7 @@ import logging
 import operator
 from dataclasses import asdict
 from typing import Any
+from uuid import UUID
 
 from aiogram.types import CallbackQuery, InaccessibleMessage, Message
 from aiogram_dialog import Dialog, DialogManager, ShowMode, Window
@@ -68,10 +69,20 @@ async def on_description_entered(
 @inject
 async def get_data(dialog_manager: DialogManager, sender: FromDishka[Sender], **kwargs: Any) -> dict[str, Any]:  # noqa: ARG001
     d: DataForDiaryCardDTO = await sender.send_query(GetDataForDiaryCardQuery())
-    emotions: list[dict[str, Any]] = [asdict(x) for x in d.emotions]
-    skills: list[dict[str, Any]] = [asdict(x) for x in d.skills]
-    targets: list[dict[str, Any]] = [asdict(x) for x in d.targets]
-    medicaments: list[dict[str, Any]] = [asdict(x) for x in d.medicaments]
+
+    def uuid_to_str(obj):
+        if isinstance(obj, UUID):
+            return str(obj)
+        elif isinstance(obj, dict):
+            return {k: uuid_to_str(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [uuid_to_str(item) for item in obj]
+        return obj
+
+    emotions: list[Any] = [uuid_to_str(asdict(x)) for x in d.emotions]
+    skills: list[Any] = [uuid_to_str(asdict(x)) for x in d.skills]
+    targets: list[Any] = [uuid_to_str(asdict(x)) for x in d.targets]
+    medicaments: list[Any] = [uuid_to_str(asdict(x)) for x in d.medicaments]
     moods = [
         ("Отличное", 5),
         ("Хорошее", 4),
