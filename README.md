@@ -1,4 +1,4 @@
-# Full Stack FastAPI Template
+# DBT Diary Card with DDD Pet Project
 
 <a href="https://github.com/fastapi/full-stack-fastapi-template/actions?query=workflow%3ATest" target="_blank"><img src="https://github.com/fastapi/full-stack-fastapi-template/workflows/Test/badge.svg" alt="Test"></a>
 
