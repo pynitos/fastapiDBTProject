@@ -1,84 +1,169 @@
-# DBT Diary Card with DDD Pet Project
+# DBT Diary Card with DDD - Учебный проект
+## 📋 О проекте
 
-<a href="https://github.com/fastapi/full-stack-fastapi-template/actions?query=workflow%3ATest" target="_blank"><img src="https://github.com/fastapi/full-stack-fastapi-template/workflows/Test/badge.svg" alt="Test"></a>
+**Учебный проект** - система для ведения дневниковых карт по методике DBT (Dialectical Behavior Therapy) с применением Domain-Driven Design. Проект создавался для изучения современных подходов к разработке.
 
-## Technology Stack and Features
+> ⚠️ **Важное замечание:** Это учебный проект для портфолио. В реализации могут быть ошибки, архитектурные недочёты и места, требующие оптимизации. Я осознаю недостатки и активно работаю над их исправлением.
 
-- ⚡ [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
-    - 🧰 [SQLAlchemy](https://www.sqlalchemy.org/) for the Python SQL database interactions (ORM).
-    - 🤖 [Dishka](https://dishka.readthedocs.io/en/stable/) provides IoC container that’s genuinely useful.
-    - 🔍 [Dataclasses and Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
-    - 💾 [PostgreSQL](https://www.postgresql.org) as the SQL database.
-- 🐋 [Docker Compose](https://www.docker.com) for development and production.
-- 🔒 Secure password hashing by default.
-- 🔑 JWT (JSON Web Token) authentication.
-- ✅ Tests with [Pytest](https://pytest.org).
-- 📞 [Nginx] as an api gateway.
-- 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
+## 🎯 Технологический стек и особенности
 
-<!--
-### Dashboard OpenAPI
+### Backend
+- ⚡ [**FastAPI**](https://fastapi.tiangolo.com) для Python backend API
+- 🧰 [**SQLAlchemy 2.0+**](https://www.sqlalchemy.org/) с async поддержкой для работы с БД
+- 🤖 [**Dishka**](https://dishka.readthedocs.io/en/stable/) - IoC контейнер для управления зависимостями
+- 🔍 [**Pydantic**](https://docs.pydantic.dev) для валидации данных и управления настройками
+- 💾 [**PostgreSQL**](https://www.postgresql.org) в качестве основной SQL базы данных
+- 🔒 **JWT аутентификация** с безопасным хранением токенов
+- 🔑 Secure password hashing по умолчанию
 
-### Dashboard - Admin
+### Инфраструктура
+- 🐋 [**Docker Compose**](https://www.docker.com) для development и production окружений
+- 📞 [**Nginx**](https://nginx.org) в качестве API gateway
+- ✅ [**Pytest**](https://pytest.org) с поддержкой asyncio для тестирования
+- 🏭 **CI/CD** на основе GitHub Actions
+- 🔑 **OpenTelemetry** для мониторинга и трассировки
+- 📊 **Prometheus** для сбора метрик
 
-[![API docs](img/dashboard.png)](https://github.com/fastapi/full-stack-fastapi-template)
+### Дополнительные технологии
+- **Message brokers**: Kafka (через FastStream), Redis (через TaskIQ)
+- **Хранилище файлов**: AWS S3 (boto3)
+- **PDF-генерация**: ReportLab
+- **Telegram-бот**: aiogram с aiogram-dialog
+- **Временное решение для пользователей**: Django + Djoser
 
-### Dashboard - User API with Djoiser
+## 🏗️ Архитектура проекта
 
-### Dashboard - Diary Cards
-
-
-### Interactive API Documentation
--->
-
-<!-- ## How To Use It
-
-You can **just fork or clone** this repository and use it as is.
-
-✨ It just works. ✨
-
-### Configure
-
-You can then update configs in the `.env` files to customize your configurations.
-
-Before deploying it, make sure you change at least the values for:
-
-- `SECRET_KEY`
-- `FIRST_SUPERUSER_PASSWORD`
-- `POSTGRES_PASSWORD`
-
-You can (and should) pass these as environment variables from secrets.
-
-Read the [deployment.md](./deployment.md) docs for more details.
-
-### Generate Secret Keys
-
-Some environment variables in the `.env` file have a default value of `changethis`.
-
-You have to change them with a secret key, to generate secret keys you can run the following command:
-
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(32))"
+### Структура по DDD принципам
+```
+fastapiDBTProject/
+├── src/
+│   ├── diary_ms/                    # Основной сервис дневниковых карт
+│   │   ├── domain/                  # Domain layer - бизнес-логика
+│   │   │   ├── entities/           # Сущности предметной области
+│   │   │   ├── value_objects/      # Value objects
+│   │   │   └── events/             # Domain events
+│   │   ├── application/            # Application layer - координация
+│   │   │   ├── diary_card/         # Модуль дневниковых карт
+│   │   │   │   └── interactors/
+│   │   │   │       ├── commands/   # Команды (CQRS)
+│   │   │   │       └── queries/    # Запросы (CQRS)
+│   │   │   └── user/               # Модуль пользователей
+│   │   ├── infrastructure/         # Infrastructure layer
+│   │   │   ├── gateways/           # Репозитории, миграции
+│   │   │   ├── brokers/    # Kafka, Redis
+│   │   │   └── services/  # Внешние API
+│   │   └── presentation/           # Presentation layer
+│   │       ├── api/                # REST API endpoints
+│   │       ├── amqp/                # FastStream интерфейсы
+│   │       └── telegram/                # Telegram bot handlers
+│   └── user_ms/                    # Сервис пользователей (Django)
 ```
 
-Copy the content and use that as password / secret key. And run that again to generate another secure key.
+## 🔄 Текущее состояние и планы
 
-## Backend Development
+### ✅ Реализовано
+- **DDD-архитектура** основного сервиса (diary_ms)
+- **FastAPI** с асинхронными endpoint
+- **JWT аутентификация** и авторизация
+- **PostgreSQL** + SQLAlchemy 2.0 с миграциями
+- **Docker** окружение с Nginx gateway
+- **OpenTelemetry** для мониторинга
+- **Telegram-бот** для удобного ведения записей
 
-Backend docs: [backend/README.md](./backend/README.md).
+### ⚠️ Требует улучшения
+- **User MS (Django)** - временная заглушка с Djoser, требует замены на самостоятельный ограниченный контекст с отдельным репозиторием
+- **Admin модули** - не соответствуют DDD принципам, должны быть оформлены как самостоятельный ограниченный контекст
+- **Тестовое покрытие** - требует расширения
+- **Производительность** - нуждается в оптимизации
 
-## Frontend Development
+### 🔄 Планируется
+- Удаление Django и переход на полный FastAPI стек
+- Рефакторинг архитектуры для лучшего соответствия DDD
+- Улучшение event-driven архитектуры
+- Расширение мониторинга и логирования
+- Улучшение документации API
 
-Frontend docs: [frontend/README.md](./frontend/README.md).
+## 🚀 Быстрый старт
 
-## Deployment
+### Настройка окружения
+```bash
+# Клонирование репозитория
+git clone <repository-url>
 
-Deployment docs: [deployment.md](./deployment.md).
+# Копирование файла окружения
+cp .env.example .env
 
-## Development
+# Генерация секретных ключей
+python -c "import secrets; print(secrets.token_urlsafe(32))"
 
-This includes using Docker Compose, custom local domains, `.env` configurations, etc.
+# Запуск в Docker
+docker-compose up -d
+```
 
-## License
+### Разработка
+```bash
+# Установка зависимостей
+poetry install
 
-The DBT Diary Card Project is licensed under the terms of the MIT license. -->
+# Запуск тестов
+pytest tests/ --asyncio-mode=auto
+
+# Проверка типов
+mypy src/ --strict
+
+# Линтинг
+ruff check src/
+ruff format src/
+```
+
+## 📈 Навыки, продемонстрированные в проекте
+
+### Технические навыки
+1. **Python 3.13** с использованием новых возможностей
+2. **FastAPI** - создание REST API с асинхронными endpoint
+3. **DDD** - практическое применение Domain-Driven Design
+4. **CQRS** - разделение команд и запросов
+5. **SQLAlchemy 2.0+** - работа с БД в async режиме
+6. **Docker** - контейнеризация и оркестрация
+7. **Message brokers** - Kafka и Redis для event-driven архитектуры
+8. **Мониторинг** - OpenTelemetry и Prometheus
+
+### Архитектурные навыки
+- Проектирование по DDD принципам
+- Микросервисная архитектура
+- Clean Architecture и разделение ответственности
+- Dependency Injection через Dishka
+- Event-driven и CQRS паттерны
+
+### Профессиональные практики
+- Type hints и strict typing с mypy
+- Автоматическое тестирование с pytest
+- Линтинг и code quality с ruff
+- CI/CD с GitHub Actions
+- Контейнеризация с Docker
+
+## 🎓 Учебная ценность проекта
+
+Этот проект позволил изучить:
+- Практическое применение DDD в реальном проекте
+- Современный Python стек (FastAPI, SQLAlchemy 2.0+)
+- Микросервисные паттерны и их реализацию
+- Инфраструктурные решения (Docker, Nginx, мониторинг)
+- Профессиональные инструменты разработки
+- Лучшие практики проектирования API
+
+## 🤝 Вклад и обратная связь
+
+Как учебный проект, я открыт для:
+- Конструктивной критики архитектуры
+- Предложений по улучшению реализации
+- Помощи в исправлении ошибок
+- Совместного изучения best practices
+
+## 📄 Лицензия
+
+Проект распространяется под лицензией MIT.
+
+---
+
+**Примечание для рекрутеров:** Данный проект демонстрирует моё понимание современных подходов к разработке и готовность к профессиональному росту. Я осознаю существующие недостатки в архитектуре (в частности, необходимость удаления admin-модулей и замены Django) и активно работаю над их устранением, изучая лучшие практики и паттерны разработки.
