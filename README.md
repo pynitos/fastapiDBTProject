@@ -9,19 +9,11 @@
     - 🤖 [Dishka](https://dishka.readthedocs.io/en/stable/) provides IoC container that’s genuinely useful.
     - 🔍 [Dataclasses and Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
     - 💾 [PostgreSQL](https://www.postgresql.org) as the SQL database.
-- 🚀 [React](https://react.dev) for the frontend.
-    - 💃 Using TypeScript, hooks, Vite, and other parts of a modern frontend stack.
-    - 🎨 [Chakra UI](https://chakra-ui.com) for the frontend components.
-    - 🤖 An automatically generated frontend client.
-    - 🧪 [Playwright](https://playwright.dev) for End-to-End testing.
-    - 🦇 Dark mode support.
 - 🐋 [Docker Compose](https://www.docker.com) for development and production.
 - 🔒 Secure password hashing by default.
 - 🔑 JWT (JSON Web Token) authentication.
-- 📫 Email based password recovery.
 - ✅ Tests with [Pytest](https://pytest.org).
-- 📞 [Nginx](https://traefik.io) as an api gateway.
-- 🚢 Deployment instructions using Docker Compose, including how to set up a frontend Traefik proxy to handle automatic HTTPS certificates.
+- 📞 [Nginx] as an api gateway.
 - 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
 
 <!--
@@ -39,7 +31,7 @@
 ### Interactive API Documentation
 -->
 
-## How To Use It
+<!-- ## How To Use It
 
 You can **just fork or clone** this repository and use it as is.
 
@@ -89,4 +81,4 @@ This includes using Docker Compose, custom local domains, `.env` configurations,
 
 ## License
 
-The DBT Diary Card Project is licensed under the terms of the MIT license.
+The DBT Diary Card Project is licensed under the terms of the MIT license. -->
