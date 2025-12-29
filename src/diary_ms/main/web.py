@@ -3,19 +3,15 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from dishka import AsyncContainer, make_async_container
-from dishka.integrations import faststream as faststream_integration
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-from faststream import FastStream
-from faststream.kafka import KafkaBroker
 from taskiq import AsyncBroker, ScheduleSource
 
 from src.diary_ms.infrastructure.log.main import configure_logging
 from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
 from src.diary_ms.main.config import WebConfig, web_config
 from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
-from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
 from src.diary_ms.presentation.api import v1
 from src.diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
@@ -35,18 +31,9 @@ container: AsyncContainer = make_async_container(
 )
 
 
-async def get_faststream_app() -> FastStream:
-    broker: KafkaBroker = KafkaBroker(web_config.BROKER_URI)
-    faststream_app = FastStream(broker=broker)
-    faststream_integration.setup_dishka(container, faststream_app, auto_inject=True)
-    broker.include_router(AMQPDiaryCardController)
-    return faststream_app
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     logger.info("Start app lifespan.")
-    await get_faststream_app()
     if not task_broker.is_worker_process:
         await task_broker.startup()
         await scheduler.startup()
