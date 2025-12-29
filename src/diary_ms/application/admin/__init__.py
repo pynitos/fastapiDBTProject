@@ -1,7 +1,3 @@
 import warnings
 
-warnings.warn(
-    "Модуль admin будет удалён.",
-    DeprecationWarning,
-    stacklevel=2
-)
+warnings.warn("Модуль admin будет удалён.", DeprecationWarning, stacklevel=2)
