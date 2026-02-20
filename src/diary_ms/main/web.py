@@ -62,16 +62,6 @@ def create_fastapi_app() -> FastAPI:
 
     @app.get(f"{web_config.API_PREFIX}/v1/openapi.json", name="1.0", tags=["Versions"])
     @app.get(f"{web_config.API_PREFIX}/v1/docs", name="1.0", tags=["Documentations"])
-    @app.get(
-        f"{web_config.API_PREFIX}/v1/admin/openapi.json",
-        name="Admin 1.0",
-        tags=["Versions"],
-    )
-    @app.get(
-        f"{web_config.API_PREFIX}/v1/admin/docs",
-        name="Admin 1.0",
-        tags=["Documentations"],
-    )
     def noop() -> None: ...
 
     return app
