@@ -166,3 +166,4 @@ cython_debug/
 .data/
 ./docker/logs
 ./redis_data
+./redis
