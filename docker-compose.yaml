@@ -11,8 +11,6 @@ volumes:
     driver: local
   minio_data:
     driver: local
-  redis_data:
-    driver: local
 
 services:
   db-diary:
@@ -49,7 +47,7 @@ services:
         retries: 5
         start_period: 30s
       volumes:
-        - redis_data:/root/redis
+        - .docker/redis_data:/root/redis
       networks:
         - diary_backend_nw
 
