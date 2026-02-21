@@ -94,8 +94,7 @@ git clone <repository-url>
 cp .env.dist .env
 
 # Запуск в Docker
-docker-compose -f docker/diary-ms.docker-compose.yaml up
-
+docker-compose up
 ```
 
 ### Разработка
