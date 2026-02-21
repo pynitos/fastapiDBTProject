@@ -8,14 +8,6 @@ class AppError(Exception):
         if status_code:
             self._status_code = status_code
 
-    @classmethod
-    def get_status_code(cls) -> int:
-        return cls._status_code
-
-    @classmethod
-    def get_detail(cls) -> str:
-        return cls._detail
-
     @property
     def status_code(self) -> int:
         return self._status_code

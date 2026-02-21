@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from src.diary_ms.domain.common.exceptions.base import DomainValueError
 from src.diary_ms.domain.common.model.value_objects.base import ValueObject
 
-MAX_CATEGORY_VALUE = 200
-MIN_CATEGORY_VALUE = 3
+MAX_DOSAGE_VALUE = 50
+MIN_DOSAGE_VALUE = 2
 
 
 class WrongMedicamentDosageValueError(ValueError, DomainValueError):
@@ -14,4 +14,19 @@ class WrongMedicamentDosageValueError(ValueError, DomainValueError):
 @dataclass(frozen=True)
 class MedicamentDosage(ValueObject[str]):
     def _validate(self) -> None:
-        pass
+        """Валидация длины строки дозировки"""
+        if not self.value:
+            raise WrongMedicamentDosageValueError("Дозировка не может быть пустой")
+        
+        if len(self.value) < MIN_DOSAGE_VALUE:
+            raise WrongMedicamentDosageValueError(
+                f"Дозировка должна быть не короче {MIN_DOSAGE_VALUE} символов. "
+                f"Получено: {len(self.value)}"
+            )
+        
+        if len(self.value) > MAX_DOSAGE_VALUE:
+            raise WrongMedicamentDosageValueError(
+                f"Дозировка должна быть не длиннее {MAX_DOSAGE_VALUE} символов. "
+                f"Получено: {len(self.value)}"
+            )
+

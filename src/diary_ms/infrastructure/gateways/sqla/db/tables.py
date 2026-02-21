@@ -153,5 +153,5 @@ medicaments_table = Table(
     ),
     Column("user_id", UUID(as_uuid=True)),
     Column("name", String(20)),
-    Column("dosage", String(20)),
-)
+    Column("dosage", String(100)),
+) 
