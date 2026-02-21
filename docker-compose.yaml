@@ -47,7 +47,8 @@ services:
         retries: 5
         start_period: 30s
       volumes:
-        - .docker/redis_data:/root/redis
+        - ./redis:/root/redis
+        - ./redis.conf:/usr/local/etc/redis/redis.conf
       networks:
         - diary_backend_nw
 
@@ -90,12 +91,6 @@ services:
     depends_on:
       zookeeper:
         condition: service_started
-    healthcheck:
-      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
-      interval: 30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
     networks:
       - diary_backend_nw
 
@@ -148,7 +143,7 @@ services:
       db-diary:
         condition: service_healthy
       kafka:
-        condition: service_healthy
+        condition: service_started
       redis_backend:
         condition: service_started
     restart: always

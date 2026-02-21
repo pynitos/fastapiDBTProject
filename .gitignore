@@ -165,4 +165,4 @@ cython_debug/
 .ruff_cache/
 .data/
 ./docker/logs
-./docker/redis_data
+./redis_data
