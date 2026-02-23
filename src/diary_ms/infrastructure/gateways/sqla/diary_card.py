@@ -4,7 +4,7 @@ from typing import Any
 from sqlalchemy import Row, ScalarResult, Select, and_, func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.exceptions.base import GatewayError
+from src.diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
 from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
 from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
 from src.diary_ms.application.diary_card.interfaces.gateway import (
@@ -50,7 +50,7 @@ class DiaryCardGateway(
             for t in coping_strategies:
                 id: str = str(t.target_id.value)
                 if not await self._session.get(Target, id):
-                    raise GatewayError(f"Target with id: {id} not found.", 404)
+                    raise ItemNotFoundError(f"Target with id: {id} not found.", 404)
         if entity.emotions_ids:
             entity.emotions = list(
                 (await self._session.scalars(select(Emotion).where(emotions_table.c.id.in_(entity.emotions_ids)))).all()
@@ -67,7 +67,7 @@ class DiaryCardGateway(
             for s in entity.skill_usages:
                 skill_id: str = str(s.skill_id.value)
                 if not await self._session.get(Skill, skill_id):
-                    raise GatewayError(f"Skill with id: {skill_id} not found.", 404)
+                    raise ItemNotFoundError(f"Skill with id: {skill_id} not found.", 404)
 
     async def create(self, entity: DiaryCard) -> None:
         await self._set_entity_relationships(entity)
@@ -124,7 +124,7 @@ class DiaryCardGateway(
     async def delete(self, id: DiaryCardId, user_id: UserId) -> None:
         entity: DiaryCard | None = await self.get_by_id(id, user_id)
         if not entity:
-            raise DiaryCardNotFoundError
+            raise DiaryCardNotFoundError(f"Diary Card with id {id.value} not found")
         await self._session.delete(entity)
 
     async def generate_report_data(

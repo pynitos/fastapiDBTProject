@@ -30,7 +30,7 @@ class MappingError(ApplicationError):
     pass
 
 
-class HandlerNotFoundError(MediatorError):
+class InteractorNotFoundError(MediatorError):
     pass
 
 

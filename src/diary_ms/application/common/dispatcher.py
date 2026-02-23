@@ -7,7 +7,7 @@ from dishka import AsyncContainer
 from src.diary_ms.application.common.dto.base import ResultDTO
 from src.diary_ms.application.common.dto.command import Command
 from src.diary_ms.application.common.dto.query import Query
-from src.diary_ms.application.common.exceptions.base import HandlerNotFoundError
+from src.diary_ms.application.common.exceptions.base import InteractorNotFoundError
 from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher, Registry
 from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
 from src.diary_ms.application.common.interfaces.handlers.command import (
@@ -65,7 +65,7 @@ class DispatcherImpl(Dispatcher):
         handler_: type[CommandHandler[Command[Any], Any]] | None = self._registry.command_handlers.get(type(command))
         if not handler_:
             logger.error("Command handler not registered.")
-            raise HandlerNotFoundError()
+            raise InteractorNotFoundError()
         handler: CommandHandler[Command[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(command)
 
@@ -73,7 +73,7 @@ class DispatcherImpl(Dispatcher):
         handler_: type[QueryHandler[Any, Any]] | None = self._registry.query_handlers.get(type(query))
         if not handler_:
             logger.error("Query handler not registered.")
-            raise HandlerNotFoundError()
+            raise InteractorNotFoundError()
         handler: QueryHandler[Query[Any], Any] = await self._resolver.resolve(handler_)
         return await handler(query)
 

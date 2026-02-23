@@ -17,16 +17,13 @@ class MedicamentDosage(ValueObject[str]):
         """Валидация длины строки дозировки"""
         if not self.value:
             raise WrongMedicamentDosageValueError("Дозировка не может быть пустой")
-        
+
         if len(self.value) < MIN_DOSAGE_VALUE:
             raise WrongMedicamentDosageValueError(
-                f"Дозировка должна быть не короче {MIN_DOSAGE_VALUE} символов. "
-                f"Получено: {len(self.value)}"
-            )
-        
-        if len(self.value) > MAX_DOSAGE_VALUE:
-            raise WrongMedicamentDosageValueError(
-                f"Дозировка должна быть не длиннее {MAX_DOSAGE_VALUE} символов. "
-                f"Получено: {len(self.value)}"
+                f"Дозировка должна быть не короче {MIN_DOSAGE_VALUE} символов. " f"Получено: {len(self.value)}"
             )
 
+        if len(self.value) > MAX_DOSAGE_VALUE:
+            raise WrongMedicamentDosageValueError(
+                f"Дозировка должна быть не длиннее {MAX_DOSAGE_VALUE} символов. " f"Получено: {len(self.value)}"
+            )

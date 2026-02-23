@@ -18,9 +18,7 @@ class MedicamentName(ValueObject[str]):
         value = self.value
         # Check for empty value
         if not value or not isinstance(value, str):
-            raise WrongMedicamentNameValueError(
-                f"Medicament name cannot be empty. Got: {value}"
-            )
+            raise WrongMedicamentNameValueError(f"Medicament name cannot be empty. Got: {value}")
 
         # Strip whitespace for validation
         stripped_value = value.strip()
@@ -36,19 +34,17 @@ class MedicamentName(ValueObject[str]):
 
         if name_length > MAX_MED_NAME_VALUE:
             raise WrongMedicamentNameValueError(
-                f"Medicament name must not exceed {MAX_MED_NAME_VALUE} characters. "
-                f"Current length: {name_length}"
+                f"Medicament name must not exceed {MAX_MED_NAME_VALUE} characters. " f"Current length: {name_length}"
             )
 
         # Optional: Check for valid characters (letters, numbers, spaces, hyphens)
         import re
-        if not re.match(r'^[a-zA-Z0-9\s\-]+$', stripped_value):
+
+        if not re.match(r"^[a-zA-Z0-9\s\-]+$", stripped_value):
             raise WrongMedicamentNameValueError(
                 f"Medicament name contains invalid characters. "
                 f"Use only letters, numbers, spaces and hyphens. Got: {stripped_value}"
             )
         # Check if name consists only of whitespace
         if stripped_value.isspace():
-            raise WrongMedicamentNameValueError(
-                "Medicament name cannot consist only of whitespace characters"
-            )
+            raise WrongMedicamentNameValueError("Medicament name cannot consist only of whitespace characters")
