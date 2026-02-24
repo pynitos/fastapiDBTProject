@@ -8,7 +8,7 @@ MIN_MED_NAME_VALUE = 3
 
 
 class WrongMedicamentNameValueError(ValueError, DomainValueError):
-    pass
+    _detail = "Wrong Medicament Name"
 
 
 @dataclass(frozen=True)

@@ -7,6 +7,7 @@ class AppError(Exception):
             self._detail = detail
         if status_code:
             self._status_code = status_code
+        super().__init__(self._detail, self._status_code)
 
     @property
     def status_code(self) -> int:

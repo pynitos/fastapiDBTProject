@@ -2,16 +2,59 @@ import logging
 
 from aiogram import Router
 from aiogram.exceptions import TelegramBadRequest
+from aiogram.filters.exception import ExceptionTypeFilter
 from aiogram.types import ErrorEvent, ReplyKeyboardRemove
 from aiogram_dialog import DialogManager, ShowMode, StartMode
 from aiogram_dialog.api.exceptions import OutdatedIntent, UnknownIntent
 
 from src.diary_ms.application.common.exceptions.base import ApplicationError, InfraError
-from src.diary_ms.domain.common.exceptions.base import DomainError
+from src.diary_ms.domain.common.exceptions.base import DomainError, DomainValueError
 from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
 
 logger = logging.getLogger(__name__)
 error_router = Router()
+
+
+@error_router.errors(ExceptionTypeFilter(DomainValueError))
+async def handle_domain_value_error(event: ErrorEvent):
+    """
+    Обработчик ошибок валидации Value Object.
+    Срабатывает только на исключения типа DomainValueError.
+    """
+    error: DomainValueError = event.exception  # type: ignore
+    update = event.update
+
+    # Логируем с детализацией
+    logger.warning(
+        f"Ошибка валидации VO у пользователя {update.event.from_user.id}: "  # pyright: ignore[reportAttributeAccessIssue]
+        f"{error} ({error.detail})"
+    )
+
+    # Формируем сообщение для пользователя
+    base_message = str(error)
+    user_message = f"❌ {base_message}"
+
+    # Отправляем сообщение в зависимости от типа апдейта
+    try:
+        if update.message:
+            await update.message.answer(user_message, parse_mode="HTML")
+        elif update.callback_query:
+            # Для callback показываем alert с ошибкой
+            await update.callback_query.answer(
+                user_message,
+                show_alert=True,
+                cache_time=10,  # Кешируем ответ на  10 секунд
+            )
+    except Exception as send_error:
+        # Резервный вариант отправки, если с разметкой возникли проблемы
+        logger.debug(f"Не удалось отправить сообщение с разметкой: {send_error}")
+        fallback_message = f"Ошибка: {base_message}"
+        if update.message:
+            await update.message.answer(fallback_message)
+        elif update.callback_query:
+            await update.callback_query.answer(fallback_message, show_alert=True)
+    # Не сбрасываем диалог — пользователь должен исправить ввод
+    return True
 
 
 @error_router.errors()
@@ -39,7 +82,7 @@ async def global_error_handler(event: ErrorEvent, dialog_manager: DialogManager)
         # Пытаемся удалить сообщение с нерабочими кнопками
         if event.update.callback_query.message:
             try:
-                await event.update.callback_query.message.delete()
+                await event.update.callback_query.message.delete()  # pyright: ignore[reportAttributeAccessIssue]
             except TelegramBadRequest:
                 # Сообщение уже удалено или нет прав
                 pass
