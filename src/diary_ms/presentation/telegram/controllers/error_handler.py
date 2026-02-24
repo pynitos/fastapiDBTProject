@@ -14,8 +14,6 @@ from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
 logger = logging.getLogger(__name__)
 error_router = Router()
 
-type DialogError = UnknownIntent | OutdatedIntent
-
 
 @error_router.errors(ExceptionTypeFilter(DomainValueError))
 async def handle_domain_value_error(event: ErrorEvent):
@@ -62,7 +60,8 @@ async def handle_domain_value_error(event: ErrorEvent):
 @error_router.errors()
 async def global_error_handler(event: ErrorEvent, dialog_manager: DialogManager):
     error = event.exception
-    if isinstance(error, UnknownIntent | OutdatedIntent):
+    is_dialog_error: bool = isinstance(error, UnknownIntent | OutdatedIntent)
+    if is_dialog_error:
         logger.warning(f"Ошибка состояния диалога: {type(error).__name__}")
     elif isinstance(error, ApplicationError):
         logger.warning(f"Ошибка в бизнес логике: {type(error).__name__}")
@@ -74,14 +73,15 @@ async def global_error_handler(event: ErrorEvent, dialog_manager: DialogManager)
         logger.warning(f"Неизвестная ошибка: {type(error).__name__}", exc_info=True)
 
     dialog_error_message: str = "🔄 Диалог устарел. Возвращаем в главное меню."
-    unknown_error_message: str = '"❌ ОШИБКА! Возвращаем в главное меню."'
+    unknown_error_message: str = "❌ ОШИБКА! Возвращаем в главное меню."
 
     # Уведомляем пользователя в зависимости от типа события
     if event.update.callback_query:
         # Это было нажатие кнопки
         await event.update.callback_query.answer(
-            "🔄 Диалог устарел. Возвращаем в главное меню.",
+            dialog_error_message if is_dialog_error else unknown_error_message,
             show_alert=False,  # Тихое уведомление
+            cache_time=10,
         )
 
         # Пытаемся удалить сообщение с нерабочими кнопками
@@ -95,7 +95,7 @@ async def global_error_handler(event: ErrorEvent, dialog_manager: DialogManager)
     elif event.update.message:
         # Это было обычное сообщение
         await event.update.message.answer(
-            dialog_error_message if DialogError else unknown_error_message,
+            dialog_error_message if is_dialog_error else unknown_error_message,
             reply_markup=ReplyKeyboardRemove(),  # Убираем клавиатуру
             cache_time=10,
         )
