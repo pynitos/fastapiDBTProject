@@ -14,6 +14,8 @@ from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
 logger = logging.getLogger(__name__)
 error_router = Router()
 
+type DialogError = UnknownIntent | OutdatedIntent
+
 
 @error_router.errors(ExceptionTypeFilter(DomainValueError))
 async def handle_domain_value_error(event: ErrorEvent):
@@ -71,6 +73,9 @@ async def global_error_handler(event: ErrorEvent, dialog_manager: DialogManager)
     else:
         logger.warning(f"Неизвестная ошибка: {type(error).__name__}", exc_info=True)
 
+    dialog_error_message: str = "🔄 Диалог устарел. Возвращаем в главное меню."
+    unknown_error_message: str = '"❌ ОШИБКА! Возвращаем в главное меню."'
+
     # Уведомляем пользователя в зависимости от типа события
     if event.update.callback_query:
         # Это было нажатие кнопки
@@ -90,8 +95,9 @@ async def global_error_handler(event: ErrorEvent, dialog_manager: DialogManager)
     elif event.update.message:
         # Это было обычное сообщение
         await event.update.message.answer(
-            "🔄 Диалог устарел. Возвращаем в главное меню.",
+            dialog_error_message if DialogError else unknown_error_message,
             reply_markup=ReplyKeyboardRemove(),  # Убираем клавиатуру
+            cache_time=10,
         )
 
     # 2. Перезапускаем диалог с главного меню
