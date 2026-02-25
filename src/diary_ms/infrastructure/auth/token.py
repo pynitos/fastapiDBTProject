@@ -6,10 +6,7 @@ from typing import Any, Literal
 
 import jwt
 
-from src.diary_ms.application.common.interfaces.id_provider import (
-    AdminIdProvider,
-    IdProvider,
-)
+from src.diary_ms.application.common.interfaces.id_provider import IdProvider
 from src.diary_ms.domain.common.exceptions.access import AuthenticationError
 from src.diary_ms.domain.model.entities.user_id import UserId
 
@@ -79,7 +76,7 @@ class JwtTokenProcessor:
             raise AuthenticationError
 
 
-class TokenIdProvider(IdProvider, AdminIdProvider):
+class TokenIdProvider(IdProvider):
     def __init__(
         self,
         token_processor: JwtTokenProcessor,
@@ -90,8 +87,4 @@ class TokenIdProvider(IdProvider, AdminIdProvider):
 
     def get_current_user_id(self) -> UserId:
         id: uuid.UUID = self.token_processor.authorize_user(self.token)
-        return UserId(id)
-
-    def get_admin_user_id(self) -> UserId:
-        id: uuid.UUID = self.token_processor.authorize_admin(self.token)
         return UserId(id)
