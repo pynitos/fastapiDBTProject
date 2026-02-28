@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 
 class TargetSaver(Protocol):

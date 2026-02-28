@@ -4,9 +4,9 @@ from uuid import UUID
 from dishka import FromDishka
 from faststream.kafka import KafkaRouter
 
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
-from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
-from src.diary_ms.presentation.amqp.deps import AMQPSenderDep
+from diary_ms.application.common.interfaces.task_sender import TaskSender
+from diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
+from diary_ms.presentation.amqp.deps import AMQPSenderDep
 
 logger = getLogger(__name__)
 AMQPDiaryCardController = KafkaRouter()

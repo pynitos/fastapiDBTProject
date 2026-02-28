@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.entities.user_id import UserId
 
 
 @dataclass

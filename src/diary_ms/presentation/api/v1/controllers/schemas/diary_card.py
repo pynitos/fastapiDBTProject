@@ -3,11 +3,11 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.skill import Skill
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 class DiaryCardReq(BaseModel):

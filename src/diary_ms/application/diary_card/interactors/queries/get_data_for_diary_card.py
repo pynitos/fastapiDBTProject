@@ -1,24 +1,24 @@
 import logging
 
-from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
-from src.diary_ms.application.diary_card.dto.diary_card import EmotionResultDTO
-from src.diary_ms.application.diary_card.dto.mappers.emotion import EmotionDTOMapper
-from src.diary_ms.application.diary_card.dto.mappers.skill import SkillDTOMapper
-from src.diary_ms.application.diary_card.dto.skill import SkillDTO
-from src.diary_ms.application.diary_card.interfaces.gateway import EmotionReader, SkillReader
-from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
-from src.diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
-from src.diary_ms.application.medicament.interfaces.gateway import MedicamentReader
-from src.diary_ms.application.target_behavior.dto.mappers.target_behavior import TargetDTOMapper
-from src.diary_ms.application.target_behavior.dto.target_behavior import OwnTargetResultDTO
-from src.diary_ms.application.target_behavior.interfaces.gateway import TargetReader
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.application.common.interfaces.handlers.query import QueryHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
+from diary_ms.application.diary_card.dto.diary_card import EmotionResultDTO
+from diary_ms.application.diary_card.dto.mappers.emotion import EmotionDTOMapper
+from diary_ms.application.diary_card.dto.mappers.skill import SkillDTOMapper
+from diary_ms.application.diary_card.dto.skill import SkillDTO
+from diary_ms.application.diary_card.interfaces.gateway import EmotionReader, SkillReader
+from diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
+from diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
+from diary_ms.application.medicament.interfaces.gateway import MedicamentReader
+from diary_ms.application.target_behavior.dto.mappers.target_behavior import TargetDTOMapper
+from diary_ms.application.target_behavior.dto.target_behavior import OwnTargetResultDTO
+from diary_ms.application.target_behavior.interfaces.gateway import TargetReader
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.skill import Skill
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
 
 logger = logging.getLogger(__name__)
 

@@ -6,11 +6,11 @@ from typing import Any, Literal
 
 from dotenv import load_dotenv
 
-from src.diary_ms.domain.common.exceptions.base import AppError
-from src.diary_ms.infrastructure.auth.token import AlgorithmT
-from src.diary_ms.infrastructure.log.config import LogConfig
-from src.diary_ms.infrastructure.s3.config import S3Config
-from src.diary_ms.infrastructure.telemetry.config import TelemetryConfig
+from diary_ms.domain.common.exceptions.base import AppError
+from diary_ms.infrastructure.auth.token import AlgorithmT
+from diary_ms.infrastructure.log.config import LogConfig
+from diary_ms.infrastructure.s3.config import S3Config
+from diary_ms.infrastructure.telemetry.config import TelemetryConfig
 
 logger = logging.getLogger()
 

@@ -1,4 +1,4 @@
-from src.diary_ms.application.common.exceptions.base import ItemNotFoundError
+from diary_ms.application.common.exceptions.base import ItemNotFoundError
 
 
 class DiaryCardNotFoundError(ItemNotFoundError):

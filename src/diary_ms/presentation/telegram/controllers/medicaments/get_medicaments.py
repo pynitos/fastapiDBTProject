@@ -22,17 +22,17 @@ from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
-from src.diary_ms.application.medicament.dto.medicament import (
+from diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
+from diary_ms.application.medicament.dto.medicament import (
     GetOwnMedicamentDTO,
     GetOwnMedicamentsDTO,
     OwnMedicamentDTO,
     OwnMedicamentsDTO,
 )
-from src.diary_ms.domain.common.exceptions.base import AppError
-from src.diary_ms.presentation.telegram.common.constants import (
+from diary_ms.domain.common.exceptions.base import AppError
+from diary_ms.presentation.telegram.common.constants import (
     ADD_BTN_TXT,
     BACK_BTN_TXT,
     BACK_TO_LIST_BTN_TXT,

@@ -2,23 +2,23 @@ from dataclasses import dataclass, field
 from typing import Self
 from uuid import UUID
 
-from src.diary_ms.domain.common.exceptions.base import DomainError
-from src.diary_ms.domain.common.model.aggregates.base import AggregateRoot
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.entities.skill_application import SkillApplication
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
-from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
+from diary_ms.domain.common.exceptions.base import DomainError
+from diary_ms.domain.common.model.aggregates.base import AggregateRoot
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.entities.coping_strategy import CopingStrategy
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.skill import Skill
+from diary_ms.domain.model.entities.skill_application import SkillApplication
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
+from diary_ms.domain.model.value_objects.diary_card.date_of_entry import (
     DCDateOfEntry,
 )
-from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
-from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.domain.model.value_objects.diary_card.description import DCDescription
+from diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass

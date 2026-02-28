@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Self
 
-from src.diary_ms.domain.common.model.value_objects.base import ValueObject
+from diary_ms.domain.common.model.value_objects.base import ValueObject
 
 MIN_URGE_INTENSITY = 0  # 0 = "нет побуждения"
 MAX_URGE_INTENSITY = 5

@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from src.diary_ms.main.config import web_config
-from src.diary_ms.presentation.api.constants.enums import Prefix, Tags
-from src.diary_ms.presentation.api.exceptions import include_exception_handlers
+from diary_ms.main.config import web_config
+from diary_ms.presentation.api.constants.enums import Prefix, Tags
+from diary_ms.presentation.api.exceptions import include_exception_handlers
 
 from ..deps import TokenDep
 from .controllers import diary_cards, medicaments, target_behavior

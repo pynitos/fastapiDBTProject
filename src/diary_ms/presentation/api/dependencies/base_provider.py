@@ -3,12 +3,12 @@ import logging
 from dishka import AnyOf, Provider, Scope, provide
 from fastapi import Request
 
-from src.diary_ms.application.common.interfaces.id_provider import (
+from diary_ms.application.common.interfaces.id_provider import (
     AdminIdProvider,
     IdProvider,
 )
-from src.diary_ms.domain.common.exceptions.access import AuthenticationError
-from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor, TokenIdProvider
+from diary_ms.domain.common.exceptions.access import AuthenticationError
+from diary_ms.infrastructure.auth.token import JwtTokenProcessor, TokenIdProvider
 
 logger = logging.getLogger(__name__)
 

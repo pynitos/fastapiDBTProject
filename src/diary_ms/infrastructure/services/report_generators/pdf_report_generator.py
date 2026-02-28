@@ -5,8 +5,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
-from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
-from src.diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
+from diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
+from diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
 
 
 class PDFReportGenerator(ReportGenerator):

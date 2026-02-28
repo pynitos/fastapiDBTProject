@@ -1,24 +1,24 @@
 import logging
 
-from src.diary_ms.application.common.exceptions.base import AuthorizationError
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardUpdater
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
-from src.diary_ms.domain.model.entities.skill_application import SkillApplication
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
-from src.diary_ms.domain.model.value_objects.diary_card.description import DCDescription
-from src.diary_ms.domain.model.value_objects.diary_card.mood import DCMood
-from src.diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.intensity import UrgeIntensity
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.application.common.exceptions.base import AuthorizationError
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
+from diary_ms.application.diary_card.interfaces.gateway import DiaryCardUpdater
+from diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.entities.coping_strategy import CopingStrategy
+from diary_ms.domain.model.entities.skill_application import SkillApplication
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
+from diary_ms.domain.model.value_objects.diary_card.description import DCDescription
+from diary_ms.domain.model.value_objects.diary_card.mood import DCMood
+from diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
+from diary_ms.domain.model.value_objects.skill.id import SkillId
+from diary_ms.domain.model.value_objects.skill.situation import SkillUsage
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.intensity import UrgeIntensity
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 logger = logging.getLogger()
 

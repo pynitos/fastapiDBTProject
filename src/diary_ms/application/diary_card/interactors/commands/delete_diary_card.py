@@ -1,10 +1,10 @@
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardDeleter
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
+from diary_ms.application.diary_card.interfaces.gateway import DiaryCardDeleter
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.entities.user_id import UserId
 
 
 class DeleteDiaryCard(CommandHandler[DeleteDiaryCardCommand, None]):

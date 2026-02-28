@@ -1,9 +1,9 @@
 import logging
 
-from src.diary_ms.application.common.interfaces.handlers.event import EventHandler
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
-from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
-from src.diary_ms.infrastructure.brokers.interface import Broker
+from diary_ms.application.common.interfaces.handlers.event import EventHandler
+from diary_ms.application.common.interfaces.task_sender import TaskSender
+from diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
+from diary_ms.infrastructure.brokers.interface import Broker
 
 logger = logging.getLogger(__name__)
 

@@ -5,10 +5,10 @@ from aiogram_dialog.widgets.text import Const
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetCommand
-from src.diary_ms.presentation.telegram.common.constants import NO_BTN_TXT, YES_BTN_TXT
-from src.diary_ms.presentation.telegram.common.constants.targets import TARGET_DELETE_CONFIRM_MSG, TARGET_DELETED_MSG
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetCommand
+from diary_ms.presentation.telegram.common.constants import NO_BTN_TXT, YES_BTN_TXT
+from diary_ms.presentation.telegram.common.constants.targets import TARGET_DELETE_CONFIRM_MSG, TARGET_DELETED_MSG
 
 from .states import ViewTargetSG
 

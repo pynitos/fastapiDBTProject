@@ -2,12 +2,12 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Self
 
-from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.value_objects.emotion.description import (
+from diary_ms.domain.common.model.entities.base import BaseEntity
+from diary_ms.domain.model.value_objects.emotion.description import (
     EmotionDescription,
 )
-from src.diary_ms.domain.model.value_objects.emotion.id import EmotionId
-from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
+from diary_ms.domain.model.value_objects.emotion.id import EmotionId
+from diary_ms.domain.model.value_objects.emotion.name import EmotionName
 
 
 @dataclass

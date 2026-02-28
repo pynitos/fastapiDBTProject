@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.diary_ms.application.diary_card.dto.diary_card import OwnDiaryCardResultDTO
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from diary_ms.application.diary_card.dto.diary_card import OwnDiaryCardResultDTO
+from diary_ms.domain.model.aggregates.diary_card import DiaryCard
 
 
 class DiaryCardDTOMapper(Protocol):

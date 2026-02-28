@@ -1,5 +1,5 @@
-from src.diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
+from diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
+from diary_ms.domain.model.value_objects.skill.id import SkillId
 
 
 class SkillNotFoundError(ItemNotFoundError):

@@ -1,7 +1,7 @@
 import abc
 from typing import Generic, TypeVar
 
-from src.diary_ms.application.common.dto.request import Request
+from diary_ms.application.common.dto.request import Request
 
 QRes = TypeVar("QRes")
 

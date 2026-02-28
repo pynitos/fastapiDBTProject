@@ -1,5 +1,6 @@
 FROM python:3.13-slim AS base_image
 
+ENV PYTHONPATH=/code/src/
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on \
     POETRY_VERSION=1.8.4
 

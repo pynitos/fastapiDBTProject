@@ -1,6 +1,6 @@
-from src.diary_ms.application.diary_card.dto.skill import SkillDTO
-from src.diary_ms.application.diary_card.exceptions.skill import SkillIdNotProvidedError
-from src.diary_ms.domain.model.entities.skill import Skill
+from diary_ms.application.diary_card.dto.skill import SkillDTO
+from diary_ms.application.diary_card.exceptions.skill import SkillIdNotProvidedError
+from diary_ms.domain.model.entities.skill import Skill
 
 
 class SkillDTOMapper:

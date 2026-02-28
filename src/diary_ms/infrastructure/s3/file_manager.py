@@ -5,8 +5,8 @@ from boto3 import client
 from botocore.client import BaseClient
 from botocore.config import Config
 
-from src.diary_ms.application.common.interfaces.file_manager import FileManager
-from src.diary_ms.infrastructure.s3.config import S3Config
+from diary_ms.application.common.interfaces.file_manager import FileManager
+from diary_ms.infrastructure.s3.config import S3Config
 
 
 class S3FileManager(FileManager):

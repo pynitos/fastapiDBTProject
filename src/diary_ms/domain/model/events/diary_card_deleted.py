@@ -3,7 +3,7 @@ from datetime import date
 from typing import ClassVar
 from uuid import UUID
 
-from src.diary_ms.domain.common.model.events.base import Event
+from diary_ms.domain.common.model.events.base import Event
 
 
 @dataclass(frozen=True)

@@ -1,8 +1,8 @@
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.diary_card.interfaces.gateway import EmotionReader
-from src.diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.application.diary_card.interfaces.gateway import EmotionReader
+from diary_ms.domain.model.entities.emotion import Emotion
 
 
 class EmotionGateway(EmotionReader):

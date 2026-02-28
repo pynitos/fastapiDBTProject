@@ -16,7 +16,7 @@ from sqlalchemy import (
     func,
 )
 
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.domain.model.value_objects.skill.type import SkillType
 
 metadata = MetaData()
 

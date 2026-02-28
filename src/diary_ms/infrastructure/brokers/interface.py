@@ -1,6 +1,6 @@
 from typing import Any, Protocol
 
-from src.diary_ms.application.common.interfaces.types.base import BaseSendableMessage
+from diary_ms.application.common.interfaces.types.base import BaseSendableMessage
 
 type BrokerKeyType = bytes | Any | None
 type BrokerTopicType = str

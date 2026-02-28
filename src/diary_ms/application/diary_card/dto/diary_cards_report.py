@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 
-from src.diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.dto.base import ResultDTO
 
 
 @dataclass

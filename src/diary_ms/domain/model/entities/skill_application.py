@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.situation import SkillUsage
+from diary_ms.domain.common.model.entities.base import BaseEntity
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
+from diary_ms.domain.model.value_objects.skill.id import SkillId
+from diary_ms.domain.model.value_objects.skill.situation import SkillUsage
 
 
 @dataclass

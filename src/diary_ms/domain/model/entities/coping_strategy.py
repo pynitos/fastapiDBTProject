@@ -2,12 +2,12 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any
 
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.id import CopingStrategyId
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.intensity import UrgeIntensity
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.value_objects.skill.effectiveness import SkillEffectiveness
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.id import CopingStrategyId
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.intensity import UrgeIntensity
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 
 @dataclass

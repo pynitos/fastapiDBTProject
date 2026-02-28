@@ -4,23 +4,23 @@ from typing import Any, TypeVar
 
 from dishka import AsyncContainer
 
-from src.diary_ms.application.common.dto.base import ResultDTO
-from src.diary_ms.application.common.dto.command import Command
-from src.diary_ms.application.common.dto.query import Query
-from src.diary_ms.application.common.exceptions.base import InteractorNotFoundError
-from src.diary_ms.application.common.interfaces.dispatcher.base import Dispatcher, Registry
-from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
-from src.diary_ms.application.common.interfaces.handlers.command import (
+from diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.dto.command import Command
+from diary_ms.application.common.dto.query import Query
+from diary_ms.application.common.exceptions.base import InteractorNotFoundError
+from diary_ms.application.common.interfaces.dispatcher.base import Dispatcher, Registry
+from diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
+from diary_ms.application.common.interfaces.handlers.command import (
     CommandHandler,
 )
-from src.diary_ms.application.common.interfaces.handlers.event import (
+from diary_ms.application.common.interfaces.handlers.event import (
     EventHandler,
     EventListener,
 )
-from src.diary_ms.application.common.interfaces.handlers.query import (
+from diary_ms.application.common.interfaces.handlers.query import (
     QueryHandler,
 )
-from src.diary_ms.domain.common.model.events.base import Event
+from diary_ms.domain.common.model.events.base import Event
 
 TDependency = TypeVar("TDependency")
 

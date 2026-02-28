@@ -1,16 +1,16 @@
 from uuid import uuid4
 
-from src.diary_ms.application.common.interfaces.dispatcher.base import Publisher
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.target_behavior.dto.commands.create_target import CreateTargetCommand
-from src.diary_ms.application.target_behavior.interfaces.gateway import TargetSaver
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
-from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
+from diary_ms.application.common.interfaces.dispatcher.base import Publisher
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.target_behavior.dto.commands.create_target import CreateTargetCommand
+from diary_ms.application.target_behavior.interfaces.gateway import TargetSaver
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 
 
 class CreateTarget(CommandHandler[CreateTargetCommand, None]):

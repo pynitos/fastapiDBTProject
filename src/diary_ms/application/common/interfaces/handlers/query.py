@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Any, Protocol, TypeVar
 
-from src.diary_ms.application.common.dto.query import Query
-from src.diary_ms.application.common.interfaces.handlers.base import Handler
+from diary_ms.application.common.dto.query import Query
+from diary_ms.application.common.interfaces.handlers.base import Handler
 
 QT = TypeVar("QT", bound=Query[Any], contravariant=True)
 QR = TypeVar("QR", covariant=True)

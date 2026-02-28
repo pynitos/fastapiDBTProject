@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import Protocol, TypeVar
 
-from src.diary_ms.application.common.dto.base import ResultDTO
-from src.diary_ms.application.common.interfaces.handlers.base import Handler
-from src.diary_ms.domain.common.model.events.base import Event
+from diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.interfaces.handlers.base import Handler
+from diary_ms.domain.common.model.events.base import Event
 
 ET = TypeVar("ET", bound=Event, contravariant=True)
 ER = TypeVar("ER", bound=ResultDTO | None, covariant=True)

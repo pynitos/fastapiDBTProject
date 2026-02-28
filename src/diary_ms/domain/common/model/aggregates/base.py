@@ -1,8 +1,8 @@
 from abc import ABC
 from dataclasses import dataclass, field
 
-from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.common.model.events.base import Event
+from diary_ms.domain.common.model.entities.base import BaseEntity
+from diary_ms.domain.common.model.events.base import Event
 
 
 @dataclass

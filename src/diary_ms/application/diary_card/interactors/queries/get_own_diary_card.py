@@ -1,11 +1,11 @@
-from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardQuery, OwnDiaryCardResultDTO
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
-from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.application.common.interfaces.handlers.query import QueryHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardQuery, OwnDiaryCardResultDTO
+from diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
+from diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
+from diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.entities.user_id import UserId
 
 
 class GetOwnDiaryCard(QueryHandler[GetOwnDiaryCardQuery, OwnDiaryCardResultDTO | None]):

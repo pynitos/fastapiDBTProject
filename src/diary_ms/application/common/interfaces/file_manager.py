@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from asyncio import Protocol
 
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
 
 def file_path_creator(diary_card_id: DiaryCardId, extension: str = "jpg") -> str:

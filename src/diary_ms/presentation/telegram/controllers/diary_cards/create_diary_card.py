@@ -26,14 +26,14 @@ from dishka.integrations.aiogram import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 from magic_filter import F
 
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.diary_card.dto.commands.create_diary_card import (
     CreateCopingStrategyCommand,
     CreateDiaryCardCommand,
     CreateSkillApplicationCommand,
 )
-from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
-from src.diary_ms.presentation.telegram.common.constants import (
+from diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
+from diary_ms.presentation.telegram.common.constants import (
     ADD_BTN_TXT,
     BACK_BTN_TXT,
     CANCEL_BTN_TXT,
@@ -41,8 +41,8 @@ from src.diary_ms.presentation.telegram.common.constants import (
     NEXT_BTN_TXT,
     REMOVE_BTN_TXT,
 )
-from src.diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
-from src.diary_ms.presentation.telegram.controllers.medicaments.states import CreateMedicamentSG
+from diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
+from diary_ms.presentation.telegram.controllers.medicaments.states import CreateMedicamentSG
 
 from . import states
 

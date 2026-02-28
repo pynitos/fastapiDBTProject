@@ -2,7 +2,7 @@ from aiogram_dialog.widgets.kbd import Back, Next, Row
 from aiogram_dialog.widgets.text import Const
 from magic_filter import MagicFilter
 
-from src.diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, NEXT_BTN_TXT
+from diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, NEXT_BTN_TXT
 
 
 def back_next_row(

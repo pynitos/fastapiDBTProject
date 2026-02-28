@@ -1,15 +1,15 @@
-from src.diary_ms.application.diary_card.dto.diary_card import (
+from diary_ms.application.diary_card.dto.diary_card import (
     EmotionResultDTO,
     MedicamentResultDTO,
     OwnDiaryCardResultDTO,
     SkillResultDTO,
     TargetResultDTO,
 )
-from src.diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
-from src.diary_ms.domain.common.exceptions.base import AppError
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.application.diary_card.interfaces.mapper import DiaryCardDTOMapper
+from diary_ms.domain.common.exceptions.base import AppError
+from diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.entities.medicament import Medicament
 
 
 class DiaryCardDTOMapperImpl(DiaryCardDTOMapper):

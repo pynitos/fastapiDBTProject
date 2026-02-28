@@ -6,9 +6,9 @@ from aiogram_dialog.widgets.text import Const, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.medicament.dto.commands.create_medicament import CreateMedicamentCommand
-from src.diary_ms.presentation.telegram.common.constants import (
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.medicament.dto.commands.create_medicament import CreateMedicamentCommand
+from diary_ms.presentation.telegram.common.constants import (
     BACK_BTN_TXT,
     CANCEL_BTN_TXT,
     CONFIRM_BTN_TXT,

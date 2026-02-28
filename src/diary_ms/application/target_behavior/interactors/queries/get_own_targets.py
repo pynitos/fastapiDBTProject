@@ -1,14 +1,14 @@
-from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.target_behavior.dto.mappers.target_behavior import TargetDTOMapper
-from src.diary_ms.application.target_behavior.dto.target_behavior import (
+from diary_ms.application.common.interfaces.handlers.query import QueryHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.target_behavior.dto.mappers.target_behavior import TargetDTOMapper
+from diary_ms.application.target_behavior.dto.target_behavior import (
     GetOwnTargetsQuery,
     OwnTargetResultDTO,
     OwnTargetsResultDTO,
 )
-from src.diary_ms.application.target_behavior.interfaces.gateway import TargetReader
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.application.target_behavior.interfaces.gateway import TargetReader
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
 
 
 class GetOwnTargets(QueryHandler[GetOwnTargetsQuery, OwnTargetsResultDTO]):

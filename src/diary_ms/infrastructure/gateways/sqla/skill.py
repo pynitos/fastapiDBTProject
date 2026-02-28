@@ -3,12 +3,12 @@ from uuid import UUID
 from sqlalchemy import ScalarResult, Select, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.exceptions.base import GatewayError
-from src.diary_ms.application.diary_card.interfaces.gateway import SkillReader
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.infrastructure.gateways.sqla.db import tables
+from diary_ms.application.common.exceptions.base import GatewayError
+from diary_ms.application.diary_card.interfaces.gateway import SkillReader
+from diary_ms.domain.model.entities.skill import Skill
+from diary_ms.domain.model.value_objects.skill.id import SkillId
+from diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.infrastructure.gateways.sqla.db import tables
 
 
 class SkillGateway(SkillReader):

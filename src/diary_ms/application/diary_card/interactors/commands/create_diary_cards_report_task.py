@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from src.diary_ms.application.common.dto.base import ResultDTO
-from src.diary_ms.application.common.dto.command import Command
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
-from src.diary_ms.domain.common.exceptions.access import AuthenticationError
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.dto.command import Command
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.task_sender import TaskSender
+from diary_ms.domain.common.exceptions.access import AuthenticationError
+from diary_ms.domain.model.entities.user_id import UserId
 
 
 @dataclass

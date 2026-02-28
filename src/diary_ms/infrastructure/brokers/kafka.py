@@ -2,8 +2,8 @@ from typing import Any
 
 from faststream.kafka.broker import KafkaBroker
 
-from src.diary_ms.application.common.interfaces.types.base import BaseSendableMessage
-from src.diary_ms.infrastructure.brokers.interface import (
+from diary_ms.application.common.interfaces.types.base import BaseSendableMessage
+from diary_ms.infrastructure.brokers.interface import (
     Broker,
     BrokerKeyType,
     BrokerTopicType,

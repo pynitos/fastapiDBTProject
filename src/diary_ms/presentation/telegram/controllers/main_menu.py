@@ -2,9 +2,9 @@ from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.kbd import Column, Start
 from aiogram_dialog.widgets.text import Const
 
-from src.diary_ms.presentation.telegram.controllers.medicaments.states import GetOwnMedicamentsSG
-from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
-from src.diary_ms.presentation.telegram.controllers.targets.states import GetTargetsSG
+from diary_ms.presentation.telegram.controllers.medicaments.states import GetOwnMedicamentsSG
+from diary_ms.presentation.telegram.controllers.states import MainMenuSG
+from diary_ms.presentation.telegram.controllers.targets.states import GetTargetsSG
 
 from .diary_cards.states import CreateDiaryCardSG, GetOwnDiaryCardsSG
 

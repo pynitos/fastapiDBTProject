@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.infrastructure.gateways.sqla.db.mapper import init_mapper
-from src.diary_ms.main.config import WebConfig
+from diary_ms.infrastructure.gateways.sqla.db.mapper import init_mapper
+from diary_ms.main.config import WebConfig
 
 
 def new_session_maker(config: WebConfig) -> async_sessionmaker[AsyncSession]:

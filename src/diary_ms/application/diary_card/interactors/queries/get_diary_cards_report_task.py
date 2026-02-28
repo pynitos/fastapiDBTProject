@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from src.diary_ms.application.common.dto.query import Query
-from src.diary_ms.application.common.interfaces.handlers.query import QueryHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
-from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
+from diary_ms.application.common.dto.query import Query
+from diary_ms.application.common.interfaces.handlers.query import QueryHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.task_sender import TaskSender
+from diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
+from diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
 
 
 @dataclass

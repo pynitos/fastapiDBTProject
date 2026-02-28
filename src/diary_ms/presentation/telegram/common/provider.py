@@ -3,11 +3,11 @@ import logging
 from aiogram.types import TelegramObject
 from dishka import AnyOf, Provider, Scope, from_context, provide
 
-from src.diary_ms.application.common.interfaces.id_provider import (
+from diary_ms.application.common.interfaces.id_provider import (
     AdminIdProvider,
     IdProvider,
 )
-from src.diary_ms.infrastructure.auth.tg import TgIdProvider
+from diary_ms.infrastructure.auth.tg import TgIdProvider
 
 logger = logging.getLogger(__name__)
 

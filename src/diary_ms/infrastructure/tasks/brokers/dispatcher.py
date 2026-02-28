@@ -4,8 +4,8 @@ from typing import Any
 from taskiq import AsyncBroker, AsyncTaskiqDecoratedTask, AsyncTaskiqTask, ScheduleSource
 from taskiq.scheduler.created_schedule import CreatedSchedule
 
-from src.diary_ms.application.common.exceptions.base import InfraError
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
+from diary_ms.application.common.exceptions.base import InfraError
+from diary_ms.application.common.interfaces.task_sender import TaskSender
 
 
 class TaskDispatcher(TaskSender):

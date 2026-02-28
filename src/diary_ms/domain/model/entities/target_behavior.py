@@ -2,14 +2,14 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Self
 
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
-from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.entities.coping_strategy import CopingStrategy
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
-from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
-from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
+from diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
+from diary_ms.domain.common.model.entities.base import BaseEntity
+from diary_ms.domain.model.entities.coping_strategy import CopingStrategy
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
+from diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
 
 
 @dataclass

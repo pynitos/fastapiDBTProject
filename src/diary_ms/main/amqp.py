@@ -5,11 +5,11 @@ from faststream import FastStream
 from faststream.kafka import KafkaBroker
 from taskiq import AsyncBroker, ScheduleSource
 
-from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, task_broker
-from src.diary_ms.main.config import WebConfig, web_config
-from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
-from src.diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
-from src.diary_ms.presentation.api.dependencies.base_provider import AdaptersFastapiProvider
+from diary_ms.infrastructure.tasks.brokers.broker import schedule_source, task_broker
+from diary_ms.main.config import WebConfig, web_config
+from diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
+from diary_ms.presentation.amqp.v1.controllers.diary_cards import AMQPDiaryCardController
+from diary_ms.presentation.api.dependencies.base_provider import AdaptersFastapiProvider
 
 container: AsyncContainer = make_async_container(
     AdaptersProvider(),

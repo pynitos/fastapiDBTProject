@@ -10,17 +10,17 @@ from aiogram_dialog.widgets.text import Const, Format, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
-from src.diary_ms.application.diary_card.dto.diary_card import (
+from diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
+from diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardQuery,
     GetOwnDiaryCardsQuery,
     OwnDiaryCardResultDTO,
     OwnDiaryCardsResultDTO,
 )
-from src.diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, CANCEL_BTN_TXT, REMOVE_BTN_TXT
-from src.diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
+from diary_ms.presentation.telegram.common.constants import BACK_BTN_TXT, CANCEL_BTN_TXT, REMOVE_BTN_TXT
+from diary_ms.presentation.telegram.common.constants.mood import MoodDisplay
 
 from . import states
 

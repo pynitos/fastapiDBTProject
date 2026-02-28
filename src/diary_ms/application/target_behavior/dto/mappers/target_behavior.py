@@ -1,6 +1,6 @@
-from src.diary_ms.application.target_behavior.dto.target_behavior import OwnTargetResultDTO
-from src.diary_ms.application.target_behavior.exceptions.target_behavior import TargetIdNotProvidedError
-from src.diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.application.target_behavior.dto.target_behavior import OwnTargetResultDTO
+from diary_ms.application.target_behavior.exceptions.target_behavior import TargetIdNotProvidedError
+from diary_ms.domain.model.entities.target_behavior import Target
 
 
 class TargetDTOMapper:

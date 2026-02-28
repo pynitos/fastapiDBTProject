@@ -1,4 +1,4 @@
-from src.diary_ms.domain.common.exceptions.base import AppError
+from diary_ms.domain.common.exceptions.base import AppError
 
 
 class ApplicationError(AppError):

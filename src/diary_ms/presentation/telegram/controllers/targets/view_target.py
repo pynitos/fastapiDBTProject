@@ -8,11 +8,11 @@ from aiogram_dialog.widgets.text import Const, Jinja
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetQuery
-from src.diary_ms.domain.common.exceptions.base import AppError
-from src.diary_ms.presentation.telegram.common.constants import BACK_TO_LIST_BTN_TXT, EDIT_BTN_TXT, REMOVE_BTN_TXT
-from src.diary_ms.presentation.telegram.common.constants.targets import TARGET_HEADER
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.target_behavior.dto.target_behavior import GetOwnTargetQuery
+from diary_ms.domain.common.exceptions.base import AppError
+from diary_ms.presentation.telegram.common.constants import BACK_TO_LIST_BTN_TXT, EDIT_BTN_TXT, REMOVE_BTN_TXT
+from diary_ms.presentation.telegram.common.constants.targets import TARGET_HEADER
 
 from .delete_target import delete_target_window
 from .states import ViewTargetSG, start_update_target

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.diary_ms.application.common.dto.command import Command
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.application.common.dto.command import Command
+from diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass

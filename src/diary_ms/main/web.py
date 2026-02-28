@@ -8,15 +8,15 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from taskiq import AsyncBroker, ScheduleSource
 
-from src.diary_ms.infrastructure.log.main import configure_logging
-from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
-from src.diary_ms.main.config import WebConfig, web_config
-from src.diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
-from src.diary_ms.presentation.api import v1
-from src.diary_ms.presentation.api.dependencies.base_provider import (
+from diary_ms.infrastructure.log.main import configure_logging
+from diary_ms.infrastructure.tasks.brokers.broker import schedule_source, scheduler, task_broker
+from diary_ms.main.config import WebConfig, web_config
+from diary_ms.main.ioc import AdaptersProvider, InteractorsProvider
+from diary_ms.presentation.api import v1
+from diary_ms.presentation.api.dependencies.base_provider import (
     AdaptersFastapiProvider,
 )
-from src.diary_ms.presentation.api.exceptions import include_exception_handlers
+from diary_ms.presentation.api.exceptions import include_exception_handlers
 
 configure_logging(web_config.log)
 

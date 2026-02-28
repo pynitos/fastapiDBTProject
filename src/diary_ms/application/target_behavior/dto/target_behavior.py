@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from src.diary_ms.application.common.dto.base import ResultDTO
-from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.application.common.dto.query import Query
+from diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.dto.pagination import Pagination
+from diary_ms.application.common.dto.query import Query
 
 
 @dataclass

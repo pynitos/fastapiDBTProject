@@ -1,10 +1,10 @@
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetCommand
-from src.diary_ms.application.target_behavior.interfaces.gateway import TargetDeleter
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.target_behavior.dto.commands.delete_target import DeleteTargetCommand
+from diary_ms.application.target_behavior.interfaces.gateway import TargetDeleter
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 
 class DeleteTarget(CommandHandler[DeleteTargetCommand, None]):

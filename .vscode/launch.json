@@ -19,7 +19,8 @@
             "program": "${workspaceFolder}/run_bot.py",
             "console": "integratedTerminal",
             "env": {
-                "LOG_LEVEL": "DEBUG"
+                "LOG_LEVEL": "DEBUG",
+                "PYTHONPATH": "${workspaceFolder}/src"
             },
             "python": "${command:python.interpreterPath}",
             "cwd": "${workspaceFolder}",
@@ -34,6 +35,10 @@
                 "run",
                 "./src/diary_ms/main/web.py",
             ],
+            "env": {
+                "LOG_LEVEL": "DEBUG",
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
         },
         {
             "name": "Scheduler",
@@ -44,6 +49,10 @@
                 "scheduler",
                 "src.diary_ms.infrastructure.tasks.brokers.broker:scheduler",
             ],
+            "env": {
+                "LOG_LEVEL": "DEBUG",
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
         },
         {
             "name": "Taskiq",
@@ -54,6 +63,10 @@
                 "worker",
                 "src.diary_ms.infrastructure.tasks.brokers.broker:task_broker",
             ],
+            "env": {
+                "LOG_LEVEL": "DEBUG",
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
         }
     ]
 }

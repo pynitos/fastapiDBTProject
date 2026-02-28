@@ -2,22 +2,22 @@ import uuid
 
 from sqlalchemy import select
 
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.emotion.description import EmotionDescription
-from src.diary_ms.domain.model.value_objects.emotion.name import EmotionName
-from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
-from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
-from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
-from src.diary_ms.domain.model.value_objects.skill.name import SkillName
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
-from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
-from src.diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
-from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
-from src.diary_ms.main.config import web_config
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.entities.skill import Skill
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.emotion.description import EmotionDescription
+from diary_ms.domain.model.value_objects.emotion.name import EmotionName
+from diary_ms.domain.model.value_objects.skill.category import SkillCategory
+from diary_ms.domain.model.value_objects.skill.description import SkillDescription
+from diary_ms.domain.model.value_objects.skill.group import SkillGroup
+from diary_ms.domain.model.value_objects.skill.name import SkillName
+from diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.domain.model.value_objects.target_behavior.coping_strategy.action import CopingAction
+from diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
+from diary_ms.domain.model.value_objects.target_behavior.urge import TargetUrge
+from diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
+from diary_ms.main.config import web_config
 
 from .tables import emotions_table, skills_table, targets_table
 

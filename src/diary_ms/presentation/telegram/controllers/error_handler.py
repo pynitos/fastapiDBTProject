@@ -7,9 +7,9 @@ from aiogram.types import ErrorEvent, ReplyKeyboardRemove
 from aiogram_dialog import DialogManager, ShowMode, StartMode
 from aiogram_dialog.api.exceptions import OutdatedIntent, UnknownIntent
 
-from src.diary_ms.application.common.exceptions.base import ApplicationError, InfraError
-from src.diary_ms.domain.common.exceptions.base import DomainError, DomainValueError
-from src.diary_ms.presentation.telegram.controllers.states import MainMenuSG
+from diary_ms.application.common.exceptions.base import ApplicationError, InfraError
+from diary_ms.domain.common.exceptions.base import DomainError, DomainValueError
+from diary_ms.presentation.telegram.controllers.states import MainMenuSG
 
 logger = logging.getLogger(__name__)
 error_router = Router()

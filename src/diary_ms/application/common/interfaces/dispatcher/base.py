@@ -1,26 +1,26 @@
 from collections.abc import Iterable, Sequence
 from typing import Any, Protocol
 
-from src.diary_ms.application.common.dto.base import ResultDTO
-from src.diary_ms.application.common.dto.command import Command, CRes
-from src.diary_ms.application.common.dto.query import QRes, Query
-from src.diary_ms.application.common.interfaces.handlers.command import (
+from diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.dto.command import Command, CRes
+from diary_ms.application.common.dto.query import QRes, Query
+from diary_ms.application.common.interfaces.handlers.command import (
     CR,
     CT,
     CommandHandler,
 )
-from src.diary_ms.application.common.interfaces.handlers.event import (
+from diary_ms.application.common.interfaces.handlers.event import (
     ER,
     ET,
     EventHandler,
     EventListener,
 )
-from src.diary_ms.application.common.interfaces.handlers.query import (
+from diary_ms.application.common.interfaces.handlers.query import (
     QR,
     QT,
     QueryHandler,
 )
-from src.diary_ms.domain.common.model.events.base import Event
+from diary_ms.domain.common.model.events.base import Event
 
 
 class Registry(Protocol):

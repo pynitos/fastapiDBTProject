@@ -1,6 +1,6 @@
 from logging.config import dictConfig
 
-from src.diary_ms.infrastructure.log.config import LogConfig
+from diary_ms.infrastructure.log.config import LogConfig
 
 
 def configure_logging(cfg: LogConfig) -> None:

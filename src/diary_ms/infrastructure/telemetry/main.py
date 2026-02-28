@@ -9,8 +9,8 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 
-from src.diary_ms.infrastructure.telemetry.config import TelemetryConfig
-from src.diary_ms.infrastructure.telemetry.utils import PrometheusMiddleware, metrics
+from diary_ms.infrastructure.telemetry.config import TelemetryConfig
+from diary_ms.infrastructure.telemetry.utils import PrometheusMiddleware, metrics
 
 
 def configure_telemetry_fastapi(app: FastAPI, cfg: TelemetryConfig) -> None:

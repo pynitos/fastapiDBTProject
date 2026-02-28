@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.diary_ms.application.common.dto.command import Command
+from diary_ms.application.common.dto.command import Command
 
 
 @dataclass

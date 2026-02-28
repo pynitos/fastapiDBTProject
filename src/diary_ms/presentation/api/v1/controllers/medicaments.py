@@ -4,18 +4,18 @@ from uuid import UUID
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter, HTTPException
 
-from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.application.medicament.dto.commands.create_medicament import CreateMedicamentCommand
-from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
-from src.diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentCommand
-from src.diary_ms.application.medicament.dto.medicament import (
+from diary_ms.application.common.dto.pagination import Pagination
+from diary_ms.application.medicament.dto.commands.create_medicament import CreateMedicamentCommand
+from diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
+from diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentCommand
+from diary_ms.application.medicament.dto.medicament import (
     GetOwnMedicamentDTO,
     GetOwnMedicamentsDTO,
     OwnMedicamentDTO,
     OwnMedicamentsDTO,
 )
-from src.diary_ms.presentation.api.deps import SenderDep
-from src.diary_ms.presentation.api.v1.controllers.schemas.medicament import (
+from diary_ms.presentation.api.deps import SenderDep
+from diary_ms.presentation.api.v1.controllers.schemas.medicament import (
     CreateOwnMedicamentReq,
     UpdateOwnMedicamentReq,
 )

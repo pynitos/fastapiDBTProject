@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import ORJSONResponse
 
-from src.diary_ms.domain.common.exceptions.base import AppError
+from diary_ms.domain.common.exceptions.base import AppError
 
 logger = logging.getLogger(__name__)
 

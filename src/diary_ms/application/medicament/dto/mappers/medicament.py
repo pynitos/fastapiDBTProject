@@ -1,6 +1,6 @@
-from src.diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
-from src.diary_ms.application.medicament.exceptions.medicament import MedicamentIdNotProvidedError
-from src.diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.application.medicament.dto.medicament import OwnMedicamentDTO
+from diary_ms.application.medicament.exceptions.medicament import MedicamentIdNotProvidedError
+from diary_ms.domain.model.entities.medicament import Medicament
 
 
 class MedicamentDTOMapper:

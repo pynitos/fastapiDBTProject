@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram_dialog import DialogManager
 
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
 
 
 class CreateDiaryCardSG(StatesGroup):

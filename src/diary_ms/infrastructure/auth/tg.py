@@ -1,8 +1,8 @@
 import uuid
 from uuid import UUID
 
-from src.diary_ms.application.common.interfaces.id_provider import AdminIdProvider, IdProvider
-from src.diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.application.common.interfaces.id_provider import AdminIdProvider, IdProvider
+from diary_ms.domain.model.entities.user_id import UserId
 
 
 class TgIdProvider(IdProvider, AdminIdProvider):

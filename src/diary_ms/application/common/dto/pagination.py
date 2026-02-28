@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.diary_ms.application.common.dto.base import ResultDTO
+from diary_ms.application.common.dto.base import ResultDTO
 
 PAGE_SIZE = 10
 

@@ -2,13 +2,13 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Self
 
-from src.diary_ms.domain.common.model.entities.base import BaseEntity
-from src.diary_ms.domain.model.value_objects.skill.category import SkillCategory
-from src.diary_ms.domain.model.value_objects.skill.description import SkillDescription
-from src.diary_ms.domain.model.value_objects.skill.group import SkillGroup
-from src.diary_ms.domain.model.value_objects.skill.id import SkillId
-from src.diary_ms.domain.model.value_objects.skill.name import SkillName
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.domain.common.model.entities.base import BaseEntity
+from diary_ms.domain.model.value_objects.skill.category import SkillCategory
+from diary_ms.domain.model.value_objects.skill.description import SkillDescription
+from diary_ms.domain.model.value_objects.skill.group import SkillGroup
+from diary_ms.domain.model.value_objects.skill.id import SkillId
+from diary_ms.domain.model.value_objects.skill.name import SkillName
+from diary_ms.domain.model.value_objects.skill.type import SkillType
 
 
 @dataclass

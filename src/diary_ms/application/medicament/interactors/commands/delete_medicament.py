@@ -1,10 +1,10 @@
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
-from src.diary_ms.application.medicament.interfaces.gateway import MedicamentDeleter
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.medicament.dto.commands.delete_medicament import DeleteMedicamentCommand
+from diary_ms.application.medicament.interfaces.gateway import MedicamentDeleter
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 
 
 class DeleteMedicament(CommandHandler[DeleteMedicamentCommand, None]):

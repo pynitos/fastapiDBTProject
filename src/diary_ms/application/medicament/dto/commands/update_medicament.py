@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from src.diary_ms.application.common.dto.command import Command
-from src.diary_ms.domain.common.types.id import TypeId
+from diary_ms.application.common.dto.command import Command
+from diary_ms.domain.common.types.id import TypeId
 
 
 @dataclass

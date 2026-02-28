@@ -1,9 +1,9 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 
 
 class MedicamentSaver(Protocol):

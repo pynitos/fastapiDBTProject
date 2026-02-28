@@ -6,52 +6,52 @@ from faststream.kafka import KafkaBroker
 from sqlalchemy.ext.asyncio.session import AsyncSession, async_sessionmaker
 from taskiq import AsyncBroker, ScheduleSource
 
-from src.diary_ms.application.common.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
-from src.diary_ms.application.common.interfaces.dispatcher.base import Registry
-from src.diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
-from src.diary_ms.application.common.interfaces.file_manager import FileManager
-from src.diary_ms.application.common.interfaces.task_sender import TaskSender
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
-from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import (
+from diary_ms.application.common.dispatcher import DishkaResolver, DispatcherImpl, RegistryImpl
+from diary_ms.application.common.interfaces.dispatcher.base import Registry
+from diary_ms.application.common.interfaces.dispatcher.resolver import Resolver
+from diary_ms.application.common.interfaces.file_manager import FileManager
+from diary_ms.application.common.interfaces.task_sender import TaskSender
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.diary_card.dto.commands.create_diary_card import CreateDiaryCardCommand
+from diary_ms.application.diary_card.dto.commands.delete_diary_card import (
     DeleteDiaryCardCommand,
 )
-from src.diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
-from src.diary_ms.application.diary_card.dto.data_for_diary_card import GetDataForDiaryCardQuery
-from src.diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardQuery, GetOwnDiaryCardsQuery
-from src.diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
-from src.diary_ms.application.diary_card.interactors.commands.create_diary_card import (
+from diary_ms.application.diary_card.dto.commands.update_diary_card import UpdateDiaryCardCommand
+from diary_ms.application.diary_card.dto.data_for_diary_card import GetDataForDiaryCardQuery
+from diary_ms.application.diary_card.dto.diary_card import GetOwnDiaryCardQuery, GetOwnDiaryCardsQuery
+from diary_ms.application.diary_card.dto.mappers.diary_card import DiaryCardDTOMapperImpl
+from diary_ms.application.diary_card.interactors.commands.create_diary_card import (
     CreateDiaryCard,
 )
-from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report import (
+from diary_ms.application.diary_card.interactors.commands.create_diary_cards_report import (
     CreateDiaryCardsReport,
     CreateDiaryCardsReportCommand,
 )
-from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
+from diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
     CreateDiaryCardsReportTaskCommand,
     CreateDiaryCardsReportTaskHandler,
 )
-from src.diary_ms.application.diary_card.interactors.commands.delete_diary_card import (
+from diary_ms.application.diary_card.interactors.commands.delete_diary_card import (
     DeleteDiaryCard,
 )
-from src.diary_ms.application.diary_card.interactors.commands.update_diary_card import (
+from diary_ms.application.diary_card.interactors.commands.update_diary_card import (
     UpdateDiaryCard,
 )
-from src.diary_ms.application.diary_card.interactors.events.diary_card_created import (
+from diary_ms.application.diary_card.interactors.events.diary_card_created import (
     DiaryCardCreatedEventHandler,
 )
-from src.diary_ms.application.diary_card.interactors.queries.get_data_for_diary_card import GetDataForDiaryCard
-from src.diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
+from diary_ms.application.diary_card.interactors.queries.get_data_for_diary_card import GetDataForDiaryCard
+from diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
     GetDiaryCardsReportTaskHandler,
     GetDiaryCardsReportTaskQuery,
 )
-from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_card import (
+from diary_ms.application.diary_card.interactors.queries.get_own_diary_card import (
     GetOwnDiaryCard,
 )
-from src.diary_ms.application.diary_card.interactors.queries.get_own_diary_cards import (
+from diary_ms.application.diary_card.interactors.queries.get_own_diary_cards import (
     GetOwnDiaryCards,
 )
-from src.diary_ms.application.diary_card.interfaces.gateway import (
+from diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
     DiaryCardReader,
     DiaryCardSaver,
@@ -59,74 +59,74 @@ from src.diary_ms.application.diary_card.interfaces.gateway import (
     EmotionReader,
     SkillReader,
 )
-from src.diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
-from src.diary_ms.application.medicament.dto.commands.create_medicament import (
+from diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
+from diary_ms.application.medicament.dto.commands.create_medicament import (
     CreateMedicamentCommand,
 )
-from src.diary_ms.application.medicament.dto.commands.delete_medicament import (
+from diary_ms.application.medicament.dto.commands.delete_medicament import (
     DeleteMedicamentCommand,
 )
-from src.diary_ms.application.medicament.dto.commands.update_medicament import (
+from diary_ms.application.medicament.dto.commands.update_medicament import (
     UpdateMedicamentCommand,
 )
-from src.diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
-from src.diary_ms.application.medicament.dto.medicament import GetOwnMedicamentDTO, GetOwnMedicamentsDTO
-from src.diary_ms.application.medicament.interactors.commands.create_medicament import CreateMedicament
-from src.diary_ms.application.medicament.interactors.commands.delete_medicament import DeleteMedicament
-from src.diary_ms.application.medicament.interactors.commands.update_medicament import UpdateMedicament
-from src.diary_ms.application.medicament.interactors.queries.get_own_medicament_by_id import GetOwnMedicament
-from src.diary_ms.application.medicament.interactors.queries.get_own_medicaments import GetOwnMedicaments
-from src.diary_ms.application.medicament.interfaces.gateway import (
+from diary_ms.application.medicament.dto.mappers.medicament import MedicamentDTOMapper
+from diary_ms.application.medicament.dto.medicament import GetOwnMedicamentDTO, GetOwnMedicamentsDTO
+from diary_ms.application.medicament.interactors.commands.create_medicament import CreateMedicament
+from diary_ms.application.medicament.interactors.commands.delete_medicament import DeleteMedicament
+from diary_ms.application.medicament.interactors.commands.update_medicament import UpdateMedicament
+from diary_ms.application.medicament.interactors.queries.get_own_medicament_by_id import GetOwnMedicament
+from diary_ms.application.medicament.interactors.queries.get_own_medicaments import GetOwnMedicaments
+from diary_ms.application.medicament.interfaces.gateway import (
     MedicamentDeleter,
     MedicamentReader,
     MedicamentSaver,
     MedicamentUpdater,
 )
-from src.diary_ms.application.target_behavior.dto.commands.create_target import (
+from diary_ms.application.target_behavior.dto.commands.create_target import (
     CreateTargetCommand,
 )
-from src.diary_ms.application.target_behavior.dto.commands.delete_target import (
+from diary_ms.application.target_behavior.dto.commands.delete_target import (
     DeleteTargetCommand,
 )
-from src.diary_ms.application.target_behavior.dto.commands.update_target import (
+from diary_ms.application.target_behavior.dto.commands.update_target import (
     UpdateTargetCommand,
 )
-from src.diary_ms.application.target_behavior.dto.target_behavior import (
+from diary_ms.application.target_behavior.dto.target_behavior import (
     GetOwnAndDefaultTargetsQuery,
     GetOwnTargetQuery,
     GetOwnTargetsQuery,
 )
-from src.diary_ms.application.target_behavior.interactors.commands.create_target import CreateTarget
-from src.diary_ms.application.target_behavior.interactors.commands.delete_target import DeleteTarget
-from src.diary_ms.application.target_behavior.interactors.commands.update_target import UpdateTarget
-from src.diary_ms.application.target_behavior.interactors.queries.get_own_and_default_targets import (
+from diary_ms.application.target_behavior.interactors.commands.create_target import CreateTarget
+from diary_ms.application.target_behavior.interactors.commands.delete_target import DeleteTarget
+from diary_ms.application.target_behavior.interactors.commands.update_target import UpdateTarget
+from diary_ms.application.target_behavior.interactors.queries.get_own_and_default_targets import (
     GetOwnAndDefaultTargets,
 )
-from src.diary_ms.application.target_behavior.interactors.queries.get_own_target_by_id import GetOwnTarget
-from src.diary_ms.application.target_behavior.interactors.queries.get_own_targets import GetOwnTargets
-from src.diary_ms.application.target_behavior.interfaces.gateway import (
+from diary_ms.application.target_behavior.interactors.queries.get_own_target_by_id import GetOwnTarget
+from diary_ms.application.target_behavior.interactors.queries.get_own_targets import GetOwnTargets
+from diary_ms.application.target_behavior.interfaces.gateway import (
     TargetDeleter,
     TargetReader,
     TargetSaver,
     TargetUpdater,
 )
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
-from src.diary_ms.infrastructure.auth.token import JwtTokenProcessor
-from src.diary_ms.infrastructure.brokers.broker import BrokerImpl
-from src.diary_ms.infrastructure.brokers.interface import Broker
-from src.diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
-from src.diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
-from src.diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
-from src.diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
-from src.diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
-from src.diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
-from src.diary_ms.infrastructure.s3.config import S3Config
-from src.diary_ms.infrastructure.s3.file_manager import S3FileManager
-from src.diary_ms.infrastructure.services.report_generators.pdf_report_generator import PDFReportGenerator
-from src.diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
-from src.diary_ms.main.config import WebConfig
+from diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.events.diary_card_deleted import DiaryCardCreatedEvent
+from diary_ms.infrastructure.auth.token import JwtTokenProcessor
+from diary_ms.infrastructure.brokers.broker import BrokerImpl
+from diary_ms.infrastructure.brokers.interface import Broker
+from diary_ms.infrastructure.gateways.sqla.db.session import new_session_maker
+from diary_ms.infrastructure.gateways.sqla.diary_card import DiaryCardGateway
+from diary_ms.infrastructure.gateways.sqla.emotion import EmotionGateway
+from diary_ms.infrastructure.gateways.sqla.medicament import MedicamentGateway
+from diary_ms.infrastructure.gateways.sqla.skill import SkillGateway
+from diary_ms.infrastructure.gateways.sqla.target_behavior import TargetGateway
+from diary_ms.infrastructure.s3.config import S3Config
+from diary_ms.infrastructure.s3.file_manager import S3FileManager
+from diary_ms.infrastructure.services.report_generators.pdf_report_generator import PDFReportGenerator
+from diary_ms.infrastructure.tasks.brokers.dispatcher import TaskDispatcher
+from diary_ms.main.config import WebConfig
 
 
 class AdaptersProvider(Provider):

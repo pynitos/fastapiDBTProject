@@ -1,5 +1,5 @@
-from src.diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
 
 
 class TargetNotFoundError(ItemNotFoundError):

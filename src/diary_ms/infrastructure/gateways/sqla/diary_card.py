@@ -4,25 +4,25 @@ from typing import Any
 from sqlalchemy import Row, ScalarResult, Select, and_, func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
-from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
-from src.diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
-from src.diary_ms.application.diary_card.interfaces.gateway import (
+from diary_ms.application.common.exceptions.base import GatewayError, ItemNotFoundError
+from diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
+from diary_ms.application.diary_card.exceptions.diary_card import DiaryCardNotFoundError
+from diary_ms.application.diary_card.interfaces.gateway import (
     DiaryCardDeleter,
     DiaryCardReader,
     DiaryCardSaver,
     DiaryCardUpdater,
 )
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
-from src.diary_ms.domain.model.aggregates.diary_card import DiaryCard
-from src.diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
-from src.diary_ms.domain.model.entities.emotion import Emotion
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.skill import Skill
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
-from src.diary_ms.infrastructure.gateways.sqla.db.tables import (
+from diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
+from diary_ms.domain.model.aggregates.diary_card import DiaryCard
+from diary_ms.domain.model.aggregates.diary_card_id import DiaryCardId
+from diary_ms.domain.model.entities.emotion import Emotion
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.skill import Skill
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
+from diary_ms.infrastructure.gateways.sqla.db.tables import (
     diary_cards_table,
     emotions_table,
     medicaments_table,

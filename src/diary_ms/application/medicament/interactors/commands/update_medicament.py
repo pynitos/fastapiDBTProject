@@ -1,16 +1,16 @@
 import logging
 
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.common.interfaces.id_provider import IdProvider
-from src.diary_ms.application.common.interfaces.uow import TransactionManager
-from src.diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentCommand
-from src.diary_ms.application.medicament.exceptions.medicament import MedicamentNotFoundError
-from src.diary_ms.application.medicament.interfaces.gateway import MedicamentUpdater
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.medicament.dosage import MedicamentDosage
-from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
-from src.diary_ms.domain.model.value_objects.medicament.name import MedicamentName
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.common.interfaces.id_provider import IdProvider
+from diary_ms.application.common.interfaces.uow import TransactionManager
+from diary_ms.application.medicament.dto.commands.update_medicament import UpdateMedicamentCommand
+from diary_ms.application.medicament.exceptions.medicament import MedicamentNotFoundError
+from diary_ms.application.medicament.interfaces.gateway import MedicamentUpdater
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.medicament.dosage import MedicamentDosage
+from diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+from diary_ms.domain.model.value_objects.medicament.name import MedicamentName
 
 logger = logging.getLogger()
 

@@ -5,36 +5,36 @@ from uuid import UUID
 from dishka.integrations.fastapi import DishkaRoute
 from fastapi import APIRouter
 
-from src.diary_ms.application.common.dto.pagination import Pagination
-from src.diary_ms.application.diary_card.dto.commands.create_diary_card import (
+from diary_ms.application.common.dto.pagination import Pagination
+from diary_ms.application.diary_card.dto.commands.create_diary_card import (
     CreateCopingStrategyCommand,
     CreateDiaryCardCommand,
     CreateSkillApplicationCommand,
 )
-from src.diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
-from src.diary_ms.application.diary_card.dto.commands.update_diary_card import (
+from diary_ms.application.diary_card.dto.commands.delete_diary_card import DeleteDiaryCardCommand
+from diary_ms.application.diary_card.dto.commands.update_diary_card import (
     UpdateCopingStrategyCommand,
     UpdateDiaryCardCommand,
     UpdateSkillApplicationCommand,
 )
-from src.diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
-from src.diary_ms.application.diary_card.dto.diary_card import (
+from diary_ms.application.diary_card.dto.data_for_diary_card import DataForDiaryCardDTO, GetDataForDiaryCardQuery
+from diary_ms.application.diary_card.dto.diary_card import (
     GetOwnDiaryCardQuery,
     GetOwnDiaryCardsQuery,
     OwnDiaryCardResultDTO,
     OwnDiaryCardsResultDTO,
 )
-from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
-from src.diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
+from diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
+from diary_ms.application.diary_card.interactors.commands.create_diary_cards_report_task import (
     CreateDiaryCardsReportTaskCommand,
     CreateDiaryCardsReportTaskDTO,
 )
-from src.diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
+from diary_ms.application.diary_card.interactors.queries.get_diary_cards_report_task import (
     GetDiaryCardsReportTaskQuery,
 )
-from src.diary_ms.domain.model.value_objects.skill.type import SkillType
-from src.diary_ms.presentation.api.deps import SenderDep
-from src.diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
+from diary_ms.domain.model.value_objects.skill.type import SkillType
+from diary_ms.presentation.api.deps import SenderDep
+from diary_ms.presentation.api.v1.controllers.schemas.diary_card import (
     CreateDiaryCardReq,
     UpdateDiaryCardReq,
 )

@@ -1,20 +1,20 @@
 from sqlalchemy import ScalarResult, Select, Table, func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.medicament.exceptions.medicament import (
+from diary_ms.application.medicament.exceptions.medicament import (
     MedicamentIdNotProvidedError,
     MedicamentNotFoundError,
 )
-from src.diary_ms.application.medicament.interfaces.gateway import (
+from diary_ms.application.medicament.interfaces.gateway import (
     MedicamentDeleter,
     MedicamentReader,
     MedicamentSaver,
     MedicamentUpdater,
 )
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
-from src.diary_ms.domain.model.entities.medicament import Medicament
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.medicament.id import MedicamentId
+from diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
+from diary_ms.domain.model.entities.medicament import Medicament
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.medicament.id import MedicamentId
 
 from .db.tables import medicaments_table
 

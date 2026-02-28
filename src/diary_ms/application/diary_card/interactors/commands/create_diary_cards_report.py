@@ -2,14 +2,14 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from uuid import UUID
 
-from src.diary_ms.application.common.dto.command import Command
-from src.diary_ms.application.common.interfaces.file_manager import FileManager
-from src.diary_ms.application.common.interfaces.handlers.command import CommandHandler
-from src.diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
-from src.diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
-from src.diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
+from diary_ms.application.common.dto.command import Command
+from diary_ms.application.common.interfaces.file_manager import FileManager
+from diary_ms.application.common.interfaces.handlers.command import CommandHandler
+from diary_ms.application.diary_card.dto.diary_cards_report import DiaryCardsReportDTO
+from diary_ms.application.diary_card.interfaces.gateway import DiaryCardReader
+from diary_ms.application.diary_card.interfaces.report_generator import ReportGenerator
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.diary_card.date_of_entry import DCDateOfEntry
 
 
 @dataclass

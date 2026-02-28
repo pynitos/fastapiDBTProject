@@ -9,15 +9,15 @@ from aiogram_dialog.widgets.text import Const, Format
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
-from src.diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
-from src.diary_ms.application.common.interfaces.dispatcher.base import Sender
-from src.diary_ms.application.target_behavior.dto.target_behavior import (
+from diary_ms.application.common.dto.pagination import PAGE_SIZE, Pagination
+from diary_ms.application.common.interfaces.dispatcher.base import Sender
+from diary_ms.application.target_behavior.dto.target_behavior import (
     GetOwnTargetsQuery,
     OwnTargetsResultDTO,
 )
-from src.diary_ms.presentation.telegram.common.constants import ADD_BTN_TXT, BACK_BTN_TXT
-from src.diary_ms.presentation.telegram.common.constants.targets import TARGET_LIST_HEADER, TARGET_LIST_NOT_FOUND_HEADER
-from src.diary_ms.presentation.telegram.controllers.targets.states import (
+from diary_ms.presentation.telegram.common.constants import ADD_BTN_TXT, BACK_BTN_TXT
+from diary_ms.presentation.telegram.common.constants.targets import TARGET_LIST_HEADER, TARGET_LIST_NOT_FOUND_HEADER
+from diary_ms.presentation.telegram.controllers.targets.states import (
     CreateTargetSG,
     GetTargetsSG,
     start_view_target,

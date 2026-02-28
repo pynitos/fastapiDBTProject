@@ -3,7 +3,7 @@ from typing import Any
 
 import orjson
 
-from src.diary_ms.domain.common.model.events.base import Event
+from diary_ms.domain.common.model.events.base import Event
 
 
 def convert_event_to_broker_message(event: Event) -> bytes:

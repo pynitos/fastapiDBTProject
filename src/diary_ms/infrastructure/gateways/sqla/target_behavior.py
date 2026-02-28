@@ -1,21 +1,21 @@
 from sqlalchemy import ScalarResult, Select, func, or_, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from src.diary_ms.application.target_behavior.exceptions.target_behavior import (
+from diary_ms.application.target_behavior.exceptions.target_behavior import (
     TargetIdNotProvidedError,
     TargetNotFoundError,
 )
-from src.diary_ms.application.target_behavior.interfaces.gateway import (
+from diary_ms.application.target_behavior.interfaces.gateway import (
     TargetDeleter,
     TargetReader,
     TargetSaver,
     TargetUpdater,
 )
-from src.diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
-from src.diary_ms.domain.model.entities.target_behavior import Target
-from src.diary_ms.domain.model.entities.user_id import UserId
-from src.diary_ms.domain.model.value_objects.target_behavior.id import TargetId
-from src.diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
+from diary_ms.domain.common.exceptions.user_id_not_provided import UserIdNotProvidedError
+from diary_ms.domain.model.entities.target_behavior import Target
+from diary_ms.domain.model.entities.user_id import UserId
+from diary_ms.domain.model.value_objects.target_behavior.id import TargetId
+from diary_ms.domain.model.value_objects.target_behavior.is_default import TargetIsDefault
 
 from .db.tables import targets_table
 

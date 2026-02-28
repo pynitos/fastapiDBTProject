@@ -10,16 +10,16 @@ from dishka import AsyncContainer, make_async_container
 from dishka.integrations.aiogram import setup_dishka
 from taskiq import AsyncBroker, ScheduleSource
 
-from src.diary_ms.infrastructure.log.main import configure_logging
-from src.diary_ms.infrastructure.tasks.brokers.broker import schedule_source, task_broker
-from src.diary_ms.presentation.telegram.common.provider import TgProvider
-from src.diary_ms.presentation.telegram.controllers.diary_cards.create_diary_card import create_diary_card_dialog
-from src.diary_ms.presentation.telegram.controllers.diary_cards.get_diary_cards import own_diary_cards_dialog
-from src.diary_ms.presentation.telegram.controllers.error_handler import error_router
-from src.diary_ms.presentation.telegram.controllers.main_menu import main_menu_dialog
-from src.diary_ms.presentation.telegram.controllers.medicaments import medicaments_router
-from src.diary_ms.presentation.telegram.controllers.start import start_router
-from src.diary_ms.presentation.telegram.controllers.targets import targets_router
+from diary_ms.infrastructure.log.main import configure_logging
+from diary_ms.infrastructure.tasks.brokers.broker import schedule_source, task_broker
+from diary_ms.presentation.telegram.common.provider import TgProvider
+from diary_ms.presentation.telegram.controllers.diary_cards.create_diary_card import create_diary_card_dialog
+from diary_ms.presentation.telegram.controllers.diary_cards.get_diary_cards import own_diary_cards_dialog
+from diary_ms.presentation.telegram.controllers.error_handler import error_router
+from diary_ms.presentation.telegram.controllers.main_menu import main_menu_dialog
+from diary_ms.presentation.telegram.controllers.medicaments import medicaments_router
+from diary_ms.presentation.telegram.controllers.start import start_router
+from diary_ms.presentation.telegram.controllers.targets import targets_router
 
 from .config import BaseConfig, BotConfig, WebConfig, load_bot_config, web_config
 from .ioc import AdaptersProvider, InteractorsProvider
