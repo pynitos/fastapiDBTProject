@@ -44,11 +44,11 @@ fastapiDBTProject/
 │   │   │   ├── value_objects/      # Value objects
 │   │   │   └── events/             # Domain events
 │   │   ├── application/            # Application layer - координация
-│   │   │   ├── diary_card/         # Модуль дневниковых карт
-│   │   │   │   └── interactors/
-│   │   │   │       ├── commands/   # Команды (CQRS)
-│   │   │   │       └── queries/    # Запросы (CQRS)
-│   │   │   └── user/               # Модуль пользователей
+│   │   │   └── diary_card/         # Модуль дневниковых карт
+│   │   │       └── interactors/
+│   │   │           ├── commands/   # Команды (CQRS)
+│   │   │           └── queries/    # Запросы (CQRS)
+│   │   │  
 │   │   ├── infrastructure/         # Infrastructure layer
 │   │   │   ├── gateways/           # Репозитории, миграции
 │   │   │   ├── brokers/    # Kafka, Redis
